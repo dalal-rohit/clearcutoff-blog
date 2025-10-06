@@ -6,7 +6,7 @@ import { Locale, useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import Image from "next/image";
 import { routing } from "@/i18n/routing";
-type AppLocale = "en" | "ur";
+import { AppLocale } from "@/types/components/language";
 export default function LanguageSwitcher() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
