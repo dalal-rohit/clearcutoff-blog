@@ -7,7 +7,6 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import BlogThemeProvider from "@/components/providers/blog-theme-provider";
-import { Icon } from "next/dist/lib/metadata/types/metadata-types";
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",

@@ -32,29 +32,13 @@ export default function Header() {
               {t("features")}
             </Link>
           </li>
-          <li>
-            <Link
-              href="#pricing"
-              className="text-gray-600 hover:text-indigo-700 transition"
-            >
-              {t("pricing")}
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="#contact"
-              className="text-gray-600 hover:text-indigo-700 transition"
-            >
-              {t("contact")}
-            </Link>
-          </li>
         </ul>
         <div className="flex items-center space-x-4">
-          <LanguageSwitcher /> {/* Integrated here */}
-          <div className="flex gap-1">
+          <div className=" gap-2 hidden md:flex">
             <LoginButton />
             <RegisterButton isFull={true} />
           </div>
+          <LanguageSwitcher />
         </div>
       </nav>
     </HeaderWrapper>

@@ -24,8 +24,10 @@ const itemsDefault: BreadcrumbItem[] = [
 
 export default function MainBreadcrumbs({ items = itemsDefault }: Props) {
   return (
-    <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 flex items-center justify-between">
-      <Breadcrumbs aria-label="breadcrumbs">
+    <div className="mx-auto px-4 sm:px-6 md:px-4 lg:px-4 flex items-center justify-between">
+      <Breadcrumbs sx={{ 
+        padding: 0,
+       }} aria-label="breadcrumbs">
         {items.map((item, index) =>
           index !== items.length - 1 ? (
             <Link
