@@ -1,3 +1,4 @@
+
 import { notFound } from "next/navigation";
 import { Locale, hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -6,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { Noto_Sans, Noto_Nastaliq_Urdu } from "next/font/google";
 import "./globals.css";
+import BlogThemeProvider from "@/components/providers/blog-theme-provider";
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
@@ -13,7 +15,6 @@ const notoSans = Noto_Sans({
   weight: ["400", "500", "600"], // you can pick which weights you need
   display: "swap",
 });
-
 
 export const metadata: Metadata = {
   title: "Clear cutoff",
@@ -35,9 +36,9 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${fontClass} antialiased`}>
-        {" "}
-        
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <BlogThemeProvider>
+          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        </BlogThemeProvider>
       </body>
     </html>
   );

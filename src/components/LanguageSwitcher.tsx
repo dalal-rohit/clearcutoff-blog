@@ -34,13 +34,13 @@ export default function LanguageSwitcher() {
       disabled={isPending}
       className="flex items-center gap-2 rounded-lg border px-3 py-2 bg-white hover:bg-gray-100 shadow-sm transition disabled:opacity-50"
     >
-      <Image
+      {/* <Image
         src={`/locale/${locale}.png`}
         alt={locale}
         width={20}
         height={20}
         className="rounded"
-      />
+      /> */}
       <span className="text-sm font-medium uppercase">{locale}</span>
       <span className="text-xs text-gray-500">⇄</span>
     </button>

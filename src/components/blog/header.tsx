@@ -1,17 +1,28 @@
 // components/Header.tsx
+"use client";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "../LanguageSwitcher";
+import LoginButton from "../buttons/login-button";
+import RegisterButton from "../buttons/register-button";
+import Image from "next/image";
+import HeaderWrapper from "../ui/header-wrapper";
 
 export default function Header() {
   const t = useTranslations("Header");
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold text-indigo-700">
-          {t("logo")}
-        </Link>
+    <HeaderWrapper>
+      <nav className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 py-2 h-16 flex items-center justify-between">
+        <div className="flex items-center">
+          <Image
+            src={"/logo/clear_cutoff_logo.png"}
+            alt="Logo"
+            width={160}
+            height={42}
+          />
+          <div className="text-brand heading-large">Academy</div>
+        </div>
         <ul className="hidden md:flex items-center space-x-6">
           <li>
             <Link
@@ -40,20 +51,12 @@ export default function Header() {
         </ul>
         <div className="flex items-center space-x-4">
           <LanguageSwitcher /> {/* Integrated here */}
-          <Link
-            href="/login"
-            className="text-indigo-700 hover:text-indigo-900 font-medium"
-          >
-            {t("login")}
-          </Link>
-          <Link
-            href="/signup"
-            className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
-          >
-            {t("signup")}
-          </Link>
+          <div className="flex gap-1">
+            <LoginButton />
+            <RegisterButton isFull={true} />
+          </div>
         </div>
       </nav>
-    </header>
+    </HeaderWrapper>
   );
 }

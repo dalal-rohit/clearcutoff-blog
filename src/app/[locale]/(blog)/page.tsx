@@ -1,7 +1,10 @@
-import React from 'react'
+import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
+import React from "react";
 
 export default function page() {
   return (
-    <div>Blog Page</div>
-  )
+    <div>
+      <MainBreadcrumbs />
+    </div>
+  );
 }
