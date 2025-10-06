@@ -6,13 +6,13 @@ import { Locale, useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import Image from "next/image";
 import { routing } from "@/i18n/routing";
-
+type AppLocale = "en" | "ur";
 export default function LanguageSwitcher() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
   const params = useParams();
-  const locale = useLocale(); // current locale
+  const locale = useLocale()  as AppLocale; // current locale
 
   const locales = routing.locales;
   const currentIndex = locales.indexOf(locale);
