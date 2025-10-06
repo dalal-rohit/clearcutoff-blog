@@ -4,7 +4,6 @@ import { useTransition } from "react";
 import { useParams } from "next/navigation";
 import { Locale, useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
-import Image from "next/image";
 import { routing } from "@/i18n/routing";
 import { AppLocale } from "@/types/components/language";
 export default function LanguageSwitcher() {

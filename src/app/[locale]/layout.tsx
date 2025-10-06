@@ -1,11 +1,11 @@
 
 import { notFound } from "next/navigation";
-import { Locale, hasLocale, NextIntlClientProvider } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import {  hasLocale, NextIntlClientProvider } from "next-intl";
+import {  setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 
 import type { Metadata } from "next";
-import { Noto_Sans, Noto_Nastaliq_Urdu } from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import BlogThemeProvider from "@/components/providers/blog-theme-provider";
 
