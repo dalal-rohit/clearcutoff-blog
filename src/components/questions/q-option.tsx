@@ -13,7 +13,7 @@ export default function QOption({ index, optiontext, imgurl }: OptionProps) {
         <div className="w-8 h-8 rounded bg-gray-200 flex items-center justify-center">
           {index}
         </div>
-        {optiontext && <div>{optiontext}</div>}
+        {optiontext && <div className="body-medium font-semibold">{optiontext}</div>}
         {imgurl && <img src={imgurl} />}
       </div>
     </>
