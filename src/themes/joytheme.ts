@@ -11,14 +11,14 @@ declare module "@mui/joy/styles" {
 
 const palette = {
   primary: {
-    solidBg: "#0d6efd",
-    solidBorder: "#0d6efd",
+    solidBg: "var(--color-brand)",
+    solidBorder: "var(--color-brand)",
     solidHoverBg: "#0b5ed7",
     solidHoverBorder: "#0a58ca",
-    solidActiveBg: "#0082ff",
+    solidActiveBg: "var(--color-brand)",
     solidActiveBorder: "#0a53be",
-    solidDisabledBg: "#0d6efd",
-    solidDisabledBorder: "#0d6efd",
+    solidDisabledBg: "var(--color-brand)",
+    solidDisabledBorder: "var(--color-brand)",
   },
 };
 

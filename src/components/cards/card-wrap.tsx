@@ -20,8 +20,8 @@ export default function CardWrap({
   children,
   width = "100%",
   height = "100%",
-  borderwidth = 2,
-  bordercolor = "#000000.9", // Tailwind amber-300
+  borderwidth = 1,
+  bordercolor = "#CBD5E2", // Tailwind amber-300
   bgcolor = "transparent",
   padding = 1,
   cursor = "",

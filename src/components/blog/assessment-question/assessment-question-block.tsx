@@ -29,7 +29,7 @@ export default function AssessmentQuestionBlock() {
           <div className="heading-small font-semibold mb-2">
             Option1: What is 2 + 2?
           </div>
-          <div className="bg-gray-100 p-4 rounded">
+          <div className="bg-softskyblue p-4 rounded-2xl">
             <div className="heading-large font-semibold mb-2">Explenation</div>
             <div className="body-large font-semibold mb-2">
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Delectus

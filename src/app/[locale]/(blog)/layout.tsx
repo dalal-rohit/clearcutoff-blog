@@ -20,7 +20,7 @@ export default function BlogLayout({
         <LeftSidebar />
 
         {/* Main Content (scrolls independently) */}
-        <main className="flex-1 ml-0 md:ml-64 mr-0 lg:mr-64 overflow-y-auto">
+        <main className="flex-1 ml-0 md:ml-80 mr-0 lg:mr-80 overflow-y-auto">
           {children}
         </main>
 
