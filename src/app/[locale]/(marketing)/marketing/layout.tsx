@@ -1,10 +1,28 @@
+import FlashSaleTimerBanner from "@/components/blog/flashsale-timer-banner";
+import Header from "@/components/blog/header";
 import React from "react";
 
-
-export default function MarketingLayout({ children }: { children: React.ReactNode }) {
+export default function MarketingLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-1">{children}</main>
+      <FlashSaleTimerBanner message="Flash Sale Ends In" />
+      <Header />
+      {/* Main Layout (sidebars fixed, main scrolls) */}
+      <div className="flex flex-1 mx-auto w-full relative">
+        {/* Left Sidebar (fixed) */}
+
+
+        {/* Main Content (scrolls independently) */}
+        <main className="flex-1  overflow-y-auto">
+          {children}
+        </main>
+
+        {/* Right Sidebar (fixed) */}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,4 @@
 "use client";
-import CardWrap from "@/components/cards/card-wrap";
 import ExamCard from "@/components/ui/exam-card";
 import React from "react";
 

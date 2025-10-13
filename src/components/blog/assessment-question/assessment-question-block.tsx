@@ -1,7 +1,7 @@
 "use client";
 import CardWrap from "@/components/cards/card-wrap";
 import QOption from "@/components/questions/q-option";
-import React, { useState } from "react";
+import React from "react";
 
 export default function AssessmentQuestionBlock() {
   return (

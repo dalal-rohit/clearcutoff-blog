@@ -14,6 +14,13 @@ const config: NextConfig = {
     optimizeCss: true, // remove unused CSS automatically
     inlineCss: true, // inline critical CSS
   },
+  images: {
+    domains: [
+      "img.icons8.com",
+      "i.pravatar.cc",
+      "cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com",
+    ],
+  },
 };
 
 export default withNextIntl(config);

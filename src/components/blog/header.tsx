@@ -1,7 +1,6 @@
 // components/Header.tsx
 "use client";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
 import LanguageSwitcher from "../LanguageSwitcher";
 import LoginButton from "../buttons/login-button";
 import RegisterButton from "../buttons/register-button";
@@ -9,7 +8,6 @@ import Image from "next/image";
 import HeaderWrapper from "../ui/header-wrapper";
 
 export default function Header() {
-  const t = useTranslations("Header");
 
   return (
     <HeaderWrapper>
@@ -29,7 +27,7 @@ export default function Header() {
               href="#features"
               className="text-gray-600 hover:text-indigo-700 transition"
             >
-              {t("features")}
+            features
             </Link>
           </li>
         </ul>

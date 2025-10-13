@@ -18,7 +18,7 @@ export default function LoginButton({
   loading = false, // default false
   disabled = false,
 }: buttonProps) {
-  const t = useTranslations("Header");
+  const t = useTranslations("Buttons");
 
   const buttonText = text ? text : t("login");
 

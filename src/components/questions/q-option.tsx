@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 type OptionProps = {
@@ -14,7 +15,7 @@ export default function QOption({ index, optiontext, imgurl }: OptionProps) {
           {index}
         </div>
         {optiontext && <div className="body-medium font-semibold">{optiontext}</div>}
-        {imgurl && <img src={imgurl} />}
+        {imgurl && <Image src={imgurl} alt="Logo" width={16} height={16} />}
       </div>
     </>
   );

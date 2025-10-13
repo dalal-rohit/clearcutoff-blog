@@ -8,17 +8,18 @@ declare const messages: {
   },
   "IndexPage": {
     "description": "This is a basic example that demonstrates the usage of <code>next-intl</code> with the Next.js App Router. Try changing the locale in the top right corner and see how the content changes.",
-    "title": "next-intl example"
+    "title": "Clear cutoff"
   },
   "LocaleLayout": {
-    "title": "next-intl example"
+    "title": "Clear cutoff",
+    "description": "This is a basic example that demonstrates the usage of <code>next-intl</code> with the Next.js App Router. Try changing the locale in the top right corner and see how the content changes."
   },
   "LocaleSwitcher": {
     "label": "Change language",
     "locale": "{locale, select, tr {TR Deutsch} en {🇺🇸 English} other {Unknown}}"
   },
   "Manifest": {
-    "name": "next-intl example"
+    "name": "Clear cutoff"
   },
   "Navigation": {
     "home": "Home",
@@ -46,48 +47,28 @@ declare const messages: {
     "description": "<p>The pathnames are internationalized too.</p><p>If you're using the default language English, you'll see <code>/en/pathnames</code> in the browser address bar on this page.</p><p>If you change the locale to German, the URL is localized accordingly (<code>/de/pfadnamen</code>).</p>",
     "title": "Pathnames"
   },
-
-  "Header": {
-    "logo": "LMS.io",
-    "features": "Features",
-    "pricing": "Pricing",
-    "contact": "Contact",
+  "CourseHeader": {
+    "title": "Clear {courseName} exam with us!",
+    "description": "Don't miss out on this incredible opportunity to advance your skills at an unbeatable price.",
+    "trialText": "3 day FREE trial",
+    "ratingsbyourstudents": "Average ratings by our students"
+  },
+  "Buttons": {
     "login": "Login",
-    "signup": "Sign Up"
+    "register": "Start for FREE"
   },
-  "Hero": {
-    "headline": "Elevate Your Learning Experience",
-    "subheadline": "The All-in-One Learning Management System for modern education.",
-    "cta_start": "Start Learning Today",
-    "cta_demo": "Request a Demo"
-  },
-  "Features": {
-    "title": "Why Choose LMS.io?",
-    "feature1_title": "Intuitive Course Creation",
-    "feature1_description": "Build engaging courses with rich media, quizzes, and assignments.",
-    "feature2_title": "Robust User Management",
-    "feature2_description": "Effortlessly manage students, instructors, and groups with roles and permissions.",
-    "feature3_title": "Advanced Analytics",
-    "feature3_description": "Track progress, identify trends, and measure learning outcomes.",
-    "feature4_title": "Seamless Integrations",
-    "feature4_description": "Connect with your favorite tools for a streamlined workflow."
-  },
-  "Testimonials": {
-    "title": "What Our Users Say",
-    "quote1": "LMS.io transformed how we deliver online education. The students love it!",
-    "author1": "Dr. Emily R., University Professor",
-    "quote2": "Easy to use for both instructors and learners. Highly recommend for any institution.",
-    "author2": "John D., Corporate Trainer"
-  },
-  "CTA": {
-    "headline": "Ready to Transform Your Learning?",
-    "subheadline": "Join thousands of educators and learners empowering their future with LMS.io.",
-    "cta_button": "Get Started Free"
-  },
-  "Footer": {
-    "copy": "© 2023 LMS.io. All rights reserved.",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service"
+  "PricingSection": {
+    "eyebrow": "Simple. Transparent. Affordable.",
+    "title": "One Price, Everything Included!",
+    "description": "One-time payment. 1-year access. Everything you need to pass on your first attempt.",
+    "tailContent": {
+      "title": "Used by 10,000+ students to clear {courseName} exams.",
+      "description": "Join thousands of successful {courseName} aspirants who chose smart, affordable learning over expensive coaching!",
+      "rating": {
+        "rat": "4.9+",
+        "text": "Average Rating by our Students!"
+      }
+    }
   }
 };
 export default messages;

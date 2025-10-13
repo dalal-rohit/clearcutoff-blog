@@ -18,9 +18,9 @@ export default function RegisterButton({
   loading = false, // default false
   disabled = false,
 }: buttonProps) {
-  const t = useTranslations("Header");
+  const t = useTranslations("Buttons");
 
-  const buttonText = text ? text : t("signup");
+  const buttonText = text ? text : t("register");
 
   return (
     <Button

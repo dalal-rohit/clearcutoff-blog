@@ -2,7 +2,6 @@ import FlashSaleTimerBanner from "@/components/blog/flashsale-timer-banner";
 import Header from "@/components/blog/header";
 import LeftSidebar from "@/components/blog/left-sidebar";
 import RightSidebar from "@/components/blog/right-sidebar";
-import BlogThemeProvider from "@/components/providers/blog-theme-provider";
 import React from "react";
 
 export default function BlogLayout({
