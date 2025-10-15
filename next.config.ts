@@ -29,7 +29,7 @@ const config: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cms.yourdomain.com",
+        hostname: "http://zo4csosgwoockgko0cggc4gc.65.108.49.3.sslip.io",
         pathname: "/api/**",
       },
       {
