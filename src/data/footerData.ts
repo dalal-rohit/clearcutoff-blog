@@ -1,4 +1,3 @@
-import { url } from "inspector";
 
 export const footerData = {
   isFooter: true,

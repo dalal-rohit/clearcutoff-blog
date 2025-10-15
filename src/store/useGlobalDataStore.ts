@@ -1,6 +1,4 @@
-import api from "@/lib/api/api";
-import { getPayloadGlobal } from "@/lib/api/landingData";
-import { useLocale } from "next-intl";
+
 import { create } from "zustand";
 
 // ✅ Define your store type (state + actions)

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import CustomizableHeader from "../customizable-header";
+import CustomizableHeader from "../../customizable-header";
 import { getImageUrl } from "@/utils/imageService";
 
 interface Props {
@@ -16,7 +16,6 @@ export default function FeatureCardFrame({
   subheading,
   icon,
 }: Props) {
-  
   return (
     <>
       <div className="flex gap-3 items-center">

@@ -3,11 +3,10 @@ import React from "react";
 import MainContainer from "@/components/main-container";
 import Image from "next/image";
 import MainHeroContent from "./main-hero-content";
-import HeroButtonsGroup from "./hero-buttons-group";
-import { useGlobalDataStore } from "@/store/useGlobalDataStore";
+// import { useGlobalDataStore } from "@/store/useGlobalDataStore";
 
 export default function MainHeroSection() {
-  const { hero } = useGlobalDataStore();
+  // const { hero } = useGlobalDataStore();
 
   return (
     <MainContainer

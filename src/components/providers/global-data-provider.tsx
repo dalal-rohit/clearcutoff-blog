@@ -1,6 +1,5 @@
 'use client'; // This is a client component
 
-import { useEffect, useRef } from 'react';
 
 
 interface GlobalSettingsProviderProps {
@@ -10,7 +9,6 @@ interface GlobalSettingsProviderProps {
 export function GlobalSettingsProvider({
   children,
 }: GlobalSettingsProviderProps) {
-  const initialized = useRef(false);
 
 
 

@@ -3,13 +3,11 @@
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import { motion, useAnimation } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import StateLogoCard from "./state-logo-card";
-import { carouselSection } from "@/data/DummyData";
 import Link from "next/link";
 import { highlightTextUtil } from "@/utils/highlightTextUtil";
 import { Typography } from "@mui/joy";
-import { useLang } from "@/hooks/useLang";
 import MainContainer from "../main-container";
 import { useGlobalDataStore } from "@/store/useGlobalDataStore";
 import { useTranslations } from "next-intl";

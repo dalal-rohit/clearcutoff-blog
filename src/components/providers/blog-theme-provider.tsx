@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
 import joytheme from "@/themes/joytheme";
 import { useGlobalDataStore } from "@/store/useGlobalDataStore";
-import { useLocale } from "next-intl";
 
 type CssVarsProviderProps = {
   children: React.ReactNode;

@@ -2,9 +2,8 @@
 
 import React from "react";
 import Box from "@mui/joy/Box";
-import FeatureCardFrame from "../feature-card-frame";
-import { featureSection } from "@/data/DummyData";
-import { useLang } from "@/hooks/useLang";
+import FeatureCardFrame from "../frames/feature-card-frame";
+
 import CustomizableHeader from "@/components/customizable-header";
 import { useGlobalDataStore } from "@/store/useGlobalDataStore";
 interface Feature {
@@ -12,8 +11,7 @@ interface Feature {
   heading: string;
   headingHighlight: string[];
   subheading: string;
-    icon?: string | { url: string | null; alt: string | null } | null;
-
+  icon?: string | { url: string | null; alt: string | null } | null;
 }
 
 interface FeatureSection {
