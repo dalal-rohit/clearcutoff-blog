@@ -6,7 +6,8 @@ import { routing } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
-import BlogThemeProvider from "@/components/providers/blog-theme-provider";
+import MainThemeProvider from "@/components/providers/main-theme-provider";
+
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
@@ -47,15 +48,17 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+
+
   const fontClass = notoSans.variable;
   // Enable static rendering
   setRequestLocale(locale);
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${fontClass} antialiased`}>
-        <BlogThemeProvider>
+        <MainThemeProvider>
           <NextIntlClientProvider>{children}</NextIntlClientProvider>
-        </BlogThemeProvider>
+        </MainThemeProvider>
       </body>
     </html>
   );

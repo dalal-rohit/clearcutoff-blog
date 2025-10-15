@@ -14,11 +14,30 @@ const config: NextConfig = {
     optimizeCss: true, // remove unused CSS automatically
     inlineCss: true, // inline critical CSS
   },
+  // typescript: {
+  //   ignoreBuildErrors: true, // allows build even with type errors
+  // },
+  // eslint: {
+  //   ignoreDuringBuilds: true, // allows build even with lint errors
+  // },
   images: {
     domains: [
       "img.icons8.com",
       "i.pravatar.cc",
       "cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com",
+    ],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cms.yourdomain.com",
+        pathname: "/api/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3001",
+        pathname: "/**",
+      },
     ],
   },
 };

@@ -67,7 +67,7 @@
 
   --color-brand: #0083ff;
   --color-brand-dark: #006bd1;
-  --color-softskyblue: #F3F7FD;
+  --color-softskyblue: #f3f7fd;
 
   /* Define a color with a scale of shades */
   --color-custom-teal-50: #f0fdfa;
@@ -76,6 +76,14 @@
   /* ... and so on for all your shades */
   --color-custom-teal-500: #14b8a6;
   --color-custom-teal-900: #134e4a;
+
+  /* ✅ Devices (Custom Breakpoints) */
+  --device-xs: 360px;
+  --device-sm: 640px;
+  --device-md: 768px;
+  --device-lg: 1024px;
+  --device-xl: 1280px;
+  --device-2xl: 1536px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -200,4 +208,52 @@ body {
   font-size: var(--fluid-bxs) !important;
   font-weight: var(--fw-medium);
   line-height: var(--flh-bxs);
+}
+
+
+
+.scroll-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+/* Pause animation on hover */
+.scroll-wrapper:hover .scroll-track {
+  animation-play-state: paused;
+}
+
+.scroll-track {
+  display: inline-block;
+}
+
+.scroll-item {
+  display: inline-block;
+  margin: 0 18px !important;
+}
+
+@media (max-width: 768px) {
+  .scroll-item {
+    margin: 0 12px !important;
+  }
+}
+
+/* Scroll Left */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Scroll Right */
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
 }

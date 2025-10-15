@@ -1,14 +1,12 @@
 import clsx from "clsx";
 
-
-
 interface CustomizableHeaderProps {
   // Content props
-  eyebrow?: string;
+  eyebrow?: string | null;
   showEyebrow?: boolean; // Add this new prop
-  heading: string;
-  subheading?: string;
-  highlightText?: string | string[]; // Text to highlight in the heading
+  heading: string | null;
+  subheading?: string | null;
+  highlightText?: string | { [key: string]: string }[] | null; // Text to highlight in the heading
 
   // Styling props
   eyebrowColor?: string;
@@ -66,8 +64,6 @@ export default function CustomizableHeader({
   eyebrowClasses = "heading-small",
   className,
 }: CustomizableHeaderProps) {
-
-
   // Weight mappings
   const weightClasses = {
     normal: "!font-normal",
@@ -76,7 +72,6 @@ export default function CustomizableHeader({
     bold: "!font-bold",
     extrabold: "!font-extrabold",
   };
-
 
   // Spacing mappings
   const spacingClasses = {
@@ -99,13 +94,14 @@ export default function CustomizableHeader({
   const renderHeading = () => {
     if (!highlightText) return heading;
 
-    const highlights = Array.isArray(highlightText)
-      ? highlightText
-      : [highlightText];
+    const highlights: string[] = Array.isArray(highlightText)
+      ? highlightText.map((item) =>
+          typeof item === "string" ? item : Object.values(item).join(" ")
+        )
+      : [highlightText as string];
 
     const regex = new RegExp(`(${highlights.join("|")})`, "gi");
-
-    const parts = heading.split(regex);
+    const parts = (heading ?? "").split(regex);
 
     return parts.map((part, index) =>
       highlights.includes(part) ? (
@@ -121,7 +117,11 @@ export default function CustomizableHeader({
   return (
     <div className={clsx("w-full", className)}>
       <div
-        className={clsx("mx-auto", maxWidthClasses[maxWidth as keyof typeof maxWidthClasses], `${alignment}`)}
+        className={clsx(
+          "mx-auto",
+          maxWidthClasses[maxWidth as keyof typeof maxWidthClasses],
+          `${alignment}`
+        )}
       >
         {eyebrow && showEyebrow && (
           <div

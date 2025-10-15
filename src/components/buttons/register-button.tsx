@@ -10,6 +10,7 @@ type buttonProps = {
   isFull?: boolean;
   loading?: boolean;
   disabled?: boolean;
+  size?: "sm" | "md" | "lg";
 };
 export default function RegisterButton({
   onClick = () => {}, // default: empty function
@@ -17,6 +18,8 @@ export default function RegisterButton({
   isFull = false, // default false
   loading = false, // default false
   disabled = false,
+  size="md",
+
 }: buttonProps) {
   const t = useTranslations("Buttons");
 
@@ -25,6 +28,7 @@ export default function RegisterButton({
   return (
     <Button
       color="primary"
+      size={size}
       fullWidth={isFull}
       disabled={disabled}
       loading={loading}

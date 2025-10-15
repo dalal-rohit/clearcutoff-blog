@@ -55,7 +55,15 @@ declare const messages: {
   },
   "Buttons": {
     "login": "Login",
-    "register": "Start for FREE"
+    "register": "Start for FREE",
+    "logout": "Logout"
+  },
+  "carousel": {
+    "text": "Preparing for other exams? Check All Teaching Exams by Clear Cutoff!",
+    "highlight": "All Teaching Exams",
+    "button": {
+      "text": "View all Courses & Test Series!"
+    }
   },
   "PricingSection": {
     "eyebrow": "Simple. Transparent. Affordable.",

@@ -32,17 +32,14 @@ const joytheme = extendTheme({
   components: {
     JoyButton: {
       styleOverrides: {
-        root: ({ ownerState, theme }) => ({
-          letterSpacing: "normal",
-          fontWeight: theme.vars.fontWeight.md,
-          fontFamily: theme.vars.fontFamily.fallback,
-          outlineWidth: 0,
-          borderRadius: "0.375rem",
-          transition:
-            "color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out",
-          ...(ownerState.size === "md" && {
-            paddingInline: "0.75rem",
-            minHeight: 38,
+        root: ({ ownerState }) => ({
+          borderRadius: "4px",
+          textTransform: "none",
+
+          // ✅ only apply when variant = "outlined"
+          ...(ownerState.variant === "outlined" && {
+            color: "#006bd1", // text color
+            borderWidth: "2px",
           }),
         }),
       },
