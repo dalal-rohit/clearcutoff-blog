@@ -1,4 +1,4 @@
-import FlashSaleTimerBanner from "@/components/blog/flashsale-timer-banner";
+import FlashSaleTimerBanner from "@/components/banner/flashsale-timer-banner";
 import Header from "@/components/blog/header";
 import LeftSidebar from "@/components/blog/left-sidebar";
 import RightSidebar from "@/components/blog/right-sidebar";

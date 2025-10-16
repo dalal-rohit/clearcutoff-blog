@@ -1,4 +1,5 @@
-import FlashSaleTimerBanner from "@/components/blog/flashsale-timer-banner";
+import CountdownBanner from "@/components/banner/countdownbanner";
+import FlashSaleTimerBanner from "@/components/banner/flashsale-timer-banner";
 import Header from "@/components/blog/header";
 import BlogThemeProvider from "@/components/providers/blog-theme-provider";
 import React, { ReactNode } from "react";
@@ -36,7 +37,7 @@ export default async function MarketingLayout({
   return (
     <BlogThemeProvider data={globalData.reviews}>
       <div className="flex flex-col min-h-screen">
-        <FlashSaleTimerBanner message="Flash Sale Ends In" />
+        <CountdownBanner message="Flash Sale Ends In" />
         <Header />
         {/* Main Layout (sidebars fixed, main scrolls) */}
         <div className="flex flex-1 mx-auto w-full relative">
