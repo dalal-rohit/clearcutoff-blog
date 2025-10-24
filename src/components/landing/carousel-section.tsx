@@ -9,7 +9,7 @@ import Link from "next/link";
 import { highlightTextUtil } from "@/utils/highlightTextUtil";
 import { Typography } from "@mui/joy";
 import MainContainer from "../main-container";
-import { useGlobalDataStore } from "@/store/useGlobalDataStore";
+import { useGlobalDataStore } from "@/store/blog/useGlobalDataStore";
 import { useTranslations } from "next-intl";
 
 type Props = {
@@ -25,11 +25,11 @@ export default function CarouselSection({ buttonShow = true }: Props) {
 
   const t = useTranslations("carousel");
 
-  const { logoCarousel } = useGlobalDataStore();
+  const { global } = useGlobalDataStore();
 
   return (
     <MainContainer maxWidth="w-full" padding="p-0">
-      <Box className="flex flex-col gap-[32px]  py-[24px]">
+      <Box id="carousel" className="flex flex-col gap-[32px]  py-[24px]">
         {/* <EdgeHighlight leftColor="from-gray-200/60" rightColor="from-gray-200/60" width="w-12"> */}
         <div className="scroll-wrapper">
           <motion.div
@@ -43,7 +43,7 @@ export default function CarouselSection({ buttonShow = true }: Props) {
             {Array(3)
               .fill(null)
               .flatMap((_, outerIndex) =>
-                logoCarousel?.logos?.map((item, innerIndex) => {
+                global?.logoCarousel?.logos?.map((item, innerIndex) => {
                   return (
                     <div
                       key={`${outerIndex}-${innerIndex}`}

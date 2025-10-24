@@ -3,6 +3,12 @@ type Item = {
   id: string;
   [key: string]: string | null;
 };
+
+type Logo = {
+  url: string | null;
+  alt: string | null;
+}
+
 type FAQs = {
   question: string | null;
   answer: string | null;
@@ -44,18 +50,19 @@ type logos = {
 type LogoItem = {
   heading: string | null;
   subheading: string | null;
-  logo: string | { url: string; alt: string } | null;
+  logo: string |Logo | null;
 };
 
-type Reviews = {
-  field: string | null;
-  gender: string | null;
-  id: string;
-  name: string | null;
-  profile: string | null;
-  rating: number | null;
+
+interface ReviewItem {
+  name: string;
+  profile: string |Logo | null; // Payload upload can return ID or full media object
+  gender: 'male' | 'female';
+  profession: string;
   review: string;
-};
+  reviewHighlight: Item[];
+  rating: number;
+}
 
 // 2️⃣ Define the main structure type
 interface ComparisonTable {
@@ -116,7 +123,7 @@ interface ReviewsSection {
   heading: string;
   subheading: string;
   highlight: Item[];
-  reviews: Item[];
+  reviews: ReviewItem[];
 }
 
 interface GlobalDataState {
@@ -128,4 +135,25 @@ interface GlobalDataState {
   how_it_works: HowItWorksSection;
   logoCarousel: logoCarouselSection;
   reviews: ReviewsSection;
+}
+
+interface Exam {
+    id: number;
+    exam_id: string;
+    name: string;
+    short_name: string;
+    state: string;
+    conducting_body: string;
+    logo_url: string;
+    exam_type: string;
+    exam_frequency: string;
+    evaluation_type: string;
+    upcoming_exam: string;
+    status: "active" | "inactive" | "archived";
+    rating: string;
+    price: number;
+    combo_price: number;
+    marking_schema: string; // or you can parse it to a JSON object
+    createdAt: string;
+    updatedAt: string;
 }

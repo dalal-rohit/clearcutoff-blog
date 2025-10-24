@@ -3,17 +3,20 @@ import CustomizableHeader from "@/components/customizable-header";
 import { Box } from "@mui/joy";
 import React from "react";
 import HowItWorkFram from "../frames/how-it-work-fram";
-import { useGlobalDataStore } from "@/store/useGlobalDataStore";
+import { useGlobalDataStore } from "@/store/blog/useGlobalDataStore";
 
 export default function HowItWorkSection() {
-  
-  const { how_it_works } = useGlobalDataStore();
 
+  const { global } = useGlobalDataStore();
+
+  const how_it_works = global?.how_it_works;
 
   if (!how_it_works) return null;
+
   return (
     <>
       <div
+        id="howitworks"
         className="
         px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32
         py-6 sm:py-6 md:py-8
@@ -35,7 +38,7 @@ export default function HowItWorkSection() {
           />
           <Box className="flex flex-col max-w-[850px] px-2 gap-[32px] md:gap-[56px]">
             {how_it_works?.how_it_works?.map((item, ide) => (
-              <HowItWorkFram key={ide} heading={item.heading} headingHighlight={''} subheading={item.subheading} description={item.description} icon={item.image} buttonText={item.btn_text}  />
+              <HowItWorkFram key={ide} heading={item.heading} headingHighlight={''} subheading={item.subheading} description={item.description} icon={item.image} buttonText={item.btn_text} />
             ))}
           </Box>
         </div>

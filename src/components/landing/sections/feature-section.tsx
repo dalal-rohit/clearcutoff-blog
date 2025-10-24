@@ -5,7 +5,7 @@ import Box from "@mui/joy/Box";
 import FeatureCardFrame from "../frames/feature-card-frame";
 
 import CustomizableHeader from "@/components/customizable-header";
-import { useGlobalDataStore } from "@/store/useGlobalDataStore";
+import { useGlobalDataStore } from "@/store/blog/useGlobalDataStore";
 interface Feature {
   id: string;
   heading: string;
@@ -24,12 +24,15 @@ interface FeatureSection {
 }
 
 export default function FeatureSection() {
-  const { features } = useGlobalDataStore();
+  const { global } = useGlobalDataStore();
 
-  if (!features) return null; // ✅ prevents crash
+  const features = global?.features;
+
+  if (!features) return null;
 
   return (
     <Box
+      id="features"
       display="grid"
       gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
       gap={4}

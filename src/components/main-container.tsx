@@ -27,5 +27,5 @@ export default function MainContainer({
     ${className}
   `;
 
-  return <div className={combinedClasses}>{children}</div>;
+  return <section className={combinedClasses}>{children}</section>;
 }

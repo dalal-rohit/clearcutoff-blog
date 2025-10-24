@@ -1,4 +1,5 @@
 import Button from "@mui/joy/Button";
+import MainContainer from "@/components/main-container";
 import React from "react";
 
 const items = [
@@ -21,6 +22,7 @@ const items = [
 
 export default function SimilarQuestionsSection() {
   return (
+    <MainContainer maxWidth="max-w-[900px]">
     <div className="p-4">
       <div>
         <div className="heading-xlarge font-semibold mb-4">
@@ -45,5 +47,6 @@ export default function SimilarQuestionsSection() {
         ))}
       </div>
     </div>
-  );
+    </MainContainer>
+    );
 }

@@ -1,45 +1,109 @@
 "use client";
 import CardWrap from "@/components/cards/card-wrap";
 import QOption from "@/components/questions/q-option";
+import MainContainer from "@/components/main-container";
 import React from "react";
+import { limitWords } from "@/utils/text/textLimit";
+import Image from "next/image";
 
-export default function AssessmentQuestionBlock() {
+interface AssessmentQuestion {
+  correct_option: number;
+  createdAt: string;
+  exam_instance_id: string;
+  explanation: string;
+  id: number;
+  label_id: string;
+  option_1_image_url: string;
+  option_1_text: string;
+  option_2_image_url: string;
+  option_2_text: string;
+  option_3_image_url: string;
+  option_3_text: string;
+  option_4_image_url: string;
+  option_4_text: string;
+  question_id: string;
+  question_image_url: string;
+  question_number: string;
+  question_text: string;
+  section_id: string;
+  stage_id: string;
+  updatedAt: string;
+}
+
+export default function AssessmentQuestionBlock({ data }: { data: AssessmentQuestion[] }) {
+  const [showExplanation, setShowExplanation] = React.useState<{ [key: number]: boolean }>({});
   return (
-    <div className="p-4">
-      <div>
-        <div className="heading-xlarge font-semibold mb-4">Assessment Questions</div>
-      </div>
+    <MainContainer maxWidth="max-w-[900px]">
 
-      <div>
-        {/* question  */}
-        <div className="heading-large font-semibold mb-2">
-          Question: What is 2 + 2?
-        </div>
-        {/* options  */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map((item) => (
-            <CardWrap key={item} cursor="pointer">
-              <QOption index={item} optiontext={"Option " + item} />
-            </CardWrap>
-          ))}
-        </div>
-        {/* answer  */}
+      <div className="p-4">
         <div>
-          <div className="heading-large font-semibold mb-2">Answer:</div>
-          <div className="heading-small font-semibold mb-2">
-            Option1: What is 2 + 2?
-          </div>
-          <div className="bg-softskyblue p-4 rounded-2xl">
-            <div className="heading-large font-semibold mb-2">Explenation</div>
+          <div className="heading-xlarge font-semibold mb-4">Assessment Questions</div>
+        </div>
+
+        {data?.map((item: AssessmentQuestion) => (
+          <div key={item.id}>
+            {/* question  */}
             <div className="body-large font-semibold mb-2">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Delectus
-              dolorum veritatis blanditiis voluptatibus inventore hic quas
-              eligendi nemo doloribus. Quis quam velit sit cum harum at alias
-              quae voluptatibus aut.
+              {item.id ? `Q${item.id}: ` : ""}
+              <span dangerouslySetInnerHTML={{ __html: item.question_text }} />
+            </div>
+            {item.question_image_url && (
+              <div className="mb-4">
+                <Image
+                  src={item.question_image_url}
+                  alt="Question"
+                  width={800}
+                  height={600}
+                  className="w-auto h-auto max-w-full rounded"
+                />
+              </div>
+            )}
+            {/* options  */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { text: item.option_1_text, img: item.option_1_image_url },
+                { text: item.option_2_text, img: item.option_2_image_url },
+                { text: item.option_3_text, img: item.option_3_image_url },
+                { text: item.option_4_text, img: item.option_4_image_url },
+              ].map((opt, idx) => (
+                <CardWrap key={idx + 1} cursor="pointer">
+                  <QOption index={idx + 1} optiontext={opt.text} imgurl={opt.img || undefined} />
+                </CardWrap>
+              ))}
+            </div>
+            {/* answer  */}
+            <div>
+              <div className="body-large font-semibold mb-2">Answer:</div>
+              <div className="body-large font-semibold mb-2">
+                {(() => {
+                  const options = [
+                    item.option_1_text,
+                    item.option_2_text,
+                    item.option_3_text,
+                    item.option_4_text,
+                  ];
+                  const c = Math.max(1, Math.min(4, item.correct_option));
+                  const text = options[c - 1];
+                  return `Option ${c}: ${text}`;
+                })()}
+              </div>
+              <div className="bg-softskyblue p-4 rounded-2xl">
+                <div className="body-large font-semibold mb-2">Explanation</div>
+                <div className="body-large font-semibold mb-2 whitespace-pre-wrap">
+                  {showExplanation[item.id] ? item.explanation : limitWords(item.explanation, 70)}
+                  {" "}
+                  <button
+                    className="body-large font-semibold mb-2 cursor-pointer text-brand"
+                    onClick={() => setShowExplanation((s) =>  ({ ...s, [item.id]: !s[item.id] }))}
+                  >
+                    {showExplanation[item.id] ? "Show Less" : "Show More"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
-    </div>
+    </MainContainer>
   );
 }

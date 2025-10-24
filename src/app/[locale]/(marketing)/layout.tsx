@@ -8,23 +8,28 @@ interface MarketingLayoutProps {
   params: Promise<{ locale: string }>; // 👈 async, so treat as promise
 }
 async function getGlobalData(locale: string) {
-  const [reviewsRes] = await Promise.all([
+  const [globalData, reviewsRes, faqRes] = await Promise.all([
     fetch(
-      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}//api/globals/global-sections?locale=${locale}`,
+      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/global-sections?locale=${locale}`,
       { cache: "no-store" }
     ),
-    // fetch(
-    //   `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/comparison-table?locale=${locale}`,
-    //   { cache: "no-store" }
-    // ),
+    fetch(
+      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/reviews?locale=${locale}`,
+      { cache: "no-store" }
+    ),
+    fetch(
+      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/faqs?locale=${locale}`,
+      { cache: "no-store" }
+    ),
   ]);
 
-  const [reviews] = await Promise.all([
+  const [global, reviews, faqs] = await Promise.all([
+    globalData.json(),
     reviewsRes.json(),
-    // tableRes.json(),
+    faqRes.json(),
   ]);
 
-  return { reviews };
+  return { global, reviews, faqs };
 }
 
 export default async function MarketingLayout({
@@ -34,8 +39,9 @@ export default async function MarketingLayout({
   const { locale } = await params; // ✅ await before using
 
   const globalData = await getGlobalData(locale);
+
   return (
-    <BlogThemeProvider data={globalData.reviews}>
+    <BlogThemeProvider data={globalData}>
       <div className="flex flex-col min-h-screen">
         <CountdownBanner message="Flash Sale Ends In" />
         <Header />

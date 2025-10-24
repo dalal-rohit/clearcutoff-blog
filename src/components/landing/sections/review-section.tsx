@@ -8,32 +8,27 @@ import InfiniteScroll from "../EmblaCarousel";
 import ReviewCard from "../review-card";
 import ReviewMainCard from "../review-main-card";
 import ReviewTailContent from "../frames/reviews-tail-content";
-import { useGlobalDataStore } from "@/store/useGlobalDataStore";
+import { useGlobalDataStore } from "@/store/blog/useGlobalDataStore";
 
 export default function ReviewSection() {
-  const [reviews1, setReviews1] = React.useState([]);
-  const [reviews2, setReviews2] = React.useState([]);
+  const [reviews1, setReviews1] = React.useState<ReviewItem[]>([]);
+  const [reviews2, setReviews2] = React.useState<ReviewItem[]>([]);
   const { reviews } = useGlobalDataStore();
 
+  if (!reviews) return null;
+
   useEffect(() => {
-    const allReviews = reviews.reviews || [];
+    const allReviews = reviews?.reviews || [];
     const midpoint = Math.ceil(allReviews.length / 2);
-    // setReviews1(allReviews.slice(0, 5));
-    // setReviews2(allReviews.slice(5, 10));
     setReviews1(allReviews.slice(0, midpoint));
     setReviews2(allReviews.slice(midpoint));
-  }, []);
+  }, [reviews]);
 
-  console.log("reviews", reviews);
-  console.log("reviews1", reviews1);
-  console.log("reviews2", reviews2);
-
-  const { currentLang } = useLang();
-  const courseName = "HTET";
 
   return (
     <>
       <div
+        id="reviews"
         className="
           py-6 sm:py-6 md:py-8
           mx-auto w-full
@@ -67,18 +62,20 @@ export default function ReviewSection() {
               {Array(5)
                 .fill(null)
                 .flatMap((_, i) =>
-                  reviews1.map((rev, index) => (
-                    <div className="scroll-item" key={`${i}-${index}`}>
-                      <h1>ksfjasjflajsldfjaskldfjasklfjasklfj</h1>
-                      <ReviewCard
-                        profile={rev.profile}
-                        name={rev}
-                        field={rev.field}
-                        review={rev}
-                        exam={courseName ?? "HTET"}
-                      />
-                    </div>
-                  ))
+                  reviews1?.map((review, index) => {
+                    return (
+                      <div className="scroll-item" key={`${i}-${index}`}>
+                        <ReviewCard
+                          profile={review?.profile}
+                          name={review?.name}
+                          profession={review?.profession}
+                          review={review?.review}
+                          examName={"HTET"}
+                          reviewHighlight={review?.reviewHighlight}
+                        />
+                      </div>
+                    );
+                  })
                 )}
             </InfiniteScroll>
             {/* </div> */}
@@ -88,27 +85,31 @@ export default function ReviewSection() {
               speed={300} // seconds
             >
               {" "}
-             
               {Array(5)
                 .fill(null)
                 .flatMap((_, i) =>
-                  reviews2.map((review, index) => (
-                    <div className="scroll-item" key={`${i}-${index}`}>
-                       <h1>sjfsidi</h1>
-                      {/* <ReviewCard {...review} exam={courseName ?? "HTET"} /> */}
-                    </div>
-                  ))
+                  reviews2?.map((review, index) => {
+                    return (
+                      <div className="scroll-item" key={`${i}-${index}`}>
+                        <ReviewCard
+                          profile={review?.profile}
+                          name={review?.name}
+                          profession={review?.profession}
+                          review={review?.review}
+                          examName={"HTET"}
+                          reviewHighlight={review?.reviewHighlight}
+                          gender={review?.gender}
+                        />
+                      </div>
+                    );
+                  })
                 )}
             </InfiniteScroll>
-            {/* {reviews2.map((review, index) => (
-              <ReviewCard key={index} {...review} />
-            ))} */}
-            {/* </div> */}
           </Box>
           {/* </EdgeHighlight> */}
-          {/* <Box className="flex -mt-50 md:-mt-50 flex-col justify-center items-center gap-[24px]">
+          <Box className="flex -mt-50 md:-mt-50 flex-col justify-center items-center gap-[24px]">
             <ReviewMainCard />
-          </Box> */}
+          </Box>
           <Box className="px-10">
             <ReviewTailContent />
           </Box>

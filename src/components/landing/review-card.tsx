@@ -6,6 +6,8 @@ import { useLang } from "@/hooks/useLang";
 import { replacePlaceholders } from "@/utils/utils";
 import CardPoints from "./card-points";
 import { getImageUrl } from "@/utils/imageService";
+import { useEffect } from "react";
+import { capitalizeFirst } from "@/utils/text/textFormat";
 // FIX: Removed unused imports for React, Chip, and Typography
 // FIX: Removed unused 'id' prop, as flagged in your initial error log.
 
@@ -18,20 +20,21 @@ type LocalizedStringArray = {
 // 'profile' should also be more specific than a generic 'object'.
 interface Props {
   profile?: string | { url: string | null; alt: string | null } | null;
-  exam: string | null;
-  gender: string | null;
-  name: string | null;
-  field: string | null;
-  review: string | null;
-  reviewHighlight: LocalizedStringArray; // This holds an array of strings per language
+  examName?: string | null;
+  gender?: string | null;
+  name?: string | null;
+  profession?: string | null;
+  review?: string | null;
+  reviewHighlight?: Item[]; // This holds an array of strings per language
 }
 
 export default function ReviewCard({
   profile,
   name,
-  field,
+  profession,
   review,
-  exam = "HTET",
+  examName = "HTET",
+  gender,
   reviewHighlight,
 }: Props) {
   const { currentLang } = useLang();
@@ -68,7 +71,9 @@ export default function ReviewCard({
 
           <CardPoints
             heading={name}
-            subheading={field}
+            subheading={`${capitalizeFirst(gender ?? "male")} ${
+              profession ? "- " + profession : ""
+            }`}
             headingClasses="body-large !font-medium"
             subheadingClasses="text-gray-400 body-small  !font-normal"
           />
@@ -93,8 +98,10 @@ export default function ReviewCard({
         </div>
         <div>
           <CardPoints
-            subheading={replacePlaceholders(review, { exam })}
-            subHeadingHighlight={reviewHighlight[currentLang]} // This will now work
+            subheading={replacePlaceholders(review ?? "", {
+              examName: examName ?? "",
+            })}
+            // subHeadingHighlight={reviewHighlight} // This will now work
             subheadingClasses="text-gray-500 body-large !font-normal break-words whitespace-normal"
           />
         </div>

@@ -85,9 +85,9 @@ export default function CardPoints({
 
     const regex = new RegExp(`(${highlights.join("|")})`, "gi");
 
-    const parts = heading.split(regex);
+    const parts = heading?.split(regex);
 
-    return parts.map((part, index) =>
+    return parts?.map((part, index) =>
       highlights.includes(part) ? (
         <span key={index} className={highlightColor}>
           {part}

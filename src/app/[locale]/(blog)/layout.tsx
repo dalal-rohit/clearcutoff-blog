@@ -1,7 +1,5 @@
 import FlashSaleTimerBanner from "@/components/banner/flashsale-timer-banner";
 import Header from "@/components/blog/header";
-import LeftSidebar from "@/components/blog/left-sidebar";
-import RightSidebar from "@/components/blog/right-sidebar";
 import React from "react";
 
 export default function BlogLayout({
@@ -16,15 +14,15 @@ export default function BlogLayout({
       {/* Main Layout (sidebars fixed, main scrolls) */}
       <div className="flex flex-1 mx-auto w-full relative">
         {/* Left Sidebar (fixed) */}
-        <LeftSidebar />
+        {/* <LeftSidebar /> */}
 
         {/* Main Content (scrolls independently) */}
-        <main className="flex-1 ml-0 md:ml-80 mr-0 lg:mr-80 overflow-y-auto">
-          {children}
+        <main className="flex-1 overflow-y-auto">
+            {children}
         </main>
 
         {/* Right Sidebar (fixed) */}
-        <RightSidebar />
+        {/* <RightSidebar /> */}
       </div>
     </div>
   );

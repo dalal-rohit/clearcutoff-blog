@@ -1,6 +1,5 @@
 import { ClassValue, clsx } from "clsx";
 
-
 // Capitalize only the first letter of the first word
 export const capitalizeFirstWord = (str: string): string => {
   if (!str) return "";
@@ -10,18 +9,17 @@ export const capitalizeFirstWord = (str: string): string => {
 
 export function replacePlaceholders(
   text: string | null | undefined,
-  values: Record<string , string>
+  values: Record<string, string | undefined>
 ): string {
-  let result = text;
-
-  if (!result) return "";
+  let result = text ?? "";
 
   for (const key in values) {
     const regex = new RegExp(`{${key}}`, "g");
-    result = result.replace(regex, values[key]);
+    result = result.replace(regex, values[key] ?? "");
   }
   return result;
 }
+
 // helpers/getBgColorClass.ts
 export function getSectionColor(color?: string): string {
   // If backend doesn't send color, fallback to default
@@ -49,11 +47,12 @@ export function getSectionColor(color?: string): string {
 //   return `bg-[${color}]`;
 // }
 // utils/buttonStyles.ts
-export const disabledButtonStyle = (bgColor = "#006BD117", textColor = "#006BD12E") => ({
+export const disabledButtonStyle = (
+  bgColor = "#006BD117",
+  textColor = "#006BD12E"
+) => ({
   "&.Mui-disabled": {
     backgroundColor: bgColor,
     color: textColor,
   },
 });
-
-
