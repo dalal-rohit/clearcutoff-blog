@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import MainThemeProvider from "@/components/providers/main-theme-provider";
+import AuthFlow from "@/components/auth/auth-flow-modal";
 
 
 const notoSans = Noto_Sans({
@@ -57,7 +58,7 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className={`${fontClass} antialiased`}>
         <MainThemeProvider>
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+          <NextIntlClientProvider>{children}<AuthFlow />  </NextIntlClientProvider>
         </MainThemeProvider>
       </body>
     </html>

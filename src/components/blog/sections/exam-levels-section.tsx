@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import CustomizableHeader from '@/components/customizable-header'
 import CardWrap from '@/components/cards/card-wrap'
 import MainContainer from '@/components/main-container'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 type NavItem = {
     id: number | string
@@ -17,8 +17,8 @@ type NavItem = {
 export default function ExamLevelsSection({ data }: { data?: NavItem[] }) {
     const [trail, setTrail] = React.useState<NavItem[]>([])
     const router = useRouter()
+    const pathname = usePathname()
     const [loading, setLoading] = React.useState<boolean>(false);
-
 
     const items = data ?? []
     const roots = items.filter((i) => !i.parent_id)
@@ -32,11 +32,12 @@ export default function ExamLevelsSection({ data }: { data?: NavItem[] }) {
     useEffect(() => {
         if (visible.length === 0) {
             setLoading(true)
-            router.push(`/exam/levels/questions`)
-        }else{
+            const newUrl = `${pathname}/${trail[trail.length - 1].name}`
+            router.push(newUrl)
+        } else {
             setLoading(false)
         }
-    }, [trail])
+    }, [trail, pathname, router, visible.length])
 
     const handleBack = () => setTrail((t) => t.slice(0, -1))
     const handleReset = () => setTrail([])

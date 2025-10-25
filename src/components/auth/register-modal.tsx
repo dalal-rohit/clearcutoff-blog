@@ -3,10 +3,11 @@ import React from 'react'
 import { CustomBottomSheet, CustomModal } from '../modals-bottom-sheet'
 import useIsMobile from '@/hooks/isMobile'
 import Link from 'next/link'
-import { error } from 'console'
+// import { error } from 'console'
 import { MobileNumberInput } from '../inputs/MobileNumberInput'
 import FreeBadge from '../badge/free-badge'
-import { Button } from '@mui/joy'
+import { Button, FormControl, FormHelperText, FormLabel, Typography } from '@mui/joy'
+import Image from 'next/image'
 
 function TitleBlock() {
   return (
@@ -44,22 +45,106 @@ function TermsText() {
 function FormContent() {
   const [phone, setPhone] = React.useState('')
   const isValid = /^[6-9][0-9]{9}$/.test(phone)
-  return (
-    <div className="p-5 space-y-3">
-      <FreeBadge />
-      <TitleBlock />
+
+  const handleSendOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // await sendOtp();
+  };
+
+  const renderNumberInput = () => {
+    return (
       <MobileNumberInput
-        isLogin
+        // ref={mobileInputRef}
+        label=""
         value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        onSubmit={() => { }}
-        // error={error}
-        // inputRef={inputRef}
+        placeholder="10-digit number"
+        icon={
+          <div className="flex gap-1 justify-center items-center -mr-2">
+            <Image
+              src="/images/indian-flage.webp"
+              alt="Indian flag"
+              width={24}
+              height={24}
+              className=""
+            />
+            <span>+91</span>
+          </div>
+        }
+        // error={errorInput}
+        // success={successInput}
+        // onChange={(e) => validatePhone(e.target.value)} // ✅ Pass correct event value
+        inputType="phone"
+        maxLength={10}
       />
-      {/* <PhoneField phone={phone} setPhone={setPhone} /> */}
-      <ContinueButton enabled={isValid} />
-      <TermsText />
-    </div>
+    );
+  };
+
+  return (
+    <form
+      onSubmit={handleSendOtp}
+      className="flex flex-col gap-8 px-6 md:px-10 py-8"
+    >
+      <div className="flex flex-col gap-4">
+        <FreeBadge />
+        <Typography className="heading-large">
+          Create a FREE Account!
+        </Typography>
+        <Typography className="body-medium !font-normal surface-text-gray-muted">
+          Already registered?{" "}
+          <span
+            // onClick={() => openModal({ type: "login" })}
+            className="!font-semibold text-[#0083ff] cursor-pointer"
+          >
+            Login
+          </span>
+        </Typography>
+      </div>
+      <div className="flex flex-col gap-4">
+        <FormControl>
+          <FormLabel className="body-small !font-semibold neutral-blueGrayLight">
+            Mobile Number
+          </FormLabel>
+          {renderNumberInput()}
+          {/* {error && (
+            <FormHelperText sx={{ color: "red" }}>{error}</FormHelperText>
+          )}
+          {/* Show success if exists */}
+          {/* {success && (
+            <FormHelperText sx={{ color: "green" }}>{success}</FormHelperText>
+          )}{" "} */}
+        </FormControl>
+        <Button
+          size="lg"
+          fullWidth
+          // disabled={disabled}
+          type="submit"
+        // loading={isLoading}
+        // sx={{
+        //   ...disabledButtonStyle(),
+        // }}
+        >
+          Continue
+        </Button>
+        <Typography className="text-center body-medium !font-normal surface-text-gray-muted">
+          By Signing Up, I agree to{" "}
+          <Link
+            // onClick={closeModal}
+            href="/terms-and-conditions"
+            className=" text-[#0083ff] cursor-pointer"
+          >
+            Terms & Conditions
+          </Link>{" "}
+          and{" "}
+          <Link
+            // onClick={closeModal}
+            href="/refund-policy"
+            className=" text-[#0083ff] cursor-pointer"
+          >
+            Privacy Policy
+          </Link>
+        </Typography>
+      </div>
+    </form>
   )
 }
 
@@ -71,7 +156,7 @@ export default function RegisterModal() {
         <CustomBottomSheet
           isOpen={true}
           onClose={() => { }}
-          isHeader={true}
+          isHeader={false}
           title="Register"
           subtitle="Register to get started"
         >
@@ -81,7 +166,7 @@ export default function RegisterModal() {
         <CustomModal
           isOpen={true}
           onClose={() => { }}
-          isHeader={true}
+          isHeader={false}
           title="Register"
           subtitle="Register to get started"
           maxWidth="max-w-sm"

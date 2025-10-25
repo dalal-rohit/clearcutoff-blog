@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import React from "react";
 
 
-export async function generateMetadata({ params, searchParams }: { params: { locale: string }, searchParams: { courseId?: string } }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: { params: { locale: string, examName: string }, searchParams: { courseId?: string } }): Promise<Metadata> {
   const locale = params?.locale ?? "en";
   const courseId = searchParams?.courseId ?? ""
   const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
@@ -51,14 +51,20 @@ export default async function Page({
   params,
   searchParams,
 }: {
-  params: { locale: string }
+  params: { locale: string, examName: string }
   searchParams: { courseId?: string }
 }) {
   const locale = params?.locale ?? "en"
-  const courseId = searchParams?.courseId ?? ""
+  const examName = params?.examName ?? ""
 
+    const resCourse = await fetch(
+    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/courses?where[short_name][equals]=${examName}&limit=1&locale=${locale}`,
+    { cache: "no-store" }
+  );
+  const courseData = await resCourse.json();
+  console.log(courseData)
   // Build query string safely
-const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false&sort=name`
+const query = `where[exam_id][equals]=${courseData?.docs[0]?.exam_id}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
 
   // ✅ Correct API fetch
   const res = await fetch(
@@ -74,7 +80,6 @@ const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${local
   const data = await res.json();
 
   console.log(data)
-  console.log(courseId)
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
@@ -95,7 +100,7 @@ const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${local
       />
 
       <MainBreadcrumbs />
-      <ExamLevelsSection data={data?.docs} />
+      <ExamLevelsSection data={data?.docs}  />
     </div>
   );
 }

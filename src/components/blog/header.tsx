@@ -14,6 +14,7 @@ import { useState } from "react";
 import { Button } from "@mui/joy";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuthModal } from "@/store/authModalStore";
 
 type SectionId =
   | "features"
@@ -45,6 +46,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const scrollToSection = useScrollToSection(50); // offset = navbar height
+  const { openModal } = useAuthModal();
 
   return (
     <>
@@ -87,8 +89,8 @@ export default function Header() {
           </ul>
           <div className="flex items-center space-x-4">
             <div className=" gap-2 hidden md:flex">
-              <LoginButton />
-              <RegisterButton isFull={true} />
+              <LoginButton onClick={() => openModal({ type: "login" })}/>
+              <RegisterButton isFull={true} onClick={() => openModal({ type: "register" })}/>
             </div>
             <LanguageSwitcher />
             <div className=" flex md:hidden">

@@ -14,7 +14,7 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
         // Save in client-side store (optional)
         setSelectedCourse(item)
         // Navigate with query param for the server to read
-        router.push(`/exam/levels?courseId=${encodeURIComponent(item.exam_id)}`)
+        router.push(`/${item.short_name}`)
     }
 
     return (

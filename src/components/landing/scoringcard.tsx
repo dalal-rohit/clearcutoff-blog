@@ -6,7 +6,7 @@ interface ScoringCardProps {
   rating?: number;
 }
 
-export default function ScoringCard({ rating }: ScoringCardProps) {
+export default function ScoringCard({ rating=4.5 }: ScoringCardProps) {
   const isValidRating = typeof rating === "number" && !isNaN(rating);
   const t = useTranslations("CourseHeader");
 
