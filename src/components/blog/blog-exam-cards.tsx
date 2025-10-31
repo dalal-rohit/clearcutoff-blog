@@ -4,8 +4,30 @@ import MainContainer from '@/components/main-container'
 import CustomizableHeader from '@/components/customizable-header'
 import { useRouter } from 'next/navigation'
 import { useSelectedDataStore } from '@/store/blog/useSelectedDataStore'
-import CourseCard from '../cards/course-card'
+import CardWrap from '../cards/card-wrap'
+import { highlightTextUtil } from '@/utils/highlightTextUtil'
+import Image from 'next/image'
 
+const ExamCourseCard = ({ item, onClick }: { item: Exam, onClick: () => void }) => {
+    return (
+        <CardWrap onClick={onClick} cursor='pointer' borderwidth={3}>
+            <div className='flex items-center gap-4'>
+                <div>
+                    <Image
+                        src={item.logo_url}
+                        alt={item.name}
+                        width={64}
+                        height={64}
+                    />
+                </div>
+                <div>
+                    <h3 className='heading-medium text-black'>{item.short_name}</h3>
+                    <p className='body-small'>{item.exam_type} Exam</p>
+                </div>
+            </div>
+        </CardWrap>
+    )
+}
 
 export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
     const router = useRouter()
@@ -13,18 +35,36 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
     const onSelect = (item: Exam) => {
         // Save in client-side store (optional)
         setSelectedCourse(item)
-        // Navigate with query param for the server to read
-        router.push(`/${item.short_name}`)
+        const examId = item.exam_id;
+
+        // Extract value after the underscore (_) and convert to lowercase
+        const formattedId = examId.split("_")[1]?.toLowerCase() ?? examId.toLowerCase();
+
+        // Navigate with clean lowercase URL
+        router.push(`/${formattedId}`);
+
     }
+
+    const centralExams = data.filter(item => item.state.toLowerCase().includes('india') && item.status.toLowerCase().includes("active"))
+    const stateExams = data
+        .filter(item => !item.state.toLowerCase().includes("india") && item.status.toLowerCase().includes("active"))
+        .reduce((groups, exam) => {
+            const key = exam.state;
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(exam);
+            return groups;
+        }, {} as Record<string, Exam[]>);
+
+
 
     return (
         <MainContainer maxWidth="max-w-[1100px]">
-            <section className="py-10 md:py-14">
+            <section className="py-10 md:py-14 space-y-10">
                 <CustomizableHeader
-                    eyebrow={'Prepare for All Teaching Exams'}
-                    heading={'All Teaching Exams at One Place!'}
-                    highlightText={'Teaching Exams'}
-                    subheading={'Explore Complete Courses & Test Series for All Teaching Exams and get started for FREE.'}
+                    showEyebrow={false}
+                    heading={'Exams on Clear Cutoff'}
+                    highlightText={'Clear Cutoff'}
+                    subheading={'Start your journey of success with Clear Cutoff Academy'}
                     headingColor="text-gray-900"
                     highlightColor="text-blue-500"
                     subheadingColor="text-gray-600"
@@ -33,20 +73,39 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                     headingSize="display-medium"
                 />
 
-                <div className="mt-8 md:mt-12 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                    {data.map((item) => {
-                        return (
-                            <CourseCard
-                                key={item.id}
-                                item={item}
-                                viewMoreDetails={() => onSelect(item)}
-                                startForFree={() => onSelect(item)}
-                            />
-                        )
-                    })}
-                </div>
+                <div className='space-y-10'>
+                    <div className='w-full'>
+                        <div className="heading-large">{highlightTextUtil('Central Teaching Exams', 'Central')}</div>
+                        <div className="mt-4 md:mt-5 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                            {centralExams.map((item) => {
+                                return (
+                                    <ExamCourseCard key={item.id} item={item} onClick={() => onSelect(item)} />
+                                )
+                            })}
+                        </div>
+                    </div>
 
-                <div className="mt-12 md:mt-16 text-center space-y-6">
+                    <div className='w-full'>
+                        <div className="heading-large">{highlightTextUtil('State Teaching Exams', 'State')}</div>
+                        <div className="mt-4 md:mt-5 grid items-start gap-5 ">
+                            {Object.entries(stateExams).map(([state, exams]) => {
+                                return (
+                                    <div key={state} >
+                                        <h3 className="heading-large neutral-blueGrayLight">{state}</h3>
+                                        <div className={["mt-2 grid items-start gap-5 grid-cols-2 ", exams.length > 3 ? "md:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-2 lg:grid-cols-3"].join(' ')}>
+                                            {exams.map((item) => {
+                                                return (
+                                                    <ExamCourseCard key={item.id} item={item} onClick={() => onSelect(item)} />
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                </div>
+                <div className=" text-center space-y-6">
                     <p className="text-xl md:text-2xl text-gray-700">
                         Used by <span className="font-bold text-blue-600">10,000+</span> students to clear TET exams.
                     </p>
@@ -64,6 +123,6 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                     </div>
                 </div>
             </section>
-        </MainContainer>
+        </MainContainer >
     )
 }

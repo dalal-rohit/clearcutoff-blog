@@ -5,6 +5,8 @@ import MainContainer from "@/components/main-container";
 import React from "react";
 import { limitWords } from "@/utils/text/textLimit";
 import Image from "next/image";
+import Link from "next/link";
+import RegisterButton from "@/components/buttons/register-button";
 
 interface AssessmentQuestion {
   correct_option: number;
@@ -87,17 +89,21 @@ export default function AssessmentQuestionBlock({ data }: { data: AssessmentQues
                   return `Option ${c}: ${text}`;
                 })()}
               </div>
-              <div className="bg-softskyblue p-4 rounded-2xl">
-                <div className="body-large font-semibold mb-2">Explanation</div>
-                <div className="body-large font-semibold mb-2 whitespace-pre-wrap">
+              <div className="bg-softskyblue p-5 rounded-2xl shadow-lg backdrop-blur-md ring-1 ring-blue-100/60">
+                <div className="body-large font-semibold mb-3">Explanation:</div>
+                <div className="body-large font-semibold mb-4 whitespace-pre-wrap">
                   {showExplanation[item.id] ? item.explanation : limitWords(item.explanation, 70)}
                   {" "}
                   <button
-                    className="body-large font-semibold mb-2 cursor-pointer text-brand"
-                    onClick={() => setShowExplanation((s) =>  ({ ...s, [item.id]: !s[item.id] }))}
+                    className="body-large font-semibold cursor-pointer text-brand"
+                    onClick={() => setShowExplanation((s) => ({ ...s, [item.id]: !s[item.id] }))}
                   >
                     {showExplanation[item.id] ? "Show Less" : "Show More"}
                   </button>
+                </div>
+                <div className="flex justify-center">
+                  <RegisterButton isFull={true} text="SignUp to Know More" />
+
                 </div>
               </div>
             </div>

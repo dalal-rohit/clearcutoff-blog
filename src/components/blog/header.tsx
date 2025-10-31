@@ -60,11 +60,11 @@ export default function Header() {
               width={160}
               height={42}
             />
-            <div className="text-brand heading-large">Academy</div>
+            {/* <div className="text-brand heading-large">Academy</div> */}
           </div>
 
-          <ul className="hidden md:flex items-center space-x-6 gap-4">
-            {links.map((link, index) => (
+          <ul className="hidden md:flex items-center space-x-2 gap-4">
+            {/* {links.map((link, index) => (
               <button
                 key={`${link.id}-${index}`}
                 onClick={() => scrollToSection(link.id)}
@@ -72,25 +72,13 @@ export default function Header() {
               >
                 {link.label}
               </button>
-            ))}
+            ))} */}
 
-            {/* <button
-              onClick={() => scrollToSection("features")}
-              className="hover:text-blue-600 transition"
-            >
-              Features
-            </button>
-            <button
-              onClick={() => scrollToSection("reviews")}
-              className="hover:text-blue-600 transition"
-            >
-              Reviews
-            </button> */}
           </ul>
           <div className="flex items-center space-x-4">
             <div className=" gap-2 hidden md:flex">
-              <LoginButton onClick={() => openModal({ type: "login" })}/>
-              <RegisterButton isFull={true} onClick={() => openModal({ type: "register" })}/>
+              <LoginButton />
+              <RegisterButton isFull={true}/>
             </div>
             <LanguageSwitcher />
             <div className=" flex md:hidden">
@@ -151,30 +139,30 @@ export default function Header() {
                     variant="outlined"
                     size="lg"
                     fullWidth
-                    // onClick={async () => {
-                    //   openModal({ type: "login" });
-                    //   setIsMenuOpen(false);
-                    //   await logAmplitudeEvent("Authentication Initiated", {
-                    //     initial_intent: "login",
-                    //     element_location: "navbar_menu",
-                    //     element_type: "button",
-                    //   });
-                    // }}
+                  // onClick={async () => {
+                  //   openModal({ type: "login" });
+                  //   setIsMenuOpen(false);
+                  //   await logAmplitudeEvent("Authentication Initiated", {
+                  //     initial_intent: "login",
+                  //     element_location: "navbar_menu",
+                  //     element_type: "button",
+                  //   });
+                  // }}
                   >
                     Log In
                   </Button>
                   <Button
                     size="lg"
                     fullWidth
-                    // onClick={async () => {
-                    //   openModal({ type: "register" });
-                    //   setIsMenuOpen(false);
-                    //   await logAmplitudeEvent("Authentication Initiated", {
-                    //     initial_intent: "login",
-                    //     element_location: "navbar_menu",
-                    //     element_type: "button",
-                    //   });
-                    // }}
+                  // onClick={async () => {
+                  //   openModal({ type: "register" });
+                  //   setIsMenuOpen(false);
+                  //   await logAmplitudeEvent("Authentication Initiated", {
+                  //     initial_intent: "login",
+                  //     element_location: "navbar_menu",
+                  //     element_type: "button",
+                  //   });
+                  // }}
                   >
                     Start for FREE
                   </Button>

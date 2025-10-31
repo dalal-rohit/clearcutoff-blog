@@ -3,6 +3,7 @@
 import React from "react";
 import Button from "@mui/joy/Button";
 import { useTranslations } from "next-intl";
+import { useAuthModal } from "@/store/authModalStore";
 
 type buttonProps = {
   onClick?: () => void | Promise<void>;
@@ -24,6 +25,7 @@ export default function RegisterButton({
   const t = useTranslations("Buttons");
 
   const buttonText = text ? text : t("register");
+  const { openModal } = useAuthModal();
 
   return (
     <Button
@@ -32,7 +34,7 @@ export default function RegisterButton({
       fullWidth={isFull}
       disabled={disabled}
       loading={loading}
-      onClick={onClick}
+      onClick={() => openModal({ type: "register" })}
     >
       {buttonText}
     </Button>

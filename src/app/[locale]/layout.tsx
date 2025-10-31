@@ -5,10 +5,11 @@ import { routing } from "@/i18n/routing";
 
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import MainThemeProvider from "@/components/providers/main-theme-provider";
 import AuthFlow from "@/components/auth/auth-flow-modal";
 
+export const dynamicParams = true;
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",

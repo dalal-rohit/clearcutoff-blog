@@ -1,23 +1,24 @@
-import NotFound from "@/app/not-found";
-import ExamLevelsSection from "@/components/blog/sections/exam-levels-section";
 import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
-import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
 import React from "react";
+import { Metadata } from "next";
+import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
+import TestByYears from "@/components/blog/assessment-question/test-by-years";
+import { notFound } from "next/navigation";
+import { unFormatSlug } from "@/utils/slugify";
 
-
-export async function generateMetadata({ params, searchParams }: { params: { locale: string, examName: string }, searchParams: { courseId?: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { locale: string, level_id: string } }): Promise<Metadata> {
   const locale = params?.locale ?? "en";
-  const courseId = searchParams?.courseId ?? ""
-  const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
-  try {
+  const levelId = params?.level_id;
+  const query = `where[stage_id][equals]=${levelId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
 
-    // ✅ Correct API fetch
+  try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/e-navigation?${query}`,
+      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/mapping-instance-and-stage?${query}`,
       { cache: "no-store" }
-    )
+    );
+
+
+
     const data = await res.json();
     const baseTitle = (data?.seoTitle as string) || "Teaching Exams";
     const baseDescription =
@@ -49,42 +50,39 @@ export async function generateMetadata({ params, searchParams }: { params: { loc
   }
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { locale: string, examName: string }
-}) {
-  const locale = params?.locale ?? "en";
-
+export default async function page({ params }: { params: { locale: string, examName: string, level_id: string } }) {
+  const locale = params?.locale ?? "en"
   const examName = params?.examName?.toUpperCase() ?? "";
+  const levelId = params?.level_id
 
-  
-  // Build query string safely
-  const query = `where[exam_id][like]=${examName}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
+  const query = `where[stage_id][like]=${examName}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
 
-  // ✅ Correct API fetch
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/e-stage?${query}`,
-    { cache: "no-store" }
-  )
+  const res = await fetch(`${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/mapping-instance-and-stage?${query}`, {
+    cache: "no-store",
+  });
 
+  // ✅ Handle failed response (404, 500 etc.)
   if (!res.ok) {
-    return <NotFound />;
+    return notFound();
   }
 
   const data = await res.json();
 
+  // ✅ SAFETY CHECK: if no docs found then show NotFound
+  if (!data?.docs || data.docs.length === 0) {
+    return notFound();
+  }
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
-  const examsUrl = `${homeUrl}/${params?.examName}`;
 
   const breadcrumbItems=[
     { name: "Home", url: homeUrl },
-    { name: examName, url: examsUrl },
+    { name: unFormatSlug(params?.examName.toUpperCase()), url: `${homeUrl}/${params?.examName}` },
+    { name: unFormatSlug(params?.level_id.toUpperCase()), url: `${homeUrl}/${params?.examName}/${params?.level_id}` },
   ]
 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
-
   return (
     <div>
 
@@ -94,7 +92,10 @@ export default async function Page({
       />
 
       <MainBreadcrumbs items={breadcrumbItems}/>
-      <ExamLevelsSection data={data?.docs} examName={examName} />
+
+      <TestByYears data={data?.docs} examName={examName} />
+      {/* <SimilarQuestionsSection /> */}
+      {/* <OthersExamsSection /> */}
     </div>
   );
 }

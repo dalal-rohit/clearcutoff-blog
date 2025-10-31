@@ -209,7 +209,81 @@ body {
   font-weight: var(--fw-medium);
   line-height: var(--flh-bxs);
 }
+.text-body {
+  color: #737780 !important;
+}
+.surface-text-gray-normal {
+  color: #192839 !important;
+}
+.neutral-blueGrayLight {
+  color: var(--neutral-blueGrayLight) !important;
+}
+.back-neutral-blueGrayLight {
+  background: var(--neutral-blueGrayLight) !important;
+}
+.subtle-background {
+  background: #f1f5fa !important;
+}
+.surface-success-background {
+  background: var(--surface-success) !important;
+}
+.yellow-200 {
+  color: #192839 !important;
+}
+.neutral-500 {
+  color: #8c8b89 !important;
+}
+.surface-text-primary-normal {
+  color: #0083ff !important;
+}
+.surface-text-gray-muted {
+  color: #768ea7 !important;
+}
+.interactive-text-positive-normal {
+  color: #008743 !important;
+}
+.interactive-text-onPrimary-normal {
+  color: #ffffff !important;
+}
+.feedback-background-notice-intense {
+  color: #e9690c !important;
+}
+.interactive-text-notice-normal {
+  color: #c65c10 !important;
+}
+.surface-border-gray-normal {
+  color: var(--surface-border-gray-normal) !important;
+}
+.feedback-background-positive-intense {
+  color: #00a251 !important;
+}
+.feedback-background-negative-intense {
+  color: #d92d20 !important;
+}
+.back-feedback-background-positive-intense {
+  background: var(--feedback-background-positive-intense) !important;
+}
+/* YouTubePlayerWithProgress.css */
+.youtube-container {
+  max-width: 800px;
+  margin: auto;
+}
 
+.progress-bar-container {
+  width: 100%;
+  height: 10px;
+  background-color: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #4caf50;
+  width: 0%;
+  transition: width 0.3s ease;
+}
 
 
 .scroll-wrapper {
@@ -256,4 +330,99 @@ body {
   100% {
     transform: translateX(0%);
   }
+}
+
+
+
+
+.custom {
+  font-family: var(--font-noto-sans), sans-serif;
+  line-height: 1.7;
+  color: #374151; /* Tailwind gray-700 */
+}
+
+/* Headings */
+.custom h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+.custom h2 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+.custom h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0.75rem 0;
+}
+.custom h4,
+.custom h5,
+.custom h6 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+/* Paragraph */
+.custom p {
+  margin: 0.75rem 0;
+}
+
+/* Lists */
+.custom ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+.custom ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+.custom li {
+  margin: 0.25rem 0;
+}
+
+/* Blockquote */
+.custom blockquote {
+  border-left: 4px solid #9ca3af; /* gray-400 */
+  padding-left: 1rem;
+  font-style: italic;
+  color: #4b5563; /* gray-600 */
+  margin: 1rem 0;
+}
+
+/* Code */
+.custom code {
+  background: #f3f4f6; /* gray-100 */
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.95rem;
+}
+.custom pre {
+  background: #1f2937; /* gray-900 */
+  color: #f9fafb; /* gray-50 */
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* Links */
+.custom a {
+  color: #2563eb; /* blue-600 */
+  text-decoration: underline;
+}
+.custom a:hover {
+  color: #1d4ed8; /* blue-700 */
+}
+
+/* Horizontal rule */
+.custom hr {
+  border: none;
+  border-top: 1px solid #e5e7eb; /* gray-200 */
+  margin: 1.5rem 0;
 }

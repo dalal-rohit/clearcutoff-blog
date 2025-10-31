@@ -2,6 +2,7 @@
 import React from "react";
 import Button from "@mui/joy/Button";
 import { useTranslations } from "next-intl";
+import { useAuthModal } from "@/store/authModalStore";
 
 type buttonProps = {
   onClick?: () => void;
@@ -19,6 +20,7 @@ export default function LoginButton({
   disabled = false,
 }: buttonProps) {
   const t = useTranslations("Buttons");
+  const { openModal } = useAuthModal();
 
   const buttonText = text ? text : t("login");
 
@@ -28,7 +30,7 @@ export default function LoginButton({
       fullWidth={isFull}
       disabled={disabled}
       loading={loading}
-      onClick={onClick}
+      onClick={() => openModal({ type: "login" })}
     >
       {buttonText}
     </Button>

@@ -25,7 +25,7 @@ export default function HeaderWrapper({ children }: Props) {
 
   return (
     <header
-      className={`bg-white h-16 sticky top-0 !z-50 sm:px-4 ${
+      className={`bg-white sticky top-0 !z-50 sm:px-4 ${
         scrolled ? "shadow-md" : ""
       }`}
     >

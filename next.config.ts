@@ -8,6 +8,7 @@ const withNextIntl = createNextIntlPlugin({
 });
 
 const config: NextConfig = {
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
   reactStrictMode: true,
   swcMinify: true, // minify JS using SWC
   experimental: {

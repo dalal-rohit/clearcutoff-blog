@@ -1,16 +1,21 @@
-import type { Metadata } from "next";
-import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
-import React from "react";
-import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
 import BlogExamCardsSection from "@/components/blog/blog-exam-cards";
+import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
+import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
+import { Metadata } from "next";
+import React from "react";
 
-export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
+
+export async function generateMetadata({ params, searchParams }: { params: { locale: string, examName: string }, searchParams: { courseId?: string } }): Promise<Metadata> {
   const locale = params?.locale ?? "en";
+  const courseId = searchParams?.courseId ?? ""
+  const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
   try {
+
+    // ✅ Correct API fetch
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/courses?locale=${locale}`,
+      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/courses?${query}`,
       { cache: "no-store" }
-    );
+    )
     const data = await res.json();
     const baseTitle = (data?.seoTitle as string) || "Teaching Exams";
     const baseDescription =
@@ -42,33 +47,44 @@ export async function generateMetadata({ params }: { params: { locale: string } 
   }
 }
 
-export default async function Page({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? "en";
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/courses?locale=${locale}`,
+export default async function Page({
+  params,
+}: {
+  params: { locale: string, examName: string }
+}) {
+  const locale = params?.locale ?? "en"
+
+ const resCourses = await fetch(
+    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/exams?locale=${locale}&limit=0&depth=2`,
     { cache: "no-store" }
   );
-  const data = await res.json();
+
+  if (!resCourses.ok) {
+    throw new Error("Failed to fetch e-navigation data")
+  }
+
+
+  const data = await resCourses.json();
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
-  const examsUrl = `${homeUrl}/exam`;
-  const pageTitle = (data?.seoTitle as string) || "Teaching Exams";
 
-  const breadcrumbLd = getBreadcrumbSchema([
-    { name: "Exam", url: homeUrl },
-    { name: pageTitle, url: examsUrl },
-  ]);
+    const breadcrumbItems=[
+      { name: "Home", url: homeUrl },
+    ]
+
+  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <div>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <MainBreadcrumbs />
-      <BlogExamCardsSection data={data?.docs} />
-      {/* <RegisterModal /> */}
+
+      <MainBreadcrumbs items={breadcrumbItems}/>
+      <BlogExamCardsSection data={data?.docs}  />
     </div>
   );
 }
