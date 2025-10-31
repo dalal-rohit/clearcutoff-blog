@@ -51,7 +51,8 @@ export async function generateMetadata({ params }: { params: { locale: string, q
 export default async function page({ params }: { params: { locale: string, examName: string, level_id: string, year: string, questionId: string } }) {
   const locale = params?.locale ?? "en";
   const str = params?.questionId ?? "";
-  const questionId = str.split("-")[1];
+  const questionId = str.split("-").pop();
+  console.log("questionId", questionId);
   const res = await fetch(`${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/questions?where[id][equals]=${questionId}&locale=${locale}&limit=5&depth=2`, {
     cache: "no-store",
   });

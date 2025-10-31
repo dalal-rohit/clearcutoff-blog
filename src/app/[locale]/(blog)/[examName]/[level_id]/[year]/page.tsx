@@ -63,7 +63,6 @@ export default async function page({ params }: { params: { locale: string, examN
   });
   const data = await res.json();
 
-  console.log("data", data);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
