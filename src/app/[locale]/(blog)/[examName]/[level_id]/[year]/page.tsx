@@ -54,7 +54,9 @@ export default async function page({ params }: { params: { locale: string, examN
   const locale = params?.locale ?? "en"
   const examName = params?.examName
 
-  const query = `where[exam_instance_id][equals]=${params?.year}&where[language_code][equals]=${locale == "en" ? "english" : "hindi"}&limit=0&depth=2`
+  const examYear = params?.year.replace(/-/g, "_").toUpperCase();
+
+  const query = `where[exam_instance_id][equals]=${examYear}&where[language_code][equals]=${locale == "en" ? "english" : "hindi"}&limit=0&depth=2`
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/questions?${query}`, {
     cache: "no-store",
