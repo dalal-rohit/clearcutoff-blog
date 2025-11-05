@@ -1,38 +1,35 @@
-import type { MetadataRoute } from "next";
+import { MetadataRoute } from "next";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+const PAYLOAD_API = `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api`;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Fetch dynamic data (Exams, Courses, Blog, etc.)
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/exams?limit=100&depth=0`,
-    { cache: "no-store" }
-  );
+  const urls: MetadataRoute.Sitemap = [];
 
-  const data = await res.json();
+  try {
+    // Fetch all exams (like reet, ctet, htet)
+    const res = await fetch(`${PAYLOAD_API}/exams?limit=100`, { cache: "no-store" });
+    const exams = (await res.json()).docs || [];
 
-  // Map dynamic URLs
-  const dynamicLinks =
-    data?.docs?.map((exam: any) => ({
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/${exam.exam_id.toLowerCase()}`,
-      lastModified: new Date(exam.updatedAt || new Date()).toISOString(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    })) ?? [];
+    for (const exam of exams) {
+      const examId = exam.exam_id;
 
-  // Add static pages
-  const staticLinks = [
-    {
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: "monthly",
-      priority: 1.0,
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/about`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-  ];
+      // Extract value after the underscore (_) and convert to lowercase
+      const formattedId = examId.split("_")[1]?.toLowerCase() ?? examId.toLowerCase();
+      urls.push({
+        url: `${BASE_URL}/sitemaps/${formattedId}.xml`,
+        lastModified: new Date(exam.updatedAt || Date.now()),
+      });
+    }
 
-  return [...staticLinks, ...dynamicLinks];
+    // Add root/home page too
+    urls.push({
+      url: BASE_URL,
+      lastModified: new Date(),
+    });
+  } catch (err) {
+    console.error("Error generating main sitemap:", err);
+  }
+
+  return urls;
 }

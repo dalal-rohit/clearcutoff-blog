@@ -2,8 +2,9 @@ import NotFound from "@/app/not-found";
 import ExamLevelsSection from "@/components/blog/sections/exam-levels-section";
 import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
 import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
+import { formatToSlug } from "@/utils/slugify";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import React from "react";
 
 
@@ -83,6 +84,13 @@ export default async function Page({
     { name: examName, url: examsUrl },
   ]
 
+  
+
+  if (data.docs.length === 1) {
+    const singleLevel = data.docs[0];
+     const targetId = formatToSlug(singleLevel.name)
+    redirect(`/${examName.toLowerCase()}/${encodeURIComponent(targetId)}`);
+  } 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (

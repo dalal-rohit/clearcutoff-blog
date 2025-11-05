@@ -3,7 +3,7 @@ import React from "react";
 import { Metadata } from "next";
 import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
 import TestByYears from "@/components/blog/assessment-question/test-by-years";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { unFormatSlug } from "@/utils/slugify";
 
 export async function generateMetadata({ params }: { params: { locale: string, level_id: string } }): Promise<Metadata> {
@@ -73,10 +73,12 @@ export default async function page({ params }: { params: { locale: string, examN
     return notFound();
   }
 
+
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
 
-  const breadcrumbItems=[
+  const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: unFormatSlug(params?.examName.toUpperCase()), url: `${homeUrl}/${params?.examName}` },
     { name: unFormatSlug(params?.level_id.toUpperCase()), url: `${homeUrl}/${params?.examName}/${params?.level_id}` },
@@ -91,7 +93,7 @@ export default async function page({ params }: { params: { locale: string, examN
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
-      <MainBreadcrumbs items={breadcrumbItems}/>
+      <MainBreadcrumbs items={breadcrumbItems} />
 
       <TestByYears data={data?.docs} examName={examName} />
       {/* <SimilarQuestionsSection /> */}

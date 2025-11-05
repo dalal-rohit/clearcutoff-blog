@@ -6,7 +6,7 @@ import { Locale, useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { AppLocale } from "@/types/components/language";
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ onClick }: { onClick: () => void }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
@@ -29,7 +29,7 @@ export default function LanguageSwitcher() {
 
   return (
     <button
-      onClick={() => switchLanguage(nextLocale as Locale)}
+      onClick={onClick}
       disabled={isPending}
       className="flex items-center gap-2 rounded-lg border px-3 py-2 bg-white hover:bg-gray-100 shadow-sm transition disabled:opacity-50"
     >

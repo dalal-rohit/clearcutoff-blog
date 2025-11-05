@@ -15,6 +15,7 @@ import { Button } from "@mui/joy";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthModal } from "@/store/authModalStore";
+import LanguageModal from "../feature/language-modal";
 
 type SectionId =
   | "features"
@@ -44,6 +45,7 @@ const Overlay = ({ onClick }: { onClick: () => void }) => (
 );
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
 
   const scrollToSection = useScrollToSection(50); // offset = navbar height
   const { openModal } = useAuthModal();
@@ -80,7 +82,7 @@ export default function Header() {
               <LoginButton />
               <RegisterButton isFull={true}/>
             </div>
-            <LanguageSwitcher />
+            <LanguageSwitcher onClick={() => setIsLanguageModalOpen(true)} />
             <div className=" flex md:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -172,6 +174,7 @@ export default function Header() {
           )}
         </AnimatePresence>
       </HeaderWrapper>
+      <LanguageModal isOpen={isLanguageModalOpen} onClose={() => setIsLanguageModalOpen(false)} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 
 "use client";
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import CardWrap from '@/components/cards/card-wrap'
 import { limitWords } from '@/utils/text/textLimit'
@@ -10,6 +10,8 @@ import { Button } from '@mui/joy';
 import CourseCheckBadge from '@/components/ui/badge/course-check-badge';
 import { useParams, usePathname } from 'next/navigation';
 import { formatToSlug } from '@/utils/slugify';
+import YearListModal from '@/components/feature/year-list-modal';
+import { useLanguageStore } from '@/store/useLanguageStore';
 
 interface AssessmentQuestion {
     correct_option: number;
@@ -17,6 +19,7 @@ interface AssessmentQuestion {
     exam_instance_id: string;
     explanation: string;
     id: number;
+    language_code: string;
     label_id: string;
     option_1_image_url: string;
     option_1_text: string;
@@ -38,9 +41,46 @@ interface AssessmentQuestion {
 export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) {
     const [loadingId, setLoadingId] = React.useState<number | null>(null);
     const [visibleCount, setVisibleCount] = React.useState<number>(10);
-    const shown = Array.isArray(data) ? data.slice(0, Math.min(visibleCount, data.length)) : [];
+    const [allData, setAllData] = React.useState<AssessmentQuestion[]>([]);
 
-    const basePath= usePathname();
+    const { courseLanguage } = useLanguageStore();
+
+    useEffect(() => {
+        if (!data || data.length === 0) return;
+
+        const courseLangName =
+            courseLanguage.toLowerCase() === 'en' ? 'english' : 'hindi';
+
+        const combinedData = data
+            // Filter phase
+            .filter(item => {
+                const lang = item.language_code.toLowerCase();
+                // Keep selected course language or anything that's not English/Hindi
+                return lang === courseLangName || (lang !== 'english' && lang !== 'hindi');
+            })
+            // Sort phase
+            .sort((a, b) => {
+                const aLang = a.language_code.toLowerCase();
+                const bLang = b.language_code.toLowerCase();
+                const aIsCourseLang = aLang === courseLangName;
+                const bIsCourseLang = bLang === courseLangName;
+
+                // Put selected language first
+                if (aIsCourseLang && !bIsCourseLang) return -1;
+                if (!aIsCourseLang && bIsCourseLang) return 1;
+
+                // Then sort alphabetically
+                return aLang.localeCompare(bLang);
+            });
+
+        setAllData(combinedData);
+    }, [data, courseLanguage]);
+
+
+    const shown = Array.isArray(allData) ? allData.slice(0, Math.min(visibleCount, allData.length)) : [];
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    const basePath = usePathname();
 
     const routeParams = useParams<{ locale: string; examName: string; level_id: string; year: string }>();
     const examName = routeParams?.examName;
@@ -78,11 +118,15 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
                             })}
 
                         </div>
-                        <div className='col-span-2 flex items-start'>
+                        <div className='col-span-2 flex items-start gap-2'>
                             <div className='rounded-md subtle-background text-blue-900 px-3 md:px-6 py-2'>
-                                <div className='font-semibold neutral-blueGrayLight'>{Array.isArray(data) ? data.length : 0}</div>
+                                <div className='font-semibold neutral-blueGrayLight'>{Array.isArray(allData) ? allData.length : 0}</div>
                                 <div className='text-xs neutral-blueGrayLight'>Questions</div>
                             </div>
+                            <div className='md:flex hidden'>
+                                <Button variant="outlined" className="shrink-0" onClick={() => setIsOpen(true)}>Years List</Button>
+                            </div>
+
                         </div>
 
                     </div>
@@ -102,7 +146,7 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
 
                 <div className="grid grid-cols-1 gap-4">
 
-                    {shown?.map((item,index) => {
+                    {shown?.map((item, index) => {
                         const plain = item.question_text?.replace(/<[^>]*>/g, "") || "";
                         const snippet = limitWords(plain, 25);
                         return (
@@ -147,6 +191,14 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
                     </button>
                 </div>
             )}
+            <YearListModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+            <div className="md:hidden flex fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+                <Button className="shrink-0" onClick={() => setIsOpen(true)}>
+                    Years List
+                </Button>
+            </div>
+
         </MainContainer>
+
     );
 }

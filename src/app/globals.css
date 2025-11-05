@@ -44,6 +44,7 @@
   --flh-bxs: clamp(14px, 1vw, 14px);
 
   --surface-text-gray-normal: #192839;
+  --surface-text-oncloud-onintense: #8bc7ff;
   --neutral-blueGrayLight: #40566d;
   --yellow-200: #192839;
   --neutral-500: #8c8b89;
@@ -68,6 +69,8 @@
   --color-brand: #0083ff;
   --color-brand-dark: #006bd1;
   --color-softskyblue: #f3f7fd;
+  --color-oncloud-onintense: var(--surface-text-oncloud-onintense);
+
 
   /* Define a color with a scale of shades */
   --color-custom-teal-50: #f0fdfa;
