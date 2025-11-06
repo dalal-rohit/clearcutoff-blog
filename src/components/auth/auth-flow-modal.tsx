@@ -10,7 +10,7 @@ import FormHelperText from "@mui/joy/FormHelperText";
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthModal } from "@/store/authModalStore";
-import { loginUser, verifyOtp } from "@/api/authApi";
+import { loginUser, verifyOtp } from "@/app/api/authApi";
 // import { logAmplitudeEvent } from "@/services/analytics";
 import { disabledButtonStyle } from "@/lib/utils";
 import Link from "next/link";

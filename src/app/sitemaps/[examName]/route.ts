@@ -5,6 +5,8 @@ import { limitWords } from "@/utils/text/textLimit";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 const PAYLOAD_API = `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api`;
 
+const allowedCourses = ["htet", "ctet", "uptet", "reet", "hptet"];
+
 export async function GET(
     request: Request,
     { params }: { params: { examName: string } }
@@ -13,6 +15,9 @@ export async function GET(
 
     const originalExamName = examName.replace(/\.xml$/i, "");
 
+    if (!allowedCourses.includes(originalExamName)) {
+        return new NextResponse(`${originalExamName} Exam not Allowed`, { status: 404 });
+    }
 
     try {
         const urls: { url: string; lastModified?: string }[] = [];

@@ -3,6 +3,8 @@ import { MetadataRoute } from "next";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 const PAYLOAD_API = `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api`;
 
+const allowedCourses = ["ctet", "htet", "reet", "hptet", "uptet"];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const urls: MetadataRoute.Sitemap = [];
 
@@ -16,6 +18,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       // Extract value after the underscore (_) and convert to lowercase
       const formattedId = examId.split("_")[1]?.toLowerCase() ?? examId.toLowerCase();
+
+      if (!allowedCourses.includes(formattedId)) {
+        continue;
+      }
+
       urls.push({
         url: `${BASE_URL}/sitemaps/${formattedId}.xml`,
         lastModified: new Date(exam.updatedAt || Date.now()),
