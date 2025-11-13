@@ -5,31 +5,39 @@ import StarBadge from '@/components/ui/badge/star-badge'
 import { usePathname, useParams } from 'next/navigation'
 import React from 'react'
 import { formatToSlug, unFormatSlug } from '@/utils/slugify'
+import YearsList from '../ui/years-list'
 import SubjectsList from '../ui/subjects-list'
 
 interface Data {
     id: number,
     stage_id: string,
     instance_id: string[],
+    sections: {
+        name: string,
+        url: string
+    }
 }
 
-export default function TestByYears({ data, examName }: { data: Data[], examName: string }) {
+export default function TestBySubjects({ data, examName }: { data: Data[], examName: string }) {
 
     const params = useParams<{ locale: string, examName: string, level_id: string, year: string }>();
     const handleSelect = (item: string) => {
-        console.log(item, "item")
     }
+
     const pathname = usePathname()
 
     return (
+
+
         <div className='space-y-5'>
+
             <div className='w-full px-5'>
                 <div className='heading-large'>
-                    By Years
+                    By Subjects
                 </div>
                 <div className='flex justify-between items-center gap-2'>
                     <div className='heading-small'>
-                        Year-wise verified questions
+                        Subject-wise verified questions
                     </div>
                     <div className='flex items-center gap-2 text-[#00a251]'>
                         <StarBadge size={32} color="#00a251" />
@@ -37,17 +45,15 @@ export default function TestByYears({ data, examName }: { data: Data[], examName
                     </div>
                 </div>
             </div>
-            <div className='bg-white'>
 
+            <div className='bg-white'>
                 {data?.length > 0 && (
-                    data.map((item, index) => {
-                        const url = `${pathname}/${params?.year ? params?.year : "year"}/${formatToSlug(item?.instance_id.replace("_", " "))}`;
-                        return (
-                            <SubjectsList key={index} index={index + 1} title={item?.instance_id.replace("_", " ")} pathname={url} />
-                        )
-                    })
+                    data.map((item, index) => (
+                        <SubjectsList key={index} index={index + 1} title={item?.sections?.name} pathname={`${pathname}/subject/${formatToSlug(item?.sections?.name)}`} />
+                    ))
                 )}
             </div>
         </div>
+
     )
 }

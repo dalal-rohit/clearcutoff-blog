@@ -17,12 +17,10 @@ type Props = {
     locale: string;
     examName: string;
     level_id?: string;
-  };
-  searchParams: {
-    levels?: string | string[]; // ✅ Accept both
+    year?: string;
   };
 };
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = params?.locale ?? "en";
 
   try {
@@ -59,52 +57,31 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   }
 }
 
-function normalizeToArray(value?: string | string[]) {
-  if (!value) return [];
-  return Array.isArray(value) ? value : [value]; // ✅ ensures array
-}
 
 
-export default async function page({ params, searchParams }: Props) {
+
+export default async function page({ params }: Props) {
   const locale = params?.locale ?? "en";
-  const levels = normalizeToArray(searchParams.levels);
 
   const examName = params?.examName?.toUpperCase() ?? "";
-
-  // console.log("LEVELS ARRAY:", levels.map((l) => unFormatSlug(l))); // <-- Always array!
 
 
   // Build query string safely
   const queryYears = `exam_id=${params?.examName}`;
-  // Convert to proper JSON array string for URL
-  const levelsString = encodeURIComponent(JSON.stringify(levels.map(unFormatSlug)));
-
-  const querySubjects =
-    `exam_id=${params.examName}` +
-    `&name=${unFormatSlug(params.level_id ?? "")}` +
-    `&levels=${levelsString}`;
-  console.log("QUERY SUBJECTS:", querySubjects); // <-- Always array!
 
   // ✅ Correct API fetch Years
   const resYears = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-years?${queryYears}`,
     { cache: "no-store" }
   );
-  // ✅ Correct API fetch Subjects
-  const resSubjects = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/get-sections?${querySubjects}`,
-    { cache: "no-store" }
-  );
 
 
   const dataYears = await resYears.json();
-  const dataSubjects = await resSubjects.json();
-
-  if (dataYears?.data?.length === 0 && dataSubjects?.data?.length === 0) {
+  if (dataYears?.data?.length === 0) {
     return notFound;
   }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
   const examsUrl = `${homeUrl}/${params?.examName}`;
 
@@ -112,10 +89,10 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
     { name: unFormatSlug(params?.level_id ?? ""), url: examsUrl },
+    { name: unFormatSlug(params?.year ?? ""), url: examsUrl },
   ]
 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
-
   return (
     <div>
 
@@ -123,13 +100,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-       <CustomBreadcrumbs
-          isShow={true}
-          items={breadcrumbItems}
-        /> 
 
-      {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
-
+      <CustomBreadcrumbs
+        isShow={true}
+        items={breadcrumbItems}
+      />
       <MainContainer maxWidth="max-w-[900px]" padding="py-4" bgColor="bg-[#f8fafc]">
 
         <div className='space-y-12'>
@@ -147,10 +122,6 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
           />
 
 
-
-          {dataSubjects?.data?.length > 0 && (
-            <TestBySubjects data={dataSubjects.data} examName={examName} />
-          )}
 
           {dataYears?.data?.length > 0 && (
             <TestByYears data={dataYears.data} examName={examName} />

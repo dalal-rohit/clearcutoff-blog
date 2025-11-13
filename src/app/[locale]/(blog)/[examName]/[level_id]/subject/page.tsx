@@ -17,79 +17,55 @@ type Props = {
     locale: string;
     examName: string;
     level_id?: string;
-  };
-  searchParams: {
-    levels?: string | string[]; // ✅ Accept both
+    subject?: string;
   };
 };
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+// export async function generateMetadata({ params }: Props): Promise<Metadata> {
+//   const locale = params?.locale ?? "en";
+
+//   try {
+
+//     const baseTitle = "Teaching Exams";
+//     const baseDescription =
+//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
+
+//     const title = `${baseTitle} | ClearCutoff`;
+//     return {
+//       title,
+//       description: baseDescription,
+//       openGraph: {
+//         title,
+//         description: baseDescription,
+//         type: "website",
+//       },
+//       alternates: {
+//         canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
+//       },
+//     };
+//   } catch {
+//     const fallbackTitle = "Teaching Exams | ClearCutoff";
+//     const fallbackDesc =
+//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
+//     return {
+//       title: fallbackTitle,
+//       description: fallbackDesc,
+//       openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
+//     };
+//   }
+// }
+
+
+
+
+export default async function page({ params }: Props) {
   const locale = params?.locale ?? "en";
-
-  try {
-
-
-
-
-    const baseTitle = "Teaching Exams";
-    const baseDescription =
-      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-
-    const title = `${baseTitle} | ClearCutoff`;
-    return {
-      title,
-      description: baseDescription,
-      openGraph: {
-        title,
-        description: baseDescription,
-        type: "website",
-      },
-      alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
-      },
-    };
-  } catch {
-    const fallbackTitle = "Teaching Exams | ClearCutoff";
-    const fallbackDesc =
-      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-    return {
-      title: fallbackTitle,
-      description: fallbackDesc,
-      openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
-    };
-  }
-}
-
-function normalizeToArray(value?: string | string[]) {
-  if (!value) return [];
-  return Array.isArray(value) ? value : [value]; // ✅ ensures array
-}
-
-
-export default async function page({ params, searchParams }: Props) {
-  const locale = params?.locale ?? "en";
-  const levels = normalizeToArray(searchParams.levels);
 
   const examName = params?.examName?.toUpperCase() ?? "";
 
-  // console.log("LEVELS ARRAY:", levels.map((l) => unFormatSlug(l))); // <-- Always array!
-
 
   // Build query string safely
-  const queryYears = `exam_id=${params?.examName}`;
-  // Convert to proper JSON array string for URL
-  const levelsString = encodeURIComponent(JSON.stringify(levels.map(unFormatSlug)));
+  const querySubjects = `exam_id=${params?.examName}&name=${unFormatSlug(params?.level_id ?? "")}`;
 
-  const querySubjects =
-    `exam_id=${params.examName}` +
-    `&name=${unFormatSlug(params.level_id ?? "")}` +
-    `&levels=${levelsString}`;
-  console.log("QUERY SUBJECTS:", querySubjects); // <-- Always array!
-
-  // ✅ Correct API fetch Years
-  const resYears = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/get-years?${queryYears}`,
-    { cache: "no-store" }
-  );
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-sections?${querySubjects}`,
@@ -97,25 +73,24 @@ export default async function page({ params, searchParams }: Props) {
   );
 
 
-  const dataYears = await resYears.json();
   const dataSubjects = await resSubjects.json();
-
-  if (dataYears?.data?.length === 0 && dataSubjects?.data?.length === 0) {
+  if (dataSubjects?.data?.length === 0) {
     return notFound;
   }
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
   const examsUrl = `${homeUrl}/${params?.examName}`;
+  const levelUrl = `${examsUrl}/${params?.level_id}`;
+  const subjectUrl = `${levelUrl}/${params?.subject}`;
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
-    { name: unFormatSlug(params?.level_id ?? ""), url: examsUrl },
+    { name: unFormatSlug(params?.level_id ?? ""), url: levelUrl },
+    { name: "Subject", url: subjectUrl },
   ]
 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
-
   return (
     <div>
 
@@ -123,13 +98,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-       <CustomBreadcrumbs
-          isShow={true}
-          items={breadcrumbItems}
-        /> 
 
-      {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
-
+      <CustomBreadcrumbs
+        isShow={true}
+        items={breadcrumbItems}
+      />
       <MainContainer maxWidth="max-w-[900px]" padding="py-4" bgColor="bg-[#f8fafc]">
 
         <div className='space-y-12'>
@@ -152,9 +125,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
             <TestBySubjects data={dataSubjects.data} examName={examName} />
           )}
 
-          {dataYears?.data?.length > 0 && (
-            <TestByYears data={dataYears.data} examName={examName} />
-          )}
+
         </div>
 
       </MainContainer>

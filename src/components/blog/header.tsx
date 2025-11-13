@@ -1,9 +1,6 @@
 // components/Header.tsx
 "use client";
 
-import dynamic from "next/dynamic";
-
-import Link from "next/link";
 import LanguageSwitcher from "../LanguageSwitcher";
 import LoginButton from "../buttons/login-button";
 import RegisterButton from "../buttons/register-button";
@@ -82,6 +79,7 @@ export default function Header() {
               <LoginButton />
               <RegisterButton isFull={true}/>
             </div>
+
             <LanguageSwitcher onClick={() => setIsLanguageModalOpen(true)} />
             <div className=" flex md:hidden">
               <button

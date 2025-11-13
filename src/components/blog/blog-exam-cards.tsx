@@ -10,7 +10,7 @@ import Image from 'next/image'
 
 const ExamCourseCard = ({ item, onClick }: { item: Exam, onClick: () => void }) => {
     return (
-        <CardWrap onClick={onClick} cursor='pointer' borderwidth={3}>
+        <CardWrap onClick={onClick} cursor='pointer' borderwidth={1}>
             <div className='flex items-center gap-4'>
                 <div>
                     <Image
@@ -21,8 +21,8 @@ const ExamCourseCard = ({ item, onClick }: { item: Exam, onClick: () => void }) 
                     />
                 </div>
                 <div>
-                    <h3 className='heading-medium text-black'>{item.short_name}</h3>
-                    <p className='body-small'>{item.exam_type} Exam</p>
+                    <h3 className='heading-medium !font-semibold text-black'>{item.short_name}</h3>
+                    <p className='body-small !font-normal'>{item.exam_type} Exam</p>
                 </div>
             </div>
         </CardWrap>
@@ -58,8 +58,8 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
 
 
     return (
-        <MainContainer maxWidth="max-w-[1100px]">
-            <section className="py-10 md:py-14 space-y-10">
+        <MainContainer padding="p-4" maxWidth="max-w-[900px]">
+            <section className="space-y-8">
                 <CustomizableHeader
                     showEyebrow={false}
                     heading={'Exams on Clear Cutoff'}
@@ -67,16 +67,16 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                     subheading={'Start your journey of success with Clear Cutoff Academy'}
                     headingColor="text-gray-900"
                     highlightColor="text-blue-500"
-                    subheadingColor="text-gray-600"
-                    alignment="text-center"
-                    headingClasses="!mb-4"
-                    headingSize="display-medium"
+                    subheadingColor="text-gray-600 "
+                    alignment="md:text-center text-left"
+                    headingClasses="!mb-1"
+                    headingSize="heading-2xlarge !font-semibold"
                 />
 
-                <div className='space-y-10'>
+                <div className='space-y-6'>
                     <div className='w-full'>
-                        <div className="heading-large">{highlightTextUtil('Central Teaching Exams', 'Central')}</div>
-                        <div className="mt-4 md:mt-5 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="heading-xlarge">{highlightTextUtil('Central Teaching Exams', 'Central')}</div>
+                        <div className="mt-5 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             {centralExams.map((item) => {
                                 return (
                                     <ExamCourseCard key={item.id} item={item} onClick={() => onSelect(item)} />
@@ -86,13 +86,13 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                     </div>
 
                     <div className='w-full'>
-                        <div className="heading-large">{highlightTextUtil('State Teaching Exams', 'State')}</div>
+                        <div className="heading-xlarge">{highlightTextUtil('State Teaching Exams', 'State')}</div>
                         <div className="mt-4 md:mt-5 grid items-start gap-5 ">
                             {Object.entries(stateExams).map(([state, exams]) => {
                                 return (
                                     <div key={state} >
-                                        <h3 className="heading-large neutral-blueGrayLight">{state}</h3>
-                                        <div className={["mt-2 grid items-start gap-5 grid-cols-2 ", exams.length > 3 ? "md:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-2 lg:grid-cols-3"].join(' ')}>
+                                        <h3 className="heading-large  neutral-blueGrayLight">{state}</h3>
+                                        <div className={["mt-4 grid items-start gap-5 grid-cols-2 ", exams.length > 3 ? "md:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-2 lg:grid-cols-3"].join(' ')}>
                                             {exams.map((item) => {
                                                 return (
                                                     <ExamCourseCard key={item.id} item={item} onClick={() => onSelect(item)} />

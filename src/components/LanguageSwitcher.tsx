@@ -6,16 +6,16 @@ import { Locale, useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { AppLocale } from "@/types/components/language";
+import LanguageIcon from "./ui/icons/language-icon";
 export default function LanguageSwitcher({ onClick }: { onClick: () => void }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
   const params = useParams();
-  const locale = useLocale()  as AppLocale; // current locale
+  const locale = useLocale() as AppLocale; // current locale
 
   const locales = routing.locales;
   const currentIndex = locales.indexOf(locale);
-  const nextLocale = locales[(currentIndex + 1) % locales.length]; // cycle
 
   function switchLanguage(nextLocale: Locale) {
     startTransition(() => {
@@ -31,17 +31,11 @@ export default function LanguageSwitcher({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       disabled={isPending}
-      className="flex items-center gap-2 rounded-lg border px-3 py-2 bg-white hover:bg-gray-100 shadow-sm transition disabled:opacity-50"
+      className="flex items-center gap-2 bg-white"
     >
-      {/* <Image
-        src={`/locale/${locale}.png`}
-        alt={locale}
-        width={20}
-        height={20}
-        className="rounded"
-      /> */}
+      <LanguageIcon size={32} color="#143D52" secondaryColor="#E2E8F0" />
+
       <span className="text-sm font-medium uppercase">{locale}</span>
-      <span className="text-xs text-gray-500">⇄</span>
     </button>
   );
 }

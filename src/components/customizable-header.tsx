@@ -34,7 +34,7 @@ interface CustomizableHeaderProps {
   mobileAlignment?: "left" | "center" | "right";
 
   // Spacing props
-  spacing?: "tight" | "normal" | "loose";
+  spacing?: "1" | "tight" | "normal" | "loose";
 
   // Container props
   maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "full";
@@ -52,12 +52,12 @@ export default function CustomizableHeader({
   subheadingColor = "text-gray-600",
   highlightColor = "text-blue-600",
   headingSize = "display-large",
-  subheadingSize = "heading-small",
+  subheadingSize = "body-medium !font-normal",
   eyebrowWeight = "semibold",
   headingWeight = "semibold",
   subheadingWeight = "normal",
   alignment = "text-left",
-  spacing = "normal",
+  spacing = "1",
   maxWidth = "4xl",
   headingClasses = "",
   subheadingClasses = "",
@@ -75,6 +75,7 @@ export default function CustomizableHeader({
 
   // Spacing mappings
   const spacingClasses = {
+    "1": "space-y-1",
     tight: "space-y-2",
     normal: "space-y-4",
     loose: "space-y-6",

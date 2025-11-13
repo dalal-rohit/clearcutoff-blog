@@ -1,4 +1,4 @@
-import FlashSaleTimerBanner from "@/components/banner/flashsale-timer-banner";
+import CountdownBanner from "@/components/banner/countdownbanner";
 import Header from "@/components/blog/header";
 import React from "react";
 
@@ -8,8 +8,8 @@ export default function BlogLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <FlashSaleTimerBanner message="Flash Sale Ends In" />
+    <div className="flex flex-col min-h-screen bg-[#f8fafc]">
+      <CountdownBanner message="Flash Sale Ends In" />
       <Header />
       {/* Main Layout (sidebars fixed, main scrolls) */}
       <div className="flex flex-1 mx-auto w-full relative">

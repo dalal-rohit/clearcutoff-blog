@@ -1,4 +1,5 @@
 import BlogExamCardsSection from "@/components/blog/blog-exam-cards";
+import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
 import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
 import { Metadata } from "next";
@@ -54,8 +55,8 @@ export default async function Page({
 }) {
   const locale = params?.locale ?? "en"
 
- const resCourses = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/exams?locale=${locale}&limit=0&depth=2`,
+  const resCourses = await fetch(
+    `${process.env.MAIN_BACKEND_URL}/blog/exam?status=active`,
     { cache: "no-store" }
   );
 
@@ -69,9 +70,9 @@ export default async function Page({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
 
-    const breadcrumbItems=[
-      { name: "Home", url: homeUrl },
-    ]
+  const breadcrumbItems = [
+    { name: "Home", url: homeUrl },
+  ]
 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
@@ -82,9 +83,12 @@ export default async function Page({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-
-      <MainBreadcrumbs items={breadcrumbItems}/>
-      <BlogExamCardsSection data={data?.docs}  />
+      {/* <CustomBreadcrumbs
+        isShow={true}
+        items={breadcrumbItems}
+      /> */}
+      {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
+      <BlogExamCardsSection data={data?.data} />
     </div>
   );
 }

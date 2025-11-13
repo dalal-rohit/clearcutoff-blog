@@ -1,6 +1,8 @@
 import NotFound from "@/app/not-found";
 import ExamLevelsSection from "@/components/blog/sections/exam-levels-section";
+import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
+import MainContainer from "@/components/main-container";
 import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
 import { formatToSlug } from "@/utils/slugify";
 import { Metadata } from "next";
@@ -59,38 +61,40 @@ export default async function Page({
 
   const examName = params?.examName?.toUpperCase() ?? "";
 
-  
+
   // Build query string safely
-  const query = `where[exam_id][like]=${examName}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
+  const query = `short_name=${params?.examName}&enavigation=true`
 
   // ✅ Correct API fetch
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/e-stage?${query}`,
+    `${process.env.MAIN_BACKEND_URL}/blog/exam?${query}`,
     { cache: "no-store" }
-  )
+  );
+
 
   if (!res.ok) {
     return <NotFound />;
   }
 
   const data = await res.json();
+  console.log("data", data)
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
   const examsUrl = `${homeUrl}/${params?.examName}`;
 
-  const breadcrumbItems=[
+  const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
   ]
 
-  
 
-  if (data.docs.length === 1) {
-    const singleLevel = data.docs[0];
-     const targetId = formatToSlug(singleLevel.name)
+
+  if (data.data[0].navigation.length === 1) {
+    const singleLevel = data.data[0];
+    const targetId = formatToSlug(singleLevel.name)
     redirect(`/${examName.toLowerCase()}/${encodeURIComponent(targetId)}`);
-  } 
+  }
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
@@ -101,8 +105,14 @@ export default async function Page({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
-      <MainBreadcrumbs items={breadcrumbItems}/>
-      <ExamLevelsSection data={data?.docs} examName={examName} />
+      <MainContainer maxWidth="max-w-[900px]" bgColor="bg-[#f8fafc]">
+        <CustomBreadcrumbs
+          isShow={true}
+          items={breadcrumbItems}
+        /> 
+        {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
+        <ExamLevelsSection data={data.data[0].navigation} examName={examName} />
+      </MainContainer>
     </div>
   );
 }
