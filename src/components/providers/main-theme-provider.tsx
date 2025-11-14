@@ -12,5 +12,7 @@ export default function MainThemeProvider({
 }: CssVarsProviderProps) {
 
 
-  return <CssVarsProvider theme={joytheme}>{children}</CssVarsProvider>;
+  return (
+      <CssVarsProvider theme={joytheme}>{children}</CssVarsProvider>
+  );
 }

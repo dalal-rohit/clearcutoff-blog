@@ -18,12 +18,12 @@ export default function SubjectsList({ index = 1, title = "", subtitle = "150 qu
     return (
         // <div className={[loading ? 'opacity-50 cursor-not-allowed' : ''].join(' ')}>
             <Link prefetch={true} href={`${pathname}`} onClick={onClick}>
-                <div className='flex items-center justify-between p-4 md:p-5 border-b border-gray-300'>
+                <div className='flex items-center justify-between py-4 px-3 border-b border-gray-300'>
                     <div className='flex items-center gap-4'>
                         <NumberedShape number={index} />
                         <div>
-                            <div className='font-semibold text-gray-900'> {title}</div>
-                            <div className='text-sm text-gray-500'>{subtitle}</div>
+                            <div className='body-large !font-semibold text-gray-900'> {title}</div>
+                            <div className='body-small !font-normal text-gray-500'>{subtitle}</div>
                         </div>
                     </div>
                     <RightArrowBox size={30} onClick={onClick} />

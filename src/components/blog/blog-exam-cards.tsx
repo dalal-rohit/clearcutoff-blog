@@ -7,22 +7,26 @@ import { useSelectedDataStore } from '@/store/blog/useSelectedDataStore'
 import CardWrap from '../cards/card-wrap'
 import { highlightTextUtil } from '@/utils/highlightTextUtil'
 import Image from 'next/image'
+import CourseCheckBadge from '../ui/badge/course-check-badge'
 
-const ExamCourseCard = ({ item, onClick }: { item: Exam, onClick: () => void }) => {
+const ExamCourseCard = ({ item, onClick, bgcolor }: { item: Exam, onClick: () => void, bgcolor?: string }) => {
     return (
-        <CardWrap onClick={onClick} cursor='pointer' borderwidth={1}>
+        <CardWrap bgcolor={bgcolor} onClick={onClick} cursor='pointer' borderwidth={1}>
             <div className='flex items-center gap-4'>
-                <div>
+                <div className='relative h-16 w-16'>
                     <Image
                         src={item.logo_url}
                         alt={item.name}
                         width={64}
                         height={64}
                     />
+                    <div className='absolute bottom-0 right-0 bg-white p-1 rounded-full'>
+                        <CourseCheckBadge size={20} fill="#0083ff" />
+                    </div>
                 </div>
                 <div>
                     <h3 className='heading-medium !font-semibold text-black'>{item.short_name}</h3>
-                    <p className='body-small !font-normal'>{item.exam_type} Exam</p>
+                    <p className='body-small !font-normal'>{item.exam_type}</p>
                 </div>
             </div>
         </CardWrap>
@@ -55,10 +59,8 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
             return groups;
         }, {} as Record<string, Exam[]>);
 
-
-
     return (
-        <MainContainer padding="p-4" maxWidth="max-w-[900px]">
+        <MainContainer padding="py-4 px-3" bgColor='transparent' maxWidth="max-w-[900px]">
             <section className="space-y-8">
                 <CustomizableHeader
                     showEyebrow={false}
@@ -76,10 +78,10 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                 <div className='space-y-6'>
                     <div className='w-full'>
                         <div className="heading-xlarge">{highlightTextUtil('Central Teaching Exams', 'Central')}</div>
-                        <div className="mt-5 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="mt-5 grid items-start gap-5 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
                             {centralExams.map((item) => {
                                 return (
-                                    <ExamCourseCard key={item.id} item={item} onClick={() => onSelect(item)} />
+                                    <ExamCourseCard bgcolor='white' key={item.id} item={item} onClick={() => onSelect(item)} />
                                 )
                             })}
                         </div>
@@ -95,7 +97,7 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                                         <div className={["mt-4 grid items-start gap-5 grid-cols-2 ", exams.length > 3 ? "md:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-2 lg:grid-cols-3"].join(' ')}>
                                             {exams.map((item) => {
                                                 return (
-                                                    <ExamCourseCard key={item.id} item={item} onClick={() => onSelect(item)} />
+                                                    <ExamCourseCard bgcolor='white' key={item.id} item={item} onClick={() => onSelect(item)} />
                                                 )
                                             })}
                                         </div>
@@ -105,7 +107,7 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                         </div>
                     </div>
                 </div>
-                <div className=" text-center space-y-6">
+                {/* <div className=" text-center space-y-6">
                     <p className="text-xl md:text-2xl text-gray-700">
                         Used by <span className="font-bold text-blue-600">10,000+</span> students to clear TET exams.
                     </p>
@@ -121,7 +123,7 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                         <span className="font-semibold">4.9+</span>
                         <span className="text-gray-500">Average Rating by our Students!</span>
                     </div>
-                </div>
+                </div> */}
             </section>
         </MainContainer >
     )

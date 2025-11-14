@@ -82,7 +82,7 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
                             <>
                                 <QuestionCard
                                     key={index}
-                                    q_no={item.question_number}
+                                    q_no={index + 1}
                                     index={index}
                                     setLoadingId={setLoadingId}
                                     path={`/question/${formatToSlug(limitWords(item.question_text, 4))}-${item.id}`}

@@ -114,9 +114,9 @@ export default async function page({ params }: Props) {
             headingColor="text-gray-900"
             highlightColor="text-blue-500"
             subheadingColor="text-gray-600"
-            alignment="text-center"
-            headingClasses="!mb-4"
-            headingSize="display-medium"
+            alignment="md:text-center text-left"
+            headingClasses="!mb-1"
+            headingSize="heading-xlarge !font-semibold"
           />
 
 

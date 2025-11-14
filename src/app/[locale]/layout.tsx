@@ -59,7 +59,9 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className={`${fontClass} antialiased `}>
         <MainThemeProvider>
-          <NextIntlClientProvider>{children}<AuthFlow />  </NextIntlClientProvider>
+          <NextIntlClientProvider>
+              {children}
+            <AuthFlow />  </NextIntlClientProvider>
         </MainThemeProvider>
       </body>
     </html>

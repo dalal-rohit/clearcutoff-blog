@@ -104,7 +104,7 @@ export default async function page({ params, searchParams }: Props) {
     return notFound;
   }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
   const examsUrl = `${homeUrl}/${params?.examName}`;
 
@@ -123,28 +123,31 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-       <CustomBreadcrumbs
-          isShow={true}
-          items={breadcrumbItems}
-        /> 
 
-      {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
 
       <MainContainer maxWidth="max-w-[900px]" padding="py-4" bgColor="bg-[#f8fafc]">
-
-        <div className='space-y-12'>
-          <CustomizableHeader
-            showEyebrow={false}
-            heading={`${examName} Exam ${unFormatSlug(params?.level_id ?? "")}`}
-            highlightText={examName}
-            subheading={`${examName} exam ${unFormatSlug(params?.level_id ?? "")} preparation with Clear Cutoff`}
-            headingColor="text-gray-900"
-            highlightColor="text-blue-500"
-            subheadingColor="text-gray-600"
-            alignment="text-center"
-            headingClasses="!mb-4"
-            headingSize="display-medium"
+        <div className="px-3">
+          <CustomBreadcrumbs
+            padding="0px 4px 20px 4px"
+            isShow={true}
+            items={breadcrumbItems}
           />
+        </div>
+        <div className='space-y-6'>
+          <div className="px-3">
+            <CustomizableHeader
+              showEyebrow={false}
+              heading={`${examName} Exam ${unFormatSlug(params?.level_id ?? "")}`}
+              highlightText={examName}
+              subheading={`${examName} exam ${unFormatSlug(params?.level_id ?? "")} preparation with Clear Cutoff`}
+              headingColor="text-gray-900"
+              highlightColor="text-blue-500"
+              subheadingColor="text-gray-600"
+              alignment="md:text-center text-left"
+              headingClasses="!mb-1"
+              headingSize="heading-xlarge !font-semibold"
+            />
+          </div>
 
 
 

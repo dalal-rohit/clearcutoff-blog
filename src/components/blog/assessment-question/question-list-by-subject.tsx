@@ -16,30 +16,28 @@ export default function QuestionListBySubject({ data }: { data: any }) {
 
 
             {data.map((item: any, index: any) => {
+                console.log("item", item)
                 return (
-                    <div key={index} className='bg-white p-4 rounded'>
-                        <div className='mb-2'>
-                            <div>
-                                
+                    <div key={index} className='bg-white p-4 rounded space-y-5'>
+                        <div className='space-y-1'>
+                            <div className='body-large font-normal text-[#768EA7] '>
+                                Chapter {index + 1}
                             </div>
-                            <div>
-                                <div>
-                                    Chapter {index + 1}
-                                </div>
-                                <div className='heading-small'>
-                                    {item.chapterName}
-                                </div>
+                            <div className='heading-small'>
+                                {item.chapterName}
                             </div>
                         </div>
                         <div className="grid grid-cols-1 gap-4">
 
-                            {item.questions.map((question, index) => {
+                            {item.questions.map((question: any, index: any) => {
                                 const plain = question.question_text?.replace(/<[^>]*>/g, "") || "";
                                 const snippet = limitWords(plain, 25);
                                 return (
                                     <QuestionCard
                                         key={index}
-                                        q_no={question.question_number}
+                                        q_no={index + 1}
+                                        chapter_name={item.chapter?.name}
+                                        topic_name={question.topic?.name}
                                         index={index}
                                         setLoadingId={setLoadingId}
                                         path={`/question/${formatToSlug(limitWords(question.question_text, 4))}-${question.id}`}
@@ -50,8 +48,8 @@ export default function QuestionListBySubject({ data }: { data: any }) {
                                 )
                             })}
                         </div>
-                        <div className='flex justify-center mt-4'>
-                            <Link href={`${pathname}/${formatToSlug(limitWords(item.chapterName, 6))}`}>
+                        <div className='flex justify-center'>
+                            <Link href={`${pathname}/${(item.slug)}`}>
                                 <Button variant="soft">View All Questions in this chapter ( {item.chapterName} )</Button>
                             </Link>
                         </div>

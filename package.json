@@ -1,5 +1,5 @@
 {
-  "name": "elearning",
+  "name": "Clear Cutoff",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -32,6 +32,7 @@
     "react-hook-form": "^7.64.0",
     "react-toastify": "^11.0.5",
     "react-window": "^2.2.3",
+    "remove-markdown": "^0.6.2",
     "zod": "^4.1.11",
     "zustand": "^5.0.8"
   },

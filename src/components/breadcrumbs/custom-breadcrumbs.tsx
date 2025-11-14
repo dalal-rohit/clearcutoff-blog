@@ -18,9 +18,11 @@ interface CustomBreadcrumbsProps {
   items: BreadcrumbItem[];
   highlightClass?: string; // optional custom class for last item
   isShow?: boolean;
+  padding?: string;
 }
 
 const CustomBreadcrumbs: React.FC<CustomBreadcrumbsProps> = ({
+  padding = "10px",
   items,
   highlightClass = "bg-[#F1F5FA] py-0.5 px-3 capitalize rounded-lg text-[#0083ff] body-medium !font-semibold ",
   isShow = false,
@@ -30,7 +32,7 @@ const CustomBreadcrumbs: React.FC<CustomBreadcrumbsProps> = ({
       {isShow && (
         <Breadcrumbs
           aria-label="breadcrumbs"
-          sx={{ px: { xs: 2, md: 4, lg: 6 } }}
+          sx={{ p: padding }}
         >
           {items.map((item, index) => {
             const isLast = index === items.length - 1;

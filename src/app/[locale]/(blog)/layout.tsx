@@ -1,5 +1,6 @@
 import CountdownBanner from "@/components/banner/countdownbanner";
 import Header from "@/components/blog/header";
+import BlogFooter from "@/components/footer/blog/blog-footer";
 import React from "react";
 
 export default function BlogLayout({
@@ -24,6 +25,7 @@ export default function BlogLayout({
         {/* Right Sidebar (fixed) */}
         {/* <RightSidebar /> */}
       </div>
+      <BlogFooter />
     </div>
   );
 }

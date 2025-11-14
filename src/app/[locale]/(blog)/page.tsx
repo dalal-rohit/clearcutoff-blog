@@ -88,7 +88,7 @@ export default async function Page({
         items={breadcrumbItems}
       /> */}
       {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
-      <BlogExamCardsSection data={data?.data} />
+      <BlogExamCardsSection  data={data?.data} />
     </div>
   );
 }

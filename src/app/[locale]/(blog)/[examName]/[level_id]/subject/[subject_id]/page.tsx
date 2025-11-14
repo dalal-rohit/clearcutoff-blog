@@ -24,6 +24,7 @@ export default async function page({ params }: { params: { locale: string, examN
   // Now group them back by chapter
   const groupedByChapter =
     data?.data?.data?.map(item => ({
+      slug: item.chapter?.slug,
       chapterId: item.chapter?.id,
       chapterName: item.chapter?.name,
       questions: item.chapter?.questions || []
@@ -82,9 +83,9 @@ export default async function page({ params }: { params: { locale: string, examN
 
       </div>
       <div className='space-y-2'>
-        <div className='flex justify-between items-center gap-2'>
+        <div className='flex justify-between items-center gap-2 px-3'>
           <div className='heading-small'>
-            Year-wise verified questions
+            Year-wise questions
           </div>
           <div className='flex items-center gap-2 text-[#00a251]'>
             <CourseCheckBadge size={20} fill="#00a251" />
@@ -93,9 +94,6 @@ export default async function page({ params }: { params: { locale: string, examN
         </div>
         <QuestionListBySubject data={groupedByChapter} />
         <div className="grid grid-cols-1 gap-4">
-
-
-
 
           {/* {shown?.map((item, index) => {
             const plain = item.question_text?.replace(/<[^>]*>/g, "") || "";

@@ -1,11 +1,8 @@
 'use client'
-import CustomizableHeader from '@/components/customizable-header'
-import MainContainer from '@/components/main-container'
-import StarBadge from '@/components/ui/badge/star-badge'
+import CourseCheckBadge from '@/components/ui/badge/course-check-badge'
 import { usePathname, useParams } from 'next/navigation'
 import React from 'react'
-import { formatToSlug, unFormatSlug } from '@/utils/slugify'
-import YearsList from '../ui/years-list'
+import { formatToSlug } from '@/utils/slugify'
 import SubjectsList from '../ui/subjects-list'
 
 interface Data {
@@ -21,27 +18,26 @@ interface Data {
 export default function TestBySubjects({ data, examName }: { data: Data[], examName: string }) {
 
     const params = useParams<{ locale: string, examName: string, level_id: string, year: string }>();
-    const handleSelect = (item: string) => {
-    }
+  
 
     const pathname = usePathname()
 
     return (
 
 
-        <div className='space-y-5'>
+        <div className='space-y-4'>
 
-            <div className='w-full px-5'>
-                <div className='heading-large'>
+            <div className='w-full px-3 space-y-1'>
+                <div className='heading-large !font-semibold'>
                     By Subjects
                 </div>
-                <div className='flex justify-between items-center gap-2'>
-                    <div className='heading-small'>
-                        Subject-wise verified questions
+                <div className='grid grid-cols-5 justify-between items-center gap-1'>
+                    <div className='heading-small !font-semibold col-span-3'>
+                        Subject-wise questions
                     </div>
-                    <div className='flex items-center gap-2 text-[#00a251]'>
-                        <StarBadge size={32} color="#00a251" />
-                        <p>by Clear Cutoff</p>
+                    <div className='flex items-center gap-2 text-[#00a251] col-span-2 justify-self-end'>
+                        <CourseCheckBadge size={16} fill="#00a251" />
+                        <p className='body-medium !font-normal'>by Clear Cutoff</p>
                     </div>
                 </div>
             </div>

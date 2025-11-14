@@ -4,74 +4,76 @@ import React from 'react'
 import { unFormatSlug } from '@/utils/slugify'
 import QuestionsListByChapter from '@/components/blog/assessment-question/questions-list-by-chapter';
 import QuestionsList from '@/components/blog/assessment-question/questions-list';
+import DetailsSectionCard from '@/components/blog/assessment-question/details-section-card';
+import CustomizableHeader from '@/components/customizable-header';
 
 export default async function page({ params }: { params: { locale: string, examName: string, level_id: string, subject: string, subject_id: string, chapter_name: string } }) {
 
-  const query = `chapter_name=${unFormatSlug(params?.chapter_name)}`
+  const query = `slug=${params?.chapter_name}`
 
   const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions-by-chapter?${query}`, {
     cache: "no-store",
   });
   const data = await res.json();
+
   const questions = data?.data?.questions;
+
   const Labels = [
     {
       lable: 'Exam',
-      value: params?.examName ?? "REET"
+      value: params?.examName.toUpperCase() ?? "REET"
     },
     {
       lable: 'Level',
-      value: params?.level_id ?? ""
+      value: params?.level_id.toUpperCase() ?? ""
     },
     {
       lable: 'State',
       value: "Rajasthan"
     },
   ]
+
+  // const breadcrumbItems = [
+  //   { name: "Home", url: homeUrl },
+  //   { name: examName, url: examsUrl },
+  //   { name: unFormatSlug(params?.level_id ?? ""), url: examsUrl },
+  //   { name: unFormatSlug(params?.subject ?? ""), url: examsUrl },
+  //   { name: unFormatSlug(params?.chapter_name ?? ""), url: examsUrl },
+  // ]
+
   return (
     <MainContainer maxWidth="max-w-[900px]" padding='py-4' className='space-y-5' bgColor='bg-transparent'>
-      <div className='w-full bg-white p-4'>
-        <div>
-          <div className='heading-large surface-text-gray-normal'>Question Details</div>
-          <div className='mt-1 grid grid-cols-5 gap-x-8 gap-y-1 text-sm'>
-            <div className='col-span-3'>
-              {Labels.map((item, index) => {
-                return (
-                  <div key={index}>
-                    <span className='font-semibold text-gray-700'>{item.lable}:</span>{' '}
-                    <span className='text-gray-600'>{item.value}</span>
-                  </div>
-                )
-              })}
+      <div className='px-3'>
+        <CustomizableHeader
+          showEyebrow={false}
+          heading={`${params?.examName.toUpperCase()} Exam - ${unFormatSlug(params?.level_id ?? "")} - ${unFormatSlug(params?.chapter_name ?? "")}`}
+          highlightText={params?.examName.toUpperCase()}
+          subheading={`${params?.examName.toUpperCase()} exam ${unFormatSlug(params?.level_id ?? "")} preparation with Clear Cutoff`}
+          headingColor="text-gray-900"
+          highlightColor="text-blue-500"
+          subheadingColor="text-gray-600"
+          alignment="md:text-center text-left"
+          headingClasses="!mb-1"
+          headingSize="heading-xlarge !font-semibold"
+        />
+      </div>
 
-            </div>
-            <div className='col-span-2 flex flex-col items-start gap-2'>
-              <div>
-                <span className='font-semibold text-gray-700'>Chapter:</span>{' '}
-                <span className="text-gray-600">
-                  {data?.data?.name}
-                </span>
-              </div>
-              <div>
-                <span className='font-semibold text-gray-700'>Questions:</span>{' '}
-                <span className='text-gray-600 px-2 py-1 bg-gray-100 rounded-md'>{questions?.length}</span>
-              </div>
+      <div className='w-full bg-white px-3 py-4'>
 
+        <div className=' '>
+          <DetailsSectionCard sourceLabel="Chapter" Labels={Labels} totalQuestions={questions} yearId={unFormatSlug(params?.chapter_name ?? "")} />
 
-            </div>
-
-          </div>
         </div>
 
       </div>
-      <div className='space-y-2'>
+      <div className='space-y-2 px-3'>
         <div className='flex justify-between items-center gap-2'>
-          <div className='heading-small'>
-            Year-wise verified questions
+          <div className='heading-small !font-semibold col-span-3'>
+            Chapter-wise questions
           </div>
-          <div className='flex items-center gap-2 text-[#00a251]'>
-            <CourseCheckBadge size={20} fill="#00a251" />
-            <p>by Clear Cutoff</p>
+          <div className='flex items-center gap-2 text-[#00a251] col-span-2 justify-self-end'>
+            <CourseCheckBadge size={16} fill="#00a251" />
+            <p className='body-medium !font-normal'>by Clear Cutoff</p>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4">

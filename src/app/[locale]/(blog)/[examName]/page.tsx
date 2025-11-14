@@ -105,11 +105,14 @@ export default async function Page({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
-      <MainContainer maxWidth="max-w-[900px]" bgColor="bg-[#f8fafc]">
-        <CustomBreadcrumbs
-          isShow={true}
-          items={breadcrumbItems}
-        /> 
+      <MainContainer padding="py-4" maxWidth="max-w-[800px]" bgColor="bg-[#f8fafc]">
+        <div className="px-3">
+          <CustomBreadcrumbs
+            padding="0px 4px 20px 4px"
+            isShow={true}
+            items={breadcrumbItems}
+          />
+        </div>
         {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
         <ExamLevelsSection data={data.data[0].navigation} examName={examName} />
       </MainContainer>

@@ -3,8 +3,10 @@ import Link from 'next/link'
 import CardWrap from '@/components/cards/card-wrap'
 import StarBadge from '@/components/ui/badge/star-badge';
 import { Button } from '@mui/joy';
-import { formatToSlug } from '@/utils/slugify';
+import { formatToSlug, unFormatSlug } from '@/utils/slugify';
 import { limitWords } from '@/utils/text/textLimit'
+import CalendarIcon from '@/components/ui/icons/calendar-icon';
+import { useParams } from 'next/navigation';
 
 interface Props {
     q_no?: string;
@@ -14,23 +16,64 @@ interface Props {
     onClick?: () => void;
     questionText?: string;
     active?: boolean;
+    chapter_name?: string;
+    topic_name?: string;
+    correct_option?: string;
+    source?: string;
 }
 
-export default function QuestionCard({ q_no, index, setLoadingId, path, onClick, questionText, active = false }: Props) {
+export default function QuestionCard({ q_no, index, setLoadingId, path, onClick, questionText, active = false, chapter_name, topic_name, source }: Props) {
     return (
         <Link key={index} href={`${path}`} onClick={onClick}>
             <CardWrap cursor="pointer" padding={2}>
                 <div className={`flex flex-col gap-2 ${active ? "opacity-80" : ""}`}>
-                    <div className='flex justify-between items-center'>
-                        <div className="body-medium font-semibold col-span-5">
-                            Question {q_no}
+                    <div className='grid grid-cols-2 items-center gap-2'>
+                        <div className='flex items-center gap-4 col-span-1'>
+                            <div className="body-medium font-semibold text-[#768EA7] ">
+                                Question {q_no}
+                            </div>
+                            <div className='flex items-center gap-1 text-[#00a251]'>
+                                <StarBadge size={20} color="#00a251" /> 
+                                Easy
+                            </div>
                         </div>
-                        <StarBadge size={28} color="#00a251" />
+
+                        <div className='col-span-1 justify-self-end'>
+                            <div className='flex items-center gap-2'>
+                                <p className="body-medium text-[#768EA7] flex items-center gap-1">
+                                    <CalendarIcon size={16} color="#768EA7" />
+                                    Source :
+                                </p>
+                                <div className="body-medium text-black">
+                                    {source}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div className="flex md:flex-row flex-col justify-between items-start gap-4">
                         <div className="flex-1 body-medium text-gray-700">
                             {questionText}
                         </div>
+                        {chapter_name && (
+                            <div className='flex gap-2'>
+                                <div className="body-medium text-[#768EA7] flex items-center gap-1">
+                                    Chapter :
+                                </div>
+                                <div className="body-medium text-black">
+                                    {chapter_name}
+                                </div>
+                            </div>
+                        )}
+                        {topic_name && (
+                            <div className='flex gap-2'>
+                                <div className="body-medium text-[#768EA7] flex items-center gap-1">
+                                    Topic :
+                                </div>
+                                <div className="body-medium text-black">
+                                    {topic_name}
+                                </div>
+                            </div>
+                        )}
 
                         <div className="w-full md:w-auto flex justify-end gap-2">
                             <Button variant="outlined" className="shrink-0">

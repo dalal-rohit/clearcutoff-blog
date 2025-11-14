@@ -7,6 +7,8 @@ import { Metadata } from "next";
 import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
 import console from "console";
 import { unFormatSlug } from "@/utils/slugify";
+import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
+import MainContainer from "@/components/main-container";
 
 // export async function generateMetadata({ params }: { params: { locale: string, questionId: string } }): Promise<Metadata> {
 //   const locale = params?.locale ?? "en";
@@ -57,9 +59,7 @@ export default async function page({ params }: { params: { locale: string, quest
   const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions?${query}`, {
     cache: "no-store",
   });
-  const data = await res.json();  
-
-  console.log("data", data)
+  const data = await res.json();
 
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
@@ -70,7 +70,7 @@ export default async function page({ params }: { params: { locale: string, quest
     // { name: unFormatSlug(params?.examName.toUpperCase()), url: `${homeUrl}/${params?.examName}` },
     // { name: unFormatSlug(params?.level_id.toUpperCase()), url: `${homeUrl}/${params?.examName}/${params?.level_id}` },
     // { name: unFormatSlug(params?.year.toUpperCase()), url: `${homeUrl}/${params?.examName}/${params?.level_id}/${params?.year}` },
-    { name: unFormatSlug(params?.questionId.toUpperCase()), url: `${homeUrl}/${params?.examName}/${params?.level_id}/${params?.year}/${params?.questionId}` },
+    // { name: unFormatSlug(params?.questionId.toUpperCase()), url: `${homeUrl}/${params?.examName}/${params?.level_id}/${params?.year}/${params?.questionId}` },
   ];
 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
@@ -81,12 +81,19 @@ export default async function page({ params }: { params: { locale: string, quest
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
+      <MainContainer padding="py-4" bgColor="transparent"  maxWidth="max-w-[900px]">
 
-      <MainBreadcrumbs items={breadcrumbItems} />
+        <CustomBreadcrumbs
+          padding="0px 4px 20px 4px"
+          isShow={true}
+          items={breadcrumbItems}
+        />
 
-      <AssessmentQuestionBlock data={data?.data} />
-      {/* <SimilarQuestionsSection /> */}
-      {/* <OthersExamsSection /> */}
+        <AssessmentQuestionBlock data={data?.data} />
+        {/* <SimilarQuestionsSection /> */}
+        {/* <OthersExamsSection /> */}
+
+      </MainContainer>
     </div>
   );
 }
