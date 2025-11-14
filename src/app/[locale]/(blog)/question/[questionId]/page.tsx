@@ -81,6 +81,7 @@ export default async function page({
   ];
 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
+  
   return (
     <div>
       <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
