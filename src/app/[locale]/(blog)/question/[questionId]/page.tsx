@@ -9,6 +9,7 @@ import console from "console";
 import { unFormatSlug } from "@/utils/slugify";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import MainContainer from "@/components/main-container";
+import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 
 // export async function generateMetadata({ params }: { params: { locale: string, questionId: string } }): Promise<Metadata> {
 //   const locale = params?.locale ?? "en";
@@ -50,17 +51,23 @@ import MainContainer from "@/components/main-container";
 //   }
 // }
 
-export default async function page({ params }: { params: { locale: string, questionId: string } }) {
+export default async function page({
+  params,
+}: {
+  params: { locale: string; questionId: string };
+}) {
   const locale = params?.locale ?? "en";
   const str = params?.questionId ?? "";
   const questionId = str.split("-").pop();
-  const query = `id=${questionId}&limit_q=2`
+  const query = `id=${questionId}&limit_q=2`;
 
-  const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions?${query}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.MAIN_BACKEND_URL}/blog/get-questions?${query}`,
+    {
+      cache: "no-store",
+    }
+  );
   const data = await res.json();
-
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
@@ -76,13 +83,13 @@ export default async function page({ params }: { params: { locale: string, quest
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
   return (
     <div>
+      <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
-      <MainContainer padding="py-4" bgColor="transparent"  maxWidth="max-w-[900px]">
-
+      <MainContainer
+        padding="py-4"
+        bgColor="transparent"
+        maxWidth="max-w-[900px]"
+      >
         <CustomBreadcrumbs
           padding="0px 4px 20px 4px"
           isShow={true}
@@ -92,7 +99,6 @@ export default async function page({ params }: { params: { locale: string, quest
         <AssessmentQuestionBlock data={data?.data} />
         {/* <SimilarQuestionsSection /> */}
         {/* <OthersExamsSection /> */}
-
       </MainContainer>
     </div>
   );

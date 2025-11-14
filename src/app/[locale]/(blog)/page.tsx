@@ -1,22 +1,25 @@
 import BlogExamCardsSection from "@/components/blog/blog-exam-cards";
-import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
-import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
+import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
 import { Metadata } from "next";
 import React from "react";
 
-
-export async function generateMetadata({ params, searchParams }: { params: { locale: string, examName: string }, searchParams: { courseId?: string } }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: { locale: string; examName: string };
+  searchParams: { courseId?: string };
+}): Promise<Metadata> {
   const locale = params?.locale ?? "en";
-  const courseId = searchParams?.courseId ?? ""
-  const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
+  const courseId = searchParams?.courseId ?? "";
+  const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`;
   try {
-
     // ✅ Correct API fetch
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/courses?${query}`,
       { cache: "no-store" }
-    )
+    );
     const data = await res.json();
     const baseTitle = (data?.seoTitle as string) || "Teaching Exams";
     const baseDescription =
@@ -43,7 +46,11 @@ export async function generateMetadata({ params, searchParams }: { params: { loc
     return {
       title: fallbackTitle,
       description: fallbackDesc,
-      openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
+      openGraph: {
+        title: fallbackTitle,
+        description: fallbackDesc,
+        type: "website",
+      },
     };
   }
 }
@@ -51,9 +58,9 @@ export async function generateMetadata({ params, searchParams }: { params: { loc
 export default async function Page({
   params,
 }: {
-  params: { locale: string, examName: string }
+  params: { locale: string; examName: string };
 }) {
-  const locale = params?.locale ?? "en"
+  const locale = params?.locale ?? "en";
 
   const resCourses = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/exam?status=active`,
@@ -61,34 +68,28 @@ export default async function Page({
   );
 
   if (!resCourses.ok) {
-    throw new Error("Failed to fetch e-navigation data")
+    throw new Error("Failed to fetch e-navigation data");
   }
-
 
   const data = await resCourses.json();
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
 
-  const breadcrumbItems = [
-    { name: "Home", url: homeUrl },
-  ]
+  const breadcrumbItems = [{ name: "Home", url: homeUrl }];
 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <div>
+      <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
       {/* <CustomBreadcrumbs
         isShow={true}
         items={breadcrumbItems}
       /> */}
       {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
-      <BlogExamCardsSection  data={data?.data} />
+      <BlogExamCardsSection data={data?.data} />
     </div>
   );
 }

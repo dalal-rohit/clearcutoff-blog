@@ -12,6 +12,7 @@ import MainContainer from "@/components/main-container";
 import CustomizableHeader from "@/components/customizable-header";
 import StarBadge from "@/components/ui/badge/star-badge";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
+import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 type Props = {
   params: {
     locale: string;
@@ -24,10 +25,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = params?.locale ?? "en";
 
   try {
-
-
-
-
     const baseTitle = "Teaching Exams";
     const baseDescription =
       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
@@ -52,19 +49,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: fallbackTitle,
       description: fallbackDesc,
-      openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
+      openGraph: {
+        title: fallbackTitle,
+        description: fallbackDesc,
+        type: "website",
+      },
     };
   }
 }
-
-
-
 
 export default async function page({ params }: Props) {
   const locale = params?.locale ?? "en";
 
   const examName = params?.examName?.toUpperCase() ?? "";
-
 
   // Build query string safely
   const queryYears = `exam_id=${params?.examName}`;
@@ -74,7 +71,6 @@ export default async function page({ params }: Props) {
     `${process.env.MAIN_BACKEND_URL}/blog/get-years?${queryYears}`,
     { cache: "no-store" }
   );
-
 
   const dataYears = await resYears.json();
   if (dataYears?.data?.length === 0) {
@@ -90,29 +86,27 @@ export default async function page({ params }: Props) {
     { name: examName, url: examsUrl },
     { name: unFormatSlug(params?.level_id ?? ""), url: examsUrl },
     { name: unFormatSlug(params?.year ?? ""), url: examsUrl },
-  ]
+  ];
 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
   return (
     <div>
+      <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
-
-      <CustomBreadcrumbs
-        isShow={true}
-        items={breadcrumbItems}
-      />
-      <MainContainer maxWidth="max-w-[900px]" padding="py-4" bgColor="bg-[#f8fafc]">
-
-        <div className='space-y-12'>
+      <CustomBreadcrumbs isShow={true} items={breadcrumbItems} />
+      <MainContainer
+        maxWidth="max-w-[900px]"
+        padding="py-4"
+        bgColor="bg-[#f8fafc]"
+      >
+        <div className="space-y-12">
           <CustomizableHeader
             showEyebrow={false}
             heading={`${examName} Exam ${unFormatSlug(params?.level_id ?? "")}`}
             highlightText={examName}
-            subheading={`${examName} exam ${unFormatSlug(params?.level_id ?? "")} preparation with Clear Cutoff`}
+            subheading={`${examName} exam ${unFormatSlug(
+              params?.level_id ?? ""
+            )} preparation with Clear Cutoff`}
             headingColor="text-gray-900"
             highlightColor="text-blue-500"
             subheadingColor="text-gray-600"
@@ -121,13 +115,10 @@ export default async function page({ params }: Props) {
             headingSize="heading-xlarge !font-semibold"
           />
 
-
-
           {dataYears?.data?.length > 0 && (
             <TestByYears data={dataYears.data} examName={examName} />
           )}
         </div>
-
       </MainContainer>
 
       {/* <SimilarQuestionsSection /> */}

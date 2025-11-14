@@ -8,6 +8,7 @@ import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import CustomizableHeader from "@/components/customizable-header";
 import { capitalizeFirst } from "@/utils/text/textFormat";
 import DetailsSectionCard from "@/components/blog/assessment-question/details-section-card";
+import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 
 // export async function generateMetadata({ params }: { params: { locale: string, level_id: string } }): Promise<Metadata> {
 //   const locale = params?.locale ?? "en";
@@ -104,11 +105,7 @@ export default async function page({ params }: { params: { locale: string, examN
   return (
     <div>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
-
+            <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
 
       <MainContainer maxWidth="max-w-[900px]" padding='py-4' className='space-y-5' bgColor='bg-transparent'>
         <div className="px-4">

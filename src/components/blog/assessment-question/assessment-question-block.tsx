@@ -61,7 +61,9 @@ export default function AssessmentQuestionBlock({ data }: { data: AssessmentQues
           </div>
         </div>
         <div>
-          <span className="body-large !font-normal" dangerouslySetInnerHTML={{ __html: selectedQuestion?.question_text ?? "" }} />
+           <p className="body-large !font-normal" >
+                {removeMd(selectedQuestion?.question_text ?? "")}
+              </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[

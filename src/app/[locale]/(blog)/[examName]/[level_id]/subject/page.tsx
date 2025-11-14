@@ -12,6 +12,7 @@ import MainContainer from "@/components/main-container";
 import CustomizableHeader from "@/components/customizable-header";
 import StarBadge from "@/components/ui/badge/star-badge";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
+import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 type Props = {
   params: {
     locale: string;
@@ -94,10 +95,8 @@ export default async function page({ params }: Props) {
   return (
     <div>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
+           <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
+     
 
       <CustomBreadcrumbs
         isShow={true}

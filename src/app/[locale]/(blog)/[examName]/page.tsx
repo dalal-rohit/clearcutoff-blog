@@ -1,5 +1,6 @@
 import NotFound from "@/app/not-found";
 import ExamLevelsSection from "@/components/blog/sections/exam-levels-section";
+import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
 import MainContainer from "@/components/main-container";
@@ -9,18 +10,22 @@ import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import React from "react";
 
-
-export async function generateMetadata({ params, searchParams }: { params: { locale: string, examName: string }, searchParams: { courseId?: string } }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: { locale: string; examName: string };
+  searchParams: { courseId?: string };
+}): Promise<Metadata> {
   const locale = params?.locale ?? "en";
-  const courseId = searchParams?.courseId ?? ""
-  const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
+  const courseId = searchParams?.courseId ?? "";
+  const query = `where[exam_id][equals]=${courseId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`;
   try {
-
     // ✅ Correct API fetch
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/e-navigation?${query}`,
       { cache: "no-store" }
-    )
+    );
     const data = await res.json();
     const baseTitle = (data?.seoTitle as string) || "Teaching Exams";
     const baseDescription =
@@ -47,7 +52,11 @@ export async function generateMetadata({ params, searchParams }: { params: { loc
     return {
       title: fallbackTitle,
       description: fallbackDesc,
-      openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
+      openGraph: {
+        title: fallbackTitle,
+        description: fallbackDesc,
+        type: "website",
+      },
     };
   }
 }
@@ -55,15 +64,14 @@ export async function generateMetadata({ params, searchParams }: { params: { loc
 export default async function Page({
   params,
 }: {
-  params: { locale: string, examName: string }
+  params: { locale: string; examName: string };
 }) {
   const locale = params?.locale ?? "en";
 
   const examName = params?.examName?.toUpperCase() ?? "";
 
-
   // Build query string safely
-  const query = `short_name=${params?.examName}&enavigation=true`
+  const query = `short_name=${params?.examName}&enavigation=true`;
 
   // ✅ Correct API fetch
   const res = await fetch(
@@ -71,13 +79,12 @@ export default async function Page({
     { cache: "no-store" }
   );
 
-
   if (!res.ok) {
     return <NotFound />;
   }
 
   const data = await res.json();
-  console.log("data", data)
+  console.log("data", data);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
@@ -86,26 +93,24 @@ export default async function Page({
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
-  ]
-
-
+  ];
 
   if (data.data[0].navigation.length === 1) {
     const singleLevel = data.data[0];
-    const targetId = formatToSlug(singleLevel.name)
+    const targetId = formatToSlug(singleLevel.name);
     redirect(`/${examName.toLowerCase()}/${encodeURIComponent(targetId)}`);
   }
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <div>
+      <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
-
-      <MainContainer padding="py-4" maxWidth="max-w-[800px]" bgColor="bg-[#f8fafc]">
+      <MainContainer
+        padding="py-4"
+        maxWidth="max-w-[800px]"
+        bgColor="bg-[#f8fafc]"
+      >
         <div className="px-3">
           <CustomBreadcrumbs
             padding="0px 4px 20px 4px"
