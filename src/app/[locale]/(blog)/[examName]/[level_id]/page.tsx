@@ -67,24 +67,24 @@ function normalizeToArray(value?: string | string[]) {
 
 
 export default async function page({ params, searchParams }: Props) {
-  const { locale, examName, level_id } = await params;
+  const { locale, examName: examNameParam, level_id } = await params;
   const sp = await searchParams;
   const levels = normalizeToArray(sp.levels);
 
+  const examName = unFormatSlug(examNameParam).toLowerCase();
 
   // console.log("LEVELS ARRAY:", levels.map((l) => unFormatSlug(l))); // <-- Always array!
 
 
   // Build query string safely
-  const queryYears = `exam_id=${examName}`;
+  const queryYears = `exam_id=${examNameParam}`;
   // Convert to proper JSON array string for URL
   const levelsString = encodeURIComponent(JSON.stringify(levels.map(unFormatSlug)));
 
   const querySubjects =
-    `exam_id=${examName}` +
+    `exam_id=${examNameParam}` +
     `&name=${unFormatSlug(level_id ?? "")}` +
     `&levels=${levelsString}`;
-  console.log("QUERY SUBJECTS:", querySubjects); // <-- Always array!
 
   // ✅ Correct API fetch Years
   const resYears = await fetch(
@@ -107,7 +107,7 @@ export default async function page({ params, searchParams }: Props) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
-  const examsUrl = `${homeUrl}/${examName}`;
+  const examsUrl = `${homeUrl}/${examNameParam}`;
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },

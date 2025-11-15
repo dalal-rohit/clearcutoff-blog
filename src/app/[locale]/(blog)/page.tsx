@@ -62,6 +62,20 @@ export default async function Page({
 }) {
   const { locale } = await params;
 
+    // const url = `${process.env.MAIN_BACKEND_URL}/blog/exam?status=active`;
+
+    // const res = await fetch(url, { cache: "no-store" });
+    // const text = await res.text();
+
+
+    // let data1;
+    // try {
+    //   data1 = JSON.parse(text);
+    // } catch (err) {
+    //   console.error("JSON parse failed! Response is not JSON");
+    // }
+
+
   const resCourses = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/exam?status=active`,
     { cache: "no-store" }
@@ -72,18 +86,12 @@ export default async function Page({
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
-
   const breadcrumbItems = [{ name: "Home", url: homeUrl }];
 
   return (
     <div>
       <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
-      {/* <CustomBreadcrumbs
-        isShow={true}
-        items={breadcrumbItems}
-      /> */}
-      {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
       <BlogExamCardsSection data={data?.data} />
     </div>
   );

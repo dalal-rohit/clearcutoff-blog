@@ -1,7 +1,7 @@
 export function formatToSlug(str: string): string {
   return str
     .trim()                          // remove spaces from both ends
-    .toLowerCase()                   // convert to lowercase
+    .toLowerCase()
     .replace(/[^a-z0-9 ]/g, "")      // remove special chars except numbers
     .replace(/\s+/g, "-");           // replace spaces with underscore
 }

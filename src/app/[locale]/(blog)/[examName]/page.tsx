@@ -9,6 +9,7 @@ import { formatToSlug } from "@/utils/slugify";
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import React from "react";
+import { unFormatSlug } from "@/utils/slugify";
 
 // export async function generateMetadata({
 //   params,
@@ -66,10 +67,11 @@ export default async function Page({
 }: {
   params: { locale: string; examName: string };
 }) {
-  const {locale, examName } = await params;
+  const { locale, examName: examNameParam } = await params;
+  const examName = unFormatSlug(examNameParam ?? "").toUpperCase();
 
   // Build query string safely
-  const query = `short_name=${examName}&enavigation=true`;
+  const query = `short_name=${examNameParam}&enavigation=true`;
 
   // ✅ Correct API fetch
   const res = await fetch(
@@ -78,24 +80,19 @@ export default async function Page({
   );
 
   const data = await res.json();
-    if (!data.data) {
+  if (!data.data) {
     return <NotFound />;
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
-  const examsUrl = `${homeUrl}/${examName}`;
+  const examsUrl = `${homeUrl}/${examNameParam}`;
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
   ];
 
-  if (data.data[0].navigation.length === 1) {
-    const singleLevel = data.data[0];
-    const targetId = formatToSlug(singleLevel.name);
-    redirect(`/${examName.toLowerCase()}/${encodeURIComponent(targetId)}`);
-  }
 
   return (
     <div>

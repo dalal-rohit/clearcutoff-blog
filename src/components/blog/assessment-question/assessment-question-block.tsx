@@ -16,6 +16,8 @@ interface AssessmentQuestion {
   createdAt: string;
   exam_instance_id: string;
   explanation: string;
+  exam_instance_id_b: string;
+  stage_id_b: string;
   id: number;
   label_id: string;
   option_1_image_url: string;
@@ -33,14 +35,11 @@ interface AssessmentQuestion {
   section_id: string;
   stage_id: string;
   updatedAt: string;
+  chapter: Chapter;
+  topic: Topic;
 }
 
-const options = [
-  "A",
-  "B",
-  "C",
-  "D",
-]
+const options = ["", "A", "B", "C", "D"];
 
 export default function AssessmentQuestionBlock({ data }: { data: AssessmentQuestion[] }) {
   const [showExplanation, setShowExplanation] = React.useState<{ [key: number]: boolean }>({});
@@ -48,7 +47,6 @@ export default function AssessmentQuestionBlock({ data }: { data: AssessmentQues
 
   const selectedQuestion = data?.find((item: AssessmentQuestion) => item.id === parseInt(params?.questionId.split("-").pop() || ""));
   const otherQuestions = data?.filter((item: AssessmentQuestion) => item.id !== parseInt(params?.questionId.split("-").pop() || ""));
-
   return (
 
     <div className="space-y-5">
@@ -61,9 +59,9 @@ export default function AssessmentQuestionBlock({ data }: { data: AssessmentQues
           </div>
         </div>
         <div>
-           <p className="body-large !font-normal" >
-                {removeMd(selectedQuestion?.question_text ?? "")}
-              </p>
+          <p className="body-large !font-normal" >
+            {removeMd(selectedQuestion?.question_text ?? "")}
+          </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
@@ -83,12 +81,12 @@ export default function AssessmentQuestionBlock({ data }: { data: AssessmentQues
 
       <div className="bg-white p-3">
         <DetailsSectionCard Labels={[
-          { lable: "Exam", value: '2022' },
-          { lable: "Level/Paper", value: "" },
+          { lable: "Exam", value: selectedQuestion?.stage_id_b.split("_")[0] || "" },
+          { lable: "Level/Paper", value: selectedQuestion?.stage_id_b || "" },
           { lable: "State", value: "" },
         ]} sources={[
-          { lable: "Chapter", value: "" },
-          { lable: "Topic", value: "" },
+          { lable: "Chapter", value: selectedQuestion?.chapter?.name || "" },
+          { lable: "Topic", value: selectedQuestion?.topic?.name || "" },
         ]}
           solveTime={"12"} />
       </div>
@@ -152,6 +150,9 @@ export default function AssessmentQuestionBlock({ data }: { data: AssessmentQues
                   index={index}
                   path={`/question/${formatToSlug(limitWords(question.question_text, 4))}-${question.id}`}
                   questionText={snippet}
+                  source={question?.chapter?.name}
+                  chapter_name={question?.chapter?.name}
+                  topic_name={question?.topic?.name}
                 />
               )
             })}

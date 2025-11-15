@@ -5,17 +5,34 @@ import { formatToSlug } from '@/utils/slugify';
 import QuestionCard from '../ui/question-card';
 import { Button } from '@mui/joy';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
+import { capitalizeFirst } from '@/utils/text/textFormat';
 
-export default function QuestionListBySubject({ data }: { data: any }) {
+interface Question {
+    id: number;
+    question_text: string;
+    chapter?: { name?: string };
+    topic?: { name?: string };
+}
+
+interface Chapter {
+    chapterName: string;
+    slug: string;
+    questions: Question[];
+}
+
+export default function QuestionListBySubject({ data }: { data: Chapter[] }) {
     const [loadingId, setLoadingId] = React.useState<number | null>(null);
-    const pathname = usePathname()
+    const params = useParams<{ subject_id: string | string[] }>();
+    const pathname = usePathname();
+    const subjectIdParam = params?.subject_id;
+    const subjectId = Array.isArray(subjectIdParam) ? subjectIdParam[0] : (subjectIdParam ?? "");
 
     return (
         <div className="grid grid-cols-1 gap-4">
 
 
-            {data.map((item: any, index: any) => {
+            {data.map((item: Chapter, index: number) => {
                 return (
                     <div key={index} className='bg-white p-4 rounded space-y-5'>
                         <div className='space-y-1'>
@@ -28,14 +45,14 @@ export default function QuestionListBySubject({ data }: { data: any }) {
                         </div>
                         <div className="grid grid-cols-1 gap-4">
 
-                            {item.questions.map((question: any, index: any) => {
-                                const plain = question.question_text?.replace(/<[^>]*>/g, "") || "";
+                            {item.questions.map((question: Question, index: number) => {
+                                    const plain = question.question_text?.replace(/<[^>]*>/g, "") || "";
                                 const snippet = limitWords(plain, 25);
                                 return (
                                     <QuestionCard
                                         key={index}
                                         q_no={index + 1}
-                                        chapter_name={item.chapter?.name}
+                                        chapter_name={question.chapter?.name}
                                         topic_name={question.topic?.name}
                                         index={index}
                                         setLoadingId={setLoadingId}
@@ -43,6 +60,7 @@ export default function QuestionListBySubject({ data }: { data: any }) {
                                         onClick={() => setLoadingId(question.id)}
                                         questionText={snippet}
                                         active={loadingId === question.id}
+                                        source={capitalizeFirst(subjectId)}
                                     />
                                 )
                             })}

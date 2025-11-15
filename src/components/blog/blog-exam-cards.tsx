@@ -8,6 +8,7 @@ import CardWrap from '../cards/card-wrap'
 import { highlightTextUtil } from '@/utils/highlightTextUtil'
 import Image from 'next/image'
 import CourseCheckBadge from '../ui/badge/course-check-badge'
+import { formatToSlug } from '@/utils/slugify'
 
 const ExamCourseCard = ({ item, onClick, bgcolor }: { item: Exam, onClick: () => void, bgcolor?: string }) => {
     return (
@@ -39,10 +40,10 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
     const onSelect = (item: Exam) => {
         // Save in client-side store (optional)
         setSelectedCourse(item)
-        const examId = item.exam_id;
+        const examId = item.short_name;
 
         // Extract value after the underscore (_) and convert to lowercase
-        const formattedId = examId.split("_")[1]?.toLowerCase() ?? examId.toLowerCase();
+        const formattedId = formatToSlug(examId);
 
         // Navigate with clean lowercase URL
         router.push(`/${formattedId}`);

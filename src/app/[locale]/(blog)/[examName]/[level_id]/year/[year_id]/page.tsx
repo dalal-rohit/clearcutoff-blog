@@ -79,6 +79,7 @@ export default async function page({
   );
   const data = await res.json();
 
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
 
@@ -158,7 +159,7 @@ export default async function page({
             />
             <div className="w-full bg-white p-4">
               <DetailsSectionCard
-                yearId={yearId}
+                yearId={unFormatSlug(yearId).toUpperCase()}
                 Labels={Labels}
                 totalQuestions={data?.data ?? 0}
               />
@@ -180,7 +181,7 @@ export default async function page({
           <div className="p-4 bg-white space-y-2">
             <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-2 ">
               <div className="heading-small col-span-1">
-                Year-wise verified questions
+                Year-wise questions
               </div>
               <div className="flex items-center gap-2 text-[#00a251] col-span-1 md:justify-self-end">
                 <CourseCheckBadge size={16} fill="#00a251" />

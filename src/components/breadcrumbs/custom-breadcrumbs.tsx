@@ -27,6 +27,7 @@ const CustomBreadcrumbs: React.FC<CustomBreadcrumbsProps> = ({
   highlightClass = "bg-[#F1F5FA] py-0.5 px-3 capitalize rounded-lg text-[#0083ff] body-medium !font-semibold ",
   isShow = false,
 }) => {
+  if (!items || items.length === 1) return null;
   return (
     <>
       {isShow && (

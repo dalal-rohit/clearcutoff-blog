@@ -5,7 +5,6 @@ import CustomizableHeader from '@/components/customizable-header'
 import CardWrap from '@/components/cards/card-wrap'
 import MainContainer from '@/components/main-container'
 import { useRouter, usePathname } from 'next/navigation'
-import Image from 'next/image'
 import CourseCheckBadge from '@/components/ui/badge/course-check-badge'
 import { formatToSlug } from '@/utils/slugify'
 

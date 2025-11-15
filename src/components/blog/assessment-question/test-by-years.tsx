@@ -15,7 +15,6 @@ export default function TestByYears({ data, examName }: { data: Data[], examName
 
     const params = useParams<{ locale: string, examName: string, level_id: string, year: string }>();
     const handleSelect = (item: string) => {
-        console.log(item, "item")
     }
     const pathname = usePathname()
 

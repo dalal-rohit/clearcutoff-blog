@@ -9,12 +9,13 @@ import StarBadge from '@/components/ui/badge/star-badge';
 import { Button } from '@mui/joy';
 import CourseCheckBadge from '@/components/ui/badge/course-check-badge';
 import { useParams, usePathname } from 'next/navigation';
-import { formatToSlug } from '@/utils/slugify';
+import { formatToSlug, unFormatSlug } from '@/utils/slugify';
 import YearListModal from '@/components/feature/year-list-modal';
 import { useLanguageStore } from '@/store/useLanguageStore';
 import { isArray } from 'util';
 import QuestionCard from '../ui/question-card';
 import { getQuestionsByLanguage } from '@/utils/getQuestionsByLanguage';
+import { capitalizeFirst } from '@/utils/text/textFormat';
 
 interface AssessmentQuestion {
     correct_option: number;
@@ -39,6 +40,8 @@ interface AssessmentQuestion {
     section_id: string;
     stage_id: string;
     updatedAt: string;
+    chapter: Chapter;
+    topic: Topic;
 }
 
 export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) {
@@ -62,10 +65,13 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
 
     const basePath = usePathname();
 
-    const routeParams = useParams<{ locale: string; examName: string; level_id: string; year: string, year_id: string }>();
+    const routeParams = useParams<{ locale: string; examName: string; level_id: string; year: string, year_id: string,chapter_name: string }>();
     const examName = routeParams?.examName;
     const levelId = routeParams?.level_id;
     const yearId = routeParams?.year_id;
+    const chapterId = routeParams?.chapter_name;
+
+    const sourceName= capitalizeFirst(unFormatSlug(yearId ? yearId : chapterId));
 
 
 
@@ -89,6 +95,9 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
                                     onClick={() => setLoadingId(item.id)}
                                     questionText={snippet}
                                     active={loadingId === item.id}
+                                    source={sourceName}
+                                    chapter_name={item?.chapter?.name}
+                                    topic_name={item?.topic?.name}
                                 />
 
                             </>
