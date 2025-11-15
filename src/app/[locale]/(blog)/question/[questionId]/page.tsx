@@ -80,11 +80,10 @@ export default async function page({
     // { name: unFormatSlug(params?.questionId.toUpperCase()), url: `${homeUrl}/${params?.examName}/${params?.level_id}/${params?.year}/${params?.questionId}` },
   ];
 
-  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
   
   return (
     <div>
-      <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
       <MainContainer
         padding="py-4"

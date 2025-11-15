@@ -88,10 +88,9 @@ export default async function page({ params }: Props) {
     { name: unFormatSlug(params?.year ?? ""), url: examsUrl },
   ];
 
-  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
   return (
     <div>
-      <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
       <CustomBreadcrumbs isShow={true} items={breadcrumbItems} />
       <MainContainer

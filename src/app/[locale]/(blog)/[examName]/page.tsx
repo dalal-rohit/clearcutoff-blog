@@ -100,11 +100,10 @@ export default async function Page({
     const targetId = formatToSlug(singleLevel.name);
     redirect(`/${examName.toLowerCase()}/${encodeURIComponent(targetId)}`);
   }
-  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <div>
-      <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
       <MainContainer
         padding="py-4"

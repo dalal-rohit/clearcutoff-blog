@@ -115,12 +115,10 @@ export default async function page({ params, searchParams }: Props) {
     { name: unFormatSlug(params?.level_id ?? ""), url: examsUrl },
   ]
 
-  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
-
   return (
     <div>
 
-           <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
+           <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
       <MainContainer maxWidth="max-w-[900px]" padding="py-4" bgColor="bg-[#f8fafc]">
         <div className="px-3">

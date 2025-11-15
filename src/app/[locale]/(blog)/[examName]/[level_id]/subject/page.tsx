@@ -1,16 +1,11 @@
 import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
 import React from "react";
 import { Metadata } from "next";
-import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
-import TestByYears from "@/components/blog/assessment-question/test-by-years";
 import { notFound, redirect } from "next/navigation";
 import { unFormatSlug } from "@/utils/slugify";
-import { findLeafNodes } from "@/utils/getLeafNodes";
 import TestBySubjects from "@/components/blog/assessment-question/test-by-subjects";
-import NotFound from "@/app/not-found";
 import MainContainer from "@/components/main-container";
 import CustomizableHeader from "@/components/customizable-header";
-import StarBadge from "@/components/ui/badge/star-badge";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 type Props = {
@@ -55,24 +50,21 @@ type Props = {
 //   }
 // }
 
-
-
-
 export default async function page({ params }: Props) {
   const locale = params?.locale ?? "en";
 
   const examName = params?.examName?.toUpperCase() ?? "";
 
-
   // Build query string safely
-  const querySubjects = `exam_id=${params?.examName}&name=${unFormatSlug(params?.level_id ?? "")}`;
+  const querySubjects = `exam_id=${params?.examName}&name=${unFormatSlug(
+    params?.level_id ?? ""
+  )}`;
 
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-sections?${querySubjects}`,
     { cache: "no-store" }
   );
-
 
   const dataSubjects = await resSubjects.json();
   if (dataSubjects?.data?.length === 0) {
@@ -89,27 +81,26 @@ export default async function page({ params }: Props) {
     { name: examName, url: examsUrl },
     { name: unFormatSlug(params?.level_id ?? ""), url: levelUrl },
     { name: "Subject", url: subjectUrl },
-  ]
+  ];
 
-  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
   return (
     <div>
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
-           <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
-     
-
-      <CustomBreadcrumbs
-        isShow={true}
-        items={breadcrumbItems}
-      />
-      <MainContainer maxWidth="max-w-[900px]" padding="py-4" bgColor="bg-[#f8fafc]">
-
-        <div className='space-y-12'>
+      <CustomBreadcrumbs isShow={true} items={breadcrumbItems} />
+      <MainContainer
+        maxWidth="max-w-[900px]"
+        padding="py-4"
+        bgColor="bg-[#f8fafc]"
+      >
+        <div className="space-y-12">
           <CustomizableHeader
             showEyebrow={false}
             heading={`${examName} Exam ${unFormatSlug(params?.level_id ?? "")}`}
             highlightText={examName}
-            subheading={`${examName} exam ${unFormatSlug(params?.level_id ?? "")} preparation with Clear Cutoff`}
+            subheading={`${examName} exam ${unFormatSlug(
+              params?.level_id ?? ""
+            )} preparation with Clear Cutoff`}
             headingColor="text-gray-900"
             highlightColor="text-blue-500"
             subheadingColor="text-gray-600"
@@ -118,15 +109,10 @@ export default async function page({ params }: Props) {
             headingSize="heading-xlarge !font-semibold"
           />
 
-
-
           {dataSubjects?.data?.length > 0 && (
             <TestBySubjects data={dataSubjects.data} examName={examName} />
           )}
-
-
         </div>
-
       </MainContainer>
 
       {/* <SimilarQuestionsSection /> */}

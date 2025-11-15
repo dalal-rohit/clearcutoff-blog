@@ -21,8 +21,6 @@ import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 //       { cache: "no-store" }
 //     );
 
-
-
 //     const data = await res.json();
 //     const baseTitle = (data?.seoTitle as string) || "Teaching Exams";
 //     const baseDescription =
@@ -54,60 +52,84 @@ import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 //   }
 // }
 
-export default async function page({ params }: { params: { locale: string, examName: string, level_id: string, year: string, year_id: string } }) {
-  const locale = params?.locale ?? "en"
+export default async function page({
+  params,
+}: {
+  params: {
+    locale: string;
+    examName: string;
+    level_id: string;
+    year: string;
+    year_id: string;
+  };
+}) {
+  const locale = params?.locale ?? "en";
   const examName = params?.examName;
   const levelId = params?.level_id;
   const examYear = params?.year_id.replace(/-/g, "_").toUpperCase();
   const yearId = params?.year_id;
 
-  const query = `year=${examYear}`
+  const query = `year=${examYear}`;
 
-  const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions?${query}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.MAIN_BACKEND_URL}/blog/get-questions?${query}`,
+    {
+      cache: "no-store",
+    }
+  );
   const data = await res.json();
-
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
-    { name: unFormatSlug(params?.examName.toLocaleUpperCase()), url: `${homeUrl}/${params?.examName}` },
-    { name: capitalizeFirst(unFormatSlug(params?.level_id)), url: `${homeUrl}/${params?.examName}/${params?.level_id}` },
-    { name: unFormatSlug(examYear.toUpperCase()), url: `${homeUrl}/${params?.examName}/${params?.level_id}/${params?.year}` },
-  ]
+    {
+      name: unFormatSlug(params?.examName.toLocaleUpperCase()),
+      url: `${homeUrl}/${params?.examName}`,
+    },
+    {
+      name: capitalizeFirst(unFormatSlug(params?.level_id)),
+      url: `${homeUrl}/${params?.examName}/${params?.level_id}`,
+    },
+    {
+      name: unFormatSlug(examYear.toUpperCase()),
+      url: `${homeUrl}/${params?.examName}/${params?.level_id}/${params?.year}`,
+    },
+  ];
 
   const Labels = [
     {
-      lable: 'Exam',
-      value: examName.toLocaleUpperCase() ?? "REET"
+      lable: "Exam",
+      value: examName.toLocaleUpperCase() ?? "REET",
     },
     {
-      lable: 'Level',
-      value: unFormatSlug(levelId ?? "") ?? ""
+      lable: "Level",
+      value: unFormatSlug(levelId ?? "") ?? "",
     },
     {
-      lable: 'State',
-      value: "Rajasthan"
+      lable: "State",
+      value: "Rajasthan",
     },
-  ]
-
+  ];
 
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   function opacityToHex(opacity: number) {
     const value = Math.round(opacity * 255);
-    return value.toString(16).padStart(2, '0').toUpperCase();
+    return value.toString(16).padStart(2, "0").toUpperCase();
   }
 
   return (
     <div>
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
-            <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
-
-      <MainContainer maxWidth="max-w-[900px]" padding='py-4' className='space-y-5' bgColor='bg-transparent'>
+      <MainContainer
+        maxWidth="max-w-[900px]"
+        padding="py-4"
+        className="space-y-5"
+        bgColor="bg-transparent"
+      >
         <div className="px-4">
           <CustomBreadcrumbs
             padding="0px 4px 20px 4px"
@@ -119,9 +141,13 @@ export default async function page({ params }: { params: { locale: string, examN
           <div className="flex flex-col gap-5">
             <CustomizableHeader
               showEyebrow={false}
-              heading={`${examName.toUpperCase()} Exam ${unFormatSlug(params?.level_id ?? "")}`}
+              heading={`${examName.toUpperCase()} Exam ${unFormatSlug(
+                params?.level_id ?? ""
+              )}`}
               highlightText={examName.toUpperCase()}
-              subheading={`${examName.toUpperCase()} exam ${unFormatSlug(params?.level_id ?? "")} preparation with Clear Cutoff`}
+              subheading={`${examName.toUpperCase()} exam ${unFormatSlug(
+                params?.level_id ?? ""
+              )} preparation with Clear Cutoff`}
               headingColor="text-gray-900"
               highlightColor="text-blue-500"
               subheadingColor="text-gray-600"
@@ -130,15 +156,17 @@ export default async function page({ params }: { params: { locale: string, examN
               headingSize="heading-xlarge !font-semibold"
               className="px-4"
             />
-            <div className='w-full bg-white p-4'>
-              <DetailsSectionCard yearId={yearId} Labels={Labels} totalQuestions={data?.data ?? 0} />
-             
+            <div className="w-full bg-white p-4">
+              <DetailsSectionCard
+                yearId={yearId}
+                Labels={Labels}
+                totalQuestions={data?.data ?? 0}
+              />
             </div>
           </div>
         </div>
 
         <div className="flex flex-col gap-5">
-
           <CustomizableHeader
             showEyebrow={false}
             heading={`Verified Answers and Explanations`}
@@ -150,20 +178,18 @@ export default async function page({ params }: { params: { locale: string, examN
           />
 
           <div className="p-4 bg-white space-y-2">
-            <div className='grid grid-cols-1 md:grid-cols-2 items-center gap-2 '>
-              <div className='heading-small col-span-1'>
+            <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-2 ">
+              <div className="heading-small col-span-1">
                 Year-wise verified questions
               </div>
-              <div className='flex items-center gap-2 text-[#00a251] col-span-1 md:justify-self-end'>
+              <div className="flex items-center gap-2 text-[#00a251] col-span-1 md:justify-self-end">
                 <CourseCheckBadge size={16} fill="#00a251" />
                 <p>by Clear Cutoff</p>
               </div>
             </div>
 
             <QuestionsList data={data?.data} />
-
           </div>
-
         </div>
       </MainContainer>
       {/* <SimilarQuestionsSection /> */}

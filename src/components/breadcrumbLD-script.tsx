@@ -1,7 +1,10 @@
 "use client";
+import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
 import React from "react";
 
-export default function BreadcrumbScriptLD({ breadcrumbLd }: any) {
+export default function BreadcrumbScriptLD({ breadcrumbItems }: any) {
+    const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
+
   return (
     <script
       type="application/ld+json"

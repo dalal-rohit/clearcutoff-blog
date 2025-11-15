@@ -78,11 +78,9 @@ export default async function Page({
 
   const breadcrumbItems = [{ name: "Home", url: homeUrl }];
 
-  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
-
   return (
     <div>
-      <BreadcrumbScriptLD breadcrumbLd={breadcrumbLd} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
       {/* <CustomBreadcrumbs
         isShow={true}
