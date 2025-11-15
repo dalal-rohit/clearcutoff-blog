@@ -1,42 +1,22 @@
-// import { MetadataRoute } from "next";
-
-// const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
-// const PAYLOAD_API = `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api`;
-
-// const allowedCourses = ["ctet", "htet", "reet", "hptet", "uptet"];
-
-// export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-//   const urls: MetadataRoute.Sitemap = [];
-
-//   try {
-//     // Fetch all exams (like reet, ctet, htet)
-//     const res = await fetch(`${PAYLOAD_API}/exams?limit=100`, { cache: "no-store" });
-//     const exams = (await res.json()).docs || [];
-
-//     for (const exam of exams) {
-//       const examId = exam.exam_id;
-
-//       // Extract value after the underscore (_) and convert to lowercase
-//       const formattedId = examId.split("_")[1]?.toLowerCase() ?? examId.toLowerCase();
-
-//       if (!allowedCourses.includes(formattedId)) {
-//         continue;
-//       }
-
-//       urls.push({
-//         url: `${BASE_URL}/sitemaps/${formattedId}.xml`,
-//         lastModified: new Date(exam.updatedAt || Date.now()),
-//       });
-//     }
-
-//     // Add root/home page too
-//     urls.push({
-//       url: BASE_URL,
-//       lastModified: new Date(),
-//     });
-//   } catch (err) {
-//     console.error("Error generating main sitemap:", err);
-//   }
-
-//   return urls;
-// }
+export default function sitemap() {
+  return [
+    {
+      url: "https://yourdomain.com/",
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1.0,
+    },
+    {
+      url: "https://yourdomain.com/about",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: "https://yourdomain.com/contact",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+  ];
+}
