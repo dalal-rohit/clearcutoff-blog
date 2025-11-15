@@ -55,6 +55,7 @@ import React from "react";
 //   }
 // }
 
+
 export default async function Page({
   params,
 }: {
@@ -62,27 +63,66 @@ export default async function Page({
 }) {
   const { locale } = await params;
 
-    // const url = `${process.env.MAIN_BACKEND_URL}/blog/exam?status=active`;
+  // --- Start Debugging ---
+  const backendUrl = process.env.MAIN_BACKEND_URL;
+  const fullFetchUrl = `${backendUrl}/blog/exam?status=active`;
 
-    // const res = await fetch(url, { cache: "no-store" });
-    // const text = await res.text();
-
-
-    // let data1;
-    // try {
-    //   data1 = JSON.parse(text);
-    // } catch (err) {
-    //   console.error("JSON parse failed! Response is not JSON");
-    // }
-
-
-  const resCourses = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/exam?status=active`,
-    { cache: "no-store" }
-  );
+  // Log the URL being fetched
+  console.log(`[DEBUG] Fetching from: ${fullFetchUrl}`);
+  // Log the backend URL variable itself
+  if (!backendUrl) {
+    console.error(`[ERROR] MAIN_BACKEND_URL is UNDEFINED. Check Vercel environment variables!`);
+    // Optionally, throw an error or redirect immediately if this is critical
+    // throw new Error("Backend URL is not configured.");
+  }
 
 
-  const data = await resCourses.json();
+  let data: any = null; // Initialize data
+  try {
+    const resCourses = await fetch(fullFetchUrl, { cache: "no-store" });
+
+    // Log the response status and headers
+    console.log(`[DEBUG] Response Status for ${fullFetchUrl}: ${resCourses.status}`);
+    console.log(`[DEBUG] Response Content-Type: ${resCourses.headers.get('content-type')}`);
+
+    if (!resCourses.ok) {
+      // If the response is not OK (e.g., 404, 500)
+      const errorBody = await resCourses.text(); // Read the body as text to see the HTML
+      console.error(
+        `[ERROR] Fetch for ${fullFetchUrl} failed with status ${resCourses.status}. ` +
+        `Response body (first 500 chars): ${errorBody.substring(0, 500)}`
+      );
+      // Depending on your app, you might want to show a user-friendly error
+      // or redirect to a 404 page if this is a fatal data dependency.
+      // For now, we'll let it proceed to try parsing, which will likely fail.
+      // notFound(); // Uncomment if a failed fetch should lead to a 404 page
+      throw new Error(`Failed to fetch course data: ${resCourses.status} - ${errorBody.substring(0, 100)}`);
+    }
+
+    const contentType = resCourses.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+        const unexpectedResponse = await resCourses.text();
+        console.error(`[ERROR] Expected JSON from ${fullFetchUrl}, but received Content-Type "${contentType}". ` +
+                      `Full response (first 500 chars): ${unexpectedResponse.substring(0, 500)}`);
+        throw new Error(`Unexpected content type from API: ${contentType}. Response starts with: ${unexpectedResponse.substring(0, 100)}`);
+    }
+
+    data = await resCourses.json(); // This is where the SyntaxError would occur
+    console.log(`[DEBUG] Successfully fetched course data (first 100 chars): ${JSON.stringify(data).substring(0, 100)}`);
+
+  } catch (error: any) {
+    console.error(`[CRITICAL ERROR] Error during fetch or JSON parsing for ${fullFetchUrl}:`, error);
+    // You can rethrow or handle the error gracefully here
+    // For example, if data fetching is critical, you might return an error UI or call notFound()
+    // throw error; // Re-throw to make sure Vercel catches it in logs
+    if (error.message.includes("Unexpected token '<'")) {
+        console.error("[CRITICAL] This strongly indicates HTML was returned instead of JSON.");
+    }
+    // Optionally, set data to an empty array or null to prevent crashes in the UI
+    data = { data: [] }; // Fallback for UI if it expects an object with a data property
+  }
+  // --- End Debugging ---
+
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
@@ -92,7 +132,8 @@ export default async function Page({
     <div>
       <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
-      <BlogExamCardsSection data={data?.data} />
+      {/* Ensure BlogExamCardsSection can handle data being null or having an empty 'data' property */}
+      <BlogExamCardsSection data={data?.data || []} />
     </div>
   );
 }
