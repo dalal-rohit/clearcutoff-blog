@@ -56,8 +56,8 @@ export default async function page({
 }: {
   params: { locale: string; questionId: string };
 }) {
-  const locale = params?.locale ?? "en";
-  const str = params?.questionId ?? "";
+  const {locale, questionId: questionIdParam} = await params;
+  const str = questionIdParam ?? "";
   const questionId = str.split("-").pop();
   const query = `id=${questionId}&limit_q=2`;
 

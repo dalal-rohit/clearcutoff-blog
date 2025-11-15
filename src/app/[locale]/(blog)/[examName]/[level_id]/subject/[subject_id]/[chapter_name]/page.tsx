@@ -9,7 +9,9 @@ import CustomizableHeader from '@/components/customizable-header';
 
 export default async function page({ params }: { params: { locale: string, examName: string, level_id: string, subject: string, subject_id: string, chapter_name: string } }) {
 
-  const query = `slug=${params?.chapter_name}`
+  const {locale, examName, level_id, subject, subject_id, chapter_name} = await params;
+
+  const query = `slug=${chapter_name}`
 
   const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions-by-chapter?${query}`, {
     cache: "no-store",
@@ -21,11 +23,11 @@ export default async function page({ params }: { params: { locale: string, examN
   const Labels = [
     {
       lable: 'Exam',
-      value: params?.examName.toUpperCase() ?? "REET"
+      value: examName.toUpperCase() ?? "REET"
     },
     {
       lable: 'Level',
-      value: params?.level_id.toUpperCase() ?? ""
+      value: level_id.toUpperCase() ?? ""
     },
     {
       lable: 'State',
@@ -46,9 +48,9 @@ export default async function page({ params }: { params: { locale: string, examN
       <div className='px-3'>
         <CustomizableHeader
           showEyebrow={false}
-          heading={`${params?.examName.toUpperCase()} Exam - ${unFormatSlug(params?.level_id ?? "")} - ${unFormatSlug(params?.chapter_name ?? "")}`}
-          highlightText={params?.examName.toUpperCase()}
-          subheading={`${params?.examName.toUpperCase()} exam ${unFormatSlug(params?.level_id ?? "")} preparation with Clear Cutoff`}
+          heading={`${examName.toUpperCase()} Exam - ${unFormatSlug(level_id ?? "")} - ${unFormatSlug(chapter_name ?? "")}`}
+          highlightText={examName.toUpperCase()}
+          subheading={`${examName.toUpperCase()} exam ${unFormatSlug(level_id ?? "")} preparation with Clear Cutoff`}
           headingColor="text-gray-900"
           highlightColor="text-blue-500"
           subheadingColor="text-gray-600"
@@ -61,7 +63,7 @@ export default async function page({ params }: { params: { locale: string, examN
       <div className='w-full bg-white px-3 py-4'>
 
         <div className=' '>
-          <DetailsSectionCard sourceLabel="Chapter" Labels={Labels} totalQuestions={questions} yearId={unFormatSlug(params?.chapter_name ?? "")} />
+          <DetailsSectionCard sourceLabel="Chapter" Labels={Labels} totalQuestions={questions} yearId={unFormatSlug(chapter_name ?? "")} />
 
         </div>
 

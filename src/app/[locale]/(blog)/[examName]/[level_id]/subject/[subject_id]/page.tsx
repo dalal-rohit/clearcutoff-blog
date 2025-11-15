@@ -7,10 +7,9 @@ import { limitWords } from '@/utils/text/textLimit';
 import React from 'react'
 
 export default async function page({ params }: { params: { locale: string, examName: string, level_id: string, subject: string, subject_id: string } }) {
-  const locale = params?.locale ?? "en"
-  const sectionId = params?.subject_id;
+  const {locale, examName, level_id, subject, subject_id} = await params;
 
-  const query = `section_id=${params?.examName}&name=${params?.subject_id}`
+  const query = `section_id=${examName}&name=${subject_id}`
 
   const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions-by-section?${query}`, {
     cache: "no-store",
@@ -34,11 +33,11 @@ export default async function page({ params }: { params: { locale: string, examN
   const Labels = [
     {
       lable: 'Exam',
-      value: params?.examName ?? "REET"
+      value: examName ?? "REET"
     },
     {
       lable: 'Level',
-      value: params?.level_id ?? ""
+      value: level_id ?? ""
     },
     {
       lable: 'State',

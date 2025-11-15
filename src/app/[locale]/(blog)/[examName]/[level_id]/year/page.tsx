@@ -59,12 +59,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function page({ params }: Props) {
-  const locale = params?.locale ?? "en";
+  const {locale, examName: examNameParam, level_id, year} = await params;
 
-  const examName = params?.examName?.toUpperCase() ?? "";
+  const examName = examNameParam?.toUpperCase() ?? "";
 
   // Build query string safely
-  const queryYears = `exam_id=${params?.examName}`;
+  const queryYears = `exam_id=${examNameParam}`;
 
   // ✅ Correct API fetch Years
   const resYears = await fetch(
@@ -79,13 +79,13 @@ export default async function page({ params }: Props) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
-  const examsUrl = `${homeUrl}/${params?.examName}`;
+  const examsUrl = `${homeUrl}/${examNameParam}`;
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
-    { name: unFormatSlug(params?.level_id ?? ""), url: examsUrl },
-    { name: unFormatSlug(params?.year ?? ""), url: examsUrl },
+    { name: unFormatSlug(level_id ?? ""), url: examsUrl },
+    { name: unFormatSlug(year ?? ""), url: examsUrl },
   ];
 
   return (
@@ -101,10 +101,10 @@ export default async function page({ params }: Props) {
         <div className="space-y-12">
           <CustomizableHeader
             showEyebrow={false}
-            heading={`${examName} Exam ${unFormatSlug(params?.level_id ?? "")}`}
+            heading={`${examName} Exam ${unFormatSlug(level_id ?? "")}`}
             highlightText={examName}
             subheading={`${examName} exam ${unFormatSlug(
-              params?.level_id ?? ""
+              level_id ?? ""
             )} preparation with Clear Cutoff`}
             headingColor="text-gray-900"
             highlightColor="text-blue-500"

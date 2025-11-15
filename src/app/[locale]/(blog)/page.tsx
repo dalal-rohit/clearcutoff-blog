@@ -60,16 +60,13 @@ export default async function Page({
 }: {
   params: { locale: string; examName: string };
 }) {
-  const locale = params?.locale ?? "en";
+  const { locale } = await params;
 
   const resCourses = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/exam?status=active`,
     { cache: "no-store" }
   );
 
-  // if (!resCourses.ok) {
-  //   throw new Error("Failed to fetch e-navigation data");
-  // }
 
   const data = await resCourses.json();
 

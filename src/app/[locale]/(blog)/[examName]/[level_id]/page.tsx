@@ -23,42 +23,42 @@ type Props = {
     levels?: string | string[]; // ✅ Accept both
   };
 };
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-  const locale = params?.locale ?? "en";
+// export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+//   const locale = params?.locale ?? "en";
 
-  try {
-
-
+//   try {
 
 
-    const baseTitle = "Teaching Exams";
-    const baseDescription =
-      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
 
-    const title = `${baseTitle} | ClearCutoff`;
-    return {
-      title,
-      description: baseDescription,
-      openGraph: {
-        title,
-        description: baseDescription,
-        type: "website",
-      },
-      alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
-      },
-    };
-  } catch {
-    const fallbackTitle = "Teaching Exams | ClearCutoff";
-    const fallbackDesc =
-      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-    return {
-      title: fallbackTitle,
-      description: fallbackDesc,
-      openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
-    };
-  }
-}
+
+//     const baseTitle = "Teaching Exams";
+//     const baseDescription =
+//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
+
+//     const title = `${baseTitle} | ClearCutoff`;
+//     return {
+//       title,
+//       description: baseDescription,
+//       openGraph: {
+//         title,
+//         description: baseDescription,
+//         type: "website",
+//       },
+//       alternates: {
+//         canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
+//       },
+//     };
+//   } catch {
+//     const fallbackTitle = "Teaching Exams | ClearCutoff";
+//     const fallbackDesc =
+//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
+//     return {
+//       title: fallbackTitle,
+//       description: fallbackDesc,
+//       openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
+//     };
+//   }
+// }
 
 function normalizeToArray(value?: string | string[]) {
   if (!value) return [];
@@ -67,22 +67,22 @@ function normalizeToArray(value?: string | string[]) {
 
 
 export default async function page({ params, searchParams }: Props) {
-  const locale = params?.locale ?? "en";
-  const levels = normalizeToArray(searchParams.levels);
+  const { locale, examName, level_id } = await params;
+  const sp = await searchParams;
+  const levels = normalizeToArray(sp.levels);
 
-  const examName = params?.examName?.toUpperCase() ?? "";
 
   // console.log("LEVELS ARRAY:", levels.map((l) => unFormatSlug(l))); // <-- Always array!
 
 
   // Build query string safely
-  const queryYears = `exam_id=${params?.examName}`;
+  const queryYears = `exam_id=${examName}`;
   // Convert to proper JSON array string for URL
   const levelsString = encodeURIComponent(JSON.stringify(levels.map(unFormatSlug)));
 
   const querySubjects =
-    `exam_id=${params.examName}` +
-    `&name=${unFormatSlug(params.level_id ?? "")}` +
+    `exam_id=${examName}` +
+    `&name=${unFormatSlug(level_id ?? "")}` +
     `&levels=${levelsString}`;
   console.log("QUERY SUBJECTS:", querySubjects); // <-- Always array!
 
@@ -107,18 +107,18 @@ export default async function page({ params, searchParams }: Props) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
-  const examsUrl = `${homeUrl}/${params?.examName}`;
+  const examsUrl = `${homeUrl}/${examName}`;
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
-    { name: unFormatSlug(params?.level_id ?? ""), url: examsUrl },
+    { name: unFormatSlug(level_id ?? ""), url: examsUrl },
   ]
 
   return (
     <div>
 
-           <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
 
       <MainContainer maxWidth="max-w-[900px]" padding="py-4" bgColor="bg-[#f8fafc]">
         <div className="px-3">
@@ -132,9 +132,9 @@ export default async function page({ params, searchParams }: Props) {
           <div className="px-3">
             <CustomizableHeader
               showEyebrow={false}
-              heading={`${examName} Exam ${unFormatSlug(params?.level_id ?? "")}`}
+              heading={`${examName} Exam ${unFormatSlug(level_id ?? "")}`}
               highlightText={examName}
-              subheading={`${examName} exam ${unFormatSlug(params?.level_id ?? "")} preparation with Clear Cutoff`}
+              subheading={`${examName} exam ${unFormatSlug(level_id ?? "")} preparation with Clear Cutoff`}
               headingColor="text-gray-900"
               highlightColor="text-blue-500"
               subheadingColor="text-gray-600"

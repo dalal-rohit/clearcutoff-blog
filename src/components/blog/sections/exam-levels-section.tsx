@@ -5,7 +5,7 @@ import CustomizableHeader from '@/components/customizable-header'
 import CardWrap from '@/components/cards/card-wrap'
 import MainContainer from '@/components/main-container'
 import { useRouter, usePathname } from 'next/navigation'
-import { formatToSlug } from '@/utils/slugify'
+import { formatToSlug, unFormatSlug } from '@/utils/slugify'
 import CourseCheckBadge from '@/components/ui/badge/course-check-badge'
 import { highlightTextUtil } from '@/utils/highlightTextUtil'
 import { Button } from '@mui/joy'
@@ -67,7 +67,7 @@ export default function ExamLevelsSection({ data, examName }: { data?: NavItem[]
     const handleReset = () => setTrail([])
     const nextHints = ['Select Paper', 'Select Subject', 'Select Language']
     const nextHint = nextHints[Math.min(trail.length, nextHints.length - 1)]
-    const decodedExamName = decodeURIComponent(examName || "")
+    const decodedExamName = unFormatSlug(examName ?? "").toUpperCase()
 
     return (
         <div className='space-y-8'>

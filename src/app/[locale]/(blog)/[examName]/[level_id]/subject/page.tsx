@@ -51,13 +51,11 @@ type Props = {
 // }
 
 export default async function page({ params }: Props) {
-  const locale = params?.locale ?? "en";
-
-  const examName = params?.examName?.toUpperCase() ?? "";
+  const {locale, examName, level_id, subject } = await params;
 
   // Build query string safely
-  const querySubjects = `exam_id=${params?.examName}&name=${unFormatSlug(
-    params?.level_id ?? ""
+  const querySubjects = `exam_id=${examName}&name=${unFormatSlug(
+    level_id ?? ""
   )}`;
 
   // ✅ Correct API fetch Subjects
@@ -72,14 +70,14 @@ export default async function page({ params }: Props) {
   }
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
-  const examsUrl = `${homeUrl}/${params?.examName}`;
-  const levelUrl = `${examsUrl}/${params?.level_id}`;
-  const subjectUrl = `${levelUrl}/${params?.subject}`;
+  const examsUrl = `${homeUrl}/${examName}`;
+  const levelUrl = `${examsUrl}/${level_id}`;
+  const subjectUrl = `${levelUrl}/${subject}`;
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
-    { name: unFormatSlug(params?.level_id ?? ""), url: levelUrl },
+    { name: unFormatSlug(level_id ?? ""), url: levelUrl },
     { name: "Subject", url: subjectUrl },
   ];
 
@@ -96,10 +94,10 @@ export default async function page({ params }: Props) {
         <div className="space-y-12">
           <CustomizableHeader
             showEyebrow={false}
-            heading={`${examName} Exam ${unFormatSlug(params?.level_id ?? "")}`}
+            heading={`${examName} Exam ${unFormatSlug(level_id ?? "")}`}
             highlightText={examName}
             subheading={`${examName} exam ${unFormatSlug(
-              params?.level_id ?? ""
+              level_id ?? ""
             )} preparation with Clear Cutoff`}
             headingColor="text-gray-900"
             highlightColor="text-blue-500"

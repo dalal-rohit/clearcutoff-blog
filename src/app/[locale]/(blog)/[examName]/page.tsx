@@ -66,12 +66,10 @@ export default async function Page({
 }: {
   params: { locale: string; examName: string };
 }) {
-  const locale = params?.locale ?? "en";
-
-  const examName = params?.examName?.toUpperCase() ?? "";
+  const {locale, examName } = await params;
 
   // Build query string safely
-  const query = `short_name=${params?.examName}&enavigation=true`;
+  const query = `short_name=${examName}&enavigation=true`;
 
   // ✅ Correct API fetch
   const res = await fetch(
@@ -79,16 +77,14 @@ export default async function Page({
     { cache: "no-store" }
   );
 
-  if (!res.ok) {
+  const data = await res.json();
+    if (!data.data) {
     return <NotFound />;
   }
 
-  const data = await res.json();
-  console.log("data", data);
-
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
-  const examsUrl = `${homeUrl}/${params?.examName}`;
+  const examsUrl = `${homeUrl}/${examName}`;
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },

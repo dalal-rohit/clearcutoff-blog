@@ -16,7 +16,6 @@ export default function QuestionListBySubject({ data }: { data: any }) {
 
 
             {data.map((item: any, index: any) => {
-                console.log("item", item)
                 return (
                     <div key={index} className='bg-white p-4 rounded space-y-5'>
                         <div className='space-y-1'>

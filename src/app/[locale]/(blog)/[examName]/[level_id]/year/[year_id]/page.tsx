@@ -63,11 +63,11 @@ export default async function page({
     year_id: string;
   };
 }) {
-  const locale = params?.locale ?? "en";
-  const examName = params?.examName;
-  const levelId = params?.level_id;
-  const examYear = params?.year_id.replace(/-/g, "_").toUpperCase();
-  const yearId = params?.year_id;
+  const {locale, examName: examNameParam, level_id, year, year_id} = await params;
+  const examName = examNameParam?.toUpperCase() ?? "";
+  const levelId = level_id;
+  const examYear = year_id.replace(/-/g, "_").toUpperCase();
+  const yearId = year_id;
 
   const query = `year=${examYear}`;
 
@@ -85,16 +85,16 @@ export default async function page({
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     {
-      name: unFormatSlug(params?.examName.toLocaleUpperCase()),
-      url: `${homeUrl}/${params?.examName}`,
+      name: unFormatSlug(examName.toLocaleUpperCase()),
+      url: `${homeUrl}/${examName}`,
     },
     {
-      name: capitalizeFirst(unFormatSlug(params?.level_id)),
-      url: `${homeUrl}/${params?.examName}/${params?.level_id}`,
+      name: capitalizeFirst(unFormatSlug(levelId)),
+      url: `${homeUrl}/${examName}/${levelId}`,
     },
     {
       name: unFormatSlug(examYear.toUpperCase()),
-      url: `${homeUrl}/${params?.examName}/${params?.level_id}/${params?.year}`,
+      url: `${homeUrl}/${examName}/${levelId}/${year}`,
     },
   ];
 
@@ -142,11 +142,11 @@ export default async function page({
             <CustomizableHeader
               showEyebrow={false}
               heading={`${examName.toUpperCase()} Exam ${unFormatSlug(
-                params?.level_id ?? ""
+                levelId ?? ""
               )}`}
               highlightText={examName.toUpperCase()}
               subheading={`${examName.toUpperCase()} exam ${unFormatSlug(
-                params?.level_id ?? ""
+                levelId ?? ""
               )} preparation with Clear Cutoff`}
               headingColor="text-gray-900"
               highlightColor="text-blue-500"
