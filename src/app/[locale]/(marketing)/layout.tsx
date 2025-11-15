@@ -7,30 +7,30 @@ interface MarketingLayoutProps {
   children: ReactNode;
   params: Promise<{ locale: string }>; // 👈 async, so treat as promise
 }
-async function getGlobalData(locale: string) {
-  const [globalData, reviewsRes, faqRes] = await Promise.all([
-    fetch(
-      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/global-sections?locale=${locale}`,
-      { cache: "no-store" }
-    ),
-    fetch(
-      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/reviews?locale=${locale}`,
-      { cache: "no-store" }
-    ),
-    fetch(
-      `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/faqs?locale=${locale}`,
-      { cache: "no-store" }
-    ),
-  ]);
+// async function getGlobalData(locale: string) {
+//   const [globalData, reviewsRes, faqRes] = await Promise.all([
+//     fetch(
+//       `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/global-sections?locale=${locale}`,
+//       { cache: "no-store" }
+//     ),
+//     fetch(
+//       `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/reviews?locale=${locale}`,
+//       { cache: "no-store" }
+//     ),
+//     fetch(
+//       `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/faqs?locale=${locale}`,
+//       { cache: "no-store" }
+//     ),
+//   ]);
 
-  const [global, reviews, faqs] = await Promise.all([
-    globalData.json(),
-    reviewsRes.json(),
-    faqRes.json(),
-  ]);
+//   const [global, reviews, faqs] = await Promise.all([
+//     globalData.json(),
+//     reviewsRes.json(),
+//     faqRes.json(),
+//   ]);
 
-  return { global, reviews, faqs };
-}
+//   return { global, reviews, faqs };
+// }
 
 export default async function MarketingLayout({
   children,
@@ -38,10 +38,10 @@ export default async function MarketingLayout({
 }: MarketingLayoutProps) {
   const { locale } = await params; // ✅ await before using
 
-  const globalData = await getGlobalData(locale);
+  // const globalData = await getGlobalData(locale);
 
   return (
-    <BlogThemeProvider data={globalData}>
+    <BlogThemeProvider>
       <div className="flex flex-col min-h-screen">
         <CountdownBanner message="Flash Sale Ends In" />
         <Header />

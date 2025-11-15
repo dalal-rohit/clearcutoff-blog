@@ -10,38 +10,38 @@ import React from "react";
 import { Page } from "@/types/landing/page";
 import RegisterModal from "@/components/auth/register-modal";
 
-export async function generateMetadata({ params }: { params: { locale: string } }) {
+// export async function generateMetadata({ params }: { params: { locale: string } }) {
 
-  const locale = await params.locale
+//   const locale = await params.locale
 
-  const resPage = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/pages?where[slug][equals]=landing`,
-    { cache: "no-store" }
-  );
+//   const resPage = await fetch(
+//     `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/pages?where[slug][equals]=landing`,
+//     { cache: "no-store" }
+//   );
 
-  if (!resPage.ok) {
-    throw new Error("Failed to fetch page data");
-  }
+//   if (!resPage.ok) {
+//     throw new Error("Failed to fetch page data");
+//   }
 
-  const dataPage = await resPage.json();
-  const page = dataPage.docs[0] as Page;
+//   const dataPage = await resPage.json();
+//   const page = dataPage.docs[0] as Page;
 
-  const title = (page?.seo_title as string) || "Teaching Exams";
-  const description = (page?.seo_description as string) || "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
+//   const title = (page?.seo_title as string) || "Teaching Exams";
+//   const description = (page?.seo_description as string) || "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
 
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-    },
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
-    },
-  };
-}
+//   return {
+//     title,
+//     description,
+//     openGraph: {
+//       title,
+//       description,
+//       type: "website",
+//     },
+//     alternates: {
+//       canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
+//     },
+//   };
+// }
 
 export default async function page({ params }: { params: { locale: string } }) {
   const locale = await params.locale
