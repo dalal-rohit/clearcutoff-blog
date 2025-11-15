@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import MainContainer from '@/components/main-container'
 import CustomizableHeader from '@/components/customizable-header'
 import { useRouter } from 'next/navigation'
@@ -49,6 +49,17 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
         router.push(`/${formattedId}`);
 
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const backendUrl = process.env.MAIN_BACKEND_URL;
+            const fullFetchUrl = `${backendUrl}/blog/exam?status=active`;
+            const resCourses = await fetch(fullFetchUrl, { cache: "no-store" });
+            const data = await resCourses.json();
+            console.log(data)
+        }
+        fetchData()
+    }, [])
 
     const centralExams = data.filter(item => item.state.toLowerCase().includes('india') && item.status.toLowerCase().includes("active"))
     const stateExams = data
