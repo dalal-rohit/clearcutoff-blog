@@ -76,7 +76,7 @@ export default async function Page({
   // ✅ Correct API fetch
   const res = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/exam?${query}`,
-    { cache: "no-store" }
+    { cache: "force-cache" }
   );
 
   const data = await res.json();

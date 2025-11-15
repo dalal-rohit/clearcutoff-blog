@@ -39,7 +39,6 @@ export async function GET(
         const examRes = await fetch(`${PAYLOAD_API}/blog/exam?${query}`);
         const examData = await examRes.json();
         const exam = examData.data?.[0];
-        console.log(exam);
 
         if (!exam) {
             return new NextResponse(`${originalExamName} Exam not found`, { status: 404 });

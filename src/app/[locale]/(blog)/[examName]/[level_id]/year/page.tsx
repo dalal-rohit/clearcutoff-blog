@@ -69,7 +69,7 @@ export default async function page({ params }: Props) {
   // ✅ Correct API fetch Years
   const resYears = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-years?${queryYears}`,
-    { cache: "no-store" }
+    { cache: "force-cache" }
   );
 
   const dataYears = await resYears.json();

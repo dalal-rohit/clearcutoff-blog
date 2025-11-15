@@ -15,7 +15,7 @@ export default async function page({ params }: { params: { locale: string, examN
   const query = `section_id=${examNameParam}&name=${subject_id}`
 
   const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions-by-section?${query}`, {
-    cache: "no-store",
+    cache: "force-cache",
   });
   const data = await res.json();
 

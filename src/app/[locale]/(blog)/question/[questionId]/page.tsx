@@ -64,7 +64,7 @@ export default async function page({
   const res = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-questions?${query}`,
     {
-      cache: "no-store",
+      cache: "force-cache",
     }
   );
   const data = await res.json();
