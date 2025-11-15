@@ -67,9 +67,9 @@ export default async function Page({
     { cache: "no-store" }
   );
 
-  if (!resCourses.ok) {
-    throw new Error("Failed to fetch e-navigation data");
-  }
+  // if (!resCourses.ok) {
+  //   throw new Error("Failed to fetch e-navigation data");
+  // }
 
   const data = await resCourses.json();
 
