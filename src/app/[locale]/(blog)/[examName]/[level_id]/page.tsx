@@ -1,7 +1,7 @@
 import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
 import React from "react";
 import { Metadata } from "next";
-import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
+import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
 import TestByYears from "@/components/blog/assessment-question/test-by-years";
 import { notFound, redirect } from "next/navigation";
 import { unFormatSlug } from "@/utils/slugify";
@@ -89,12 +89,12 @@ export default async function page({ params, searchParams }: Props) {
   // ✅ Correct API fetch Years
   const resYears = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-years?${queryYears}`,
-    { cache: "force-cache" }
+    { cache: "no-store" }
   );
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-sections?${querySubjects}`,
-    { cache: "force-cache" }
+    { cache: "no-store" }
   );
 
 
@@ -106,7 +106,7 @@ export default async function page({ params, searchParams }: Props) {
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
+  const homeUrl = siteUrl;
   const examsUrl = `${homeUrl}/${examNameParam}`;
 
   const breadcrumbItems = [

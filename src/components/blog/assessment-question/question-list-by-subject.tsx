@@ -11,6 +11,7 @@ import { capitalizeFirst } from '@/utils/text/textFormat';
 interface Question {
     id: number;
     question_text: string;
+    slug: string;
     chapter?: { name?: string };
     topic?: { name?: string };
 }
@@ -48,6 +49,8 @@ export default function QuestionListBySubject({ data }: { data: Chapter[] }) {
                             {item.questions.map((question: Question, index: number) => {
                                     const plain = question.question_text?.replace(/<[^>]*>/g, "") || "";
                                 const snippet = limitWords(plain, 25);
+                                const slug= question?.slug ? question.slug : formatToSlug(limitWords(question.question_text, 4));
+                                
                                 return (
                                     <QuestionCard
                                         key={index}
@@ -56,7 +59,7 @@ export default function QuestionListBySubject({ data }: { data: Chapter[] }) {
                                         topic_name={question.topic?.name}
                                         index={index}
                                         setLoadingId={setLoadingId}
-                                        path={`/question/${formatToSlug(limitWords(question.question_text, 4))}-${question.id}`}
+                                        path={`/question/${slug}-${question.id}`}
                                         onClick={() => setLoadingId(question.id)}
                                         questionText={snippet}
                                         active={loadingId === question.id}

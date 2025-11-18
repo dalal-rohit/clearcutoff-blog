@@ -11,14 +11,17 @@ interface Data {
     instance_id: string[],
     sections: {
         name: string,
-        url: string
+        url: string,
+        slug: string
     }
 }
 
 export default function TestBySubjects({ data, examName }: { data: Data[], examName: string }) {
 
+    console.log("data", data)
+
     const params = useParams<{ locale: string, examName: string, level_id: string, year: string }>();
-  
+
 
     const pathname = usePathname()
 
@@ -45,7 +48,7 @@ export default function TestBySubjects({ data, examName }: { data: Data[], examN
             <div className='bg-white'>
                 {data?.length > 0 && (
                     data.map((item, index) => (
-                        <SubjectsList key={index} index={index + 1} title={item?.sections?.name} pathname={`${pathname}/subject/${formatToSlug(item?.sections?.name)}`} />
+                        <SubjectsList key={index} index={index + 1} title={item?.sections?.name} pathname={`${pathname}/subject/${item?.sections?.slug}`} />
                     ))
                 )}
             </div>

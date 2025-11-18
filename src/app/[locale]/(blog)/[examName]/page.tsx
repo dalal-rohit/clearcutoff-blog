@@ -4,7 +4,7 @@ import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
 import MainContainer from "@/components/main-container";
-import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
+import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
 import { formatToSlug } from "@/utils/slugify";
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -85,7 +85,7 @@ export default async function Page({
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
+  const homeUrl = siteUrl;
   const examsUrl = `${homeUrl}/${examNameParam}`;
 
   const breadcrumbItems = [

@@ -1,5 +1,5 @@
 import React from "react";
-import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
+import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
 import QuestionsList from "@/components/blog/assessment-question/questions-list";
 import { unFormatSlug } from "@/utils/slugify";
 import MainContainer from "@/components/main-container";
@@ -63,7 +63,7 @@ export default async function page({
     year_id: string;
   };
 }) {
-  const {locale, examName: examNameParam, level_id, year, year_id} = await params;
+  const { locale, examName: examNameParam, level_id, year, year_id } = await params;
   const examName = examNameParam?.toUpperCase() ?? "";
   const levelId = level_id;
   const examYear = year_id.replace(/-/g, "_").toUpperCase();
@@ -81,21 +81,25 @@ export default async function page({
 
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
+  const homeUrl = siteUrl;
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     {
-      name: unFormatSlug(examName.toLocaleUpperCase()),
-      url: `${homeUrl}/${examName}`,
+      name: unFormatSlug(examNameParam.toLocaleUpperCase()),
+      url: `${homeUrl}/${examNameParam}`,
     },
     {
       name: capitalizeFirst(unFormatSlug(levelId)),
-      url: `${homeUrl}/${examName}/${levelId}`,
+      url: `${homeUrl}/${examNameParam}/${levelId}`,
+    },
+    {
+      name: "Years",
+      url: `${homeUrl}/${examNameParam}/${levelId}/year`,
     },
     {
       name: unFormatSlug(examYear.toUpperCase()),
-      url: `${homeUrl}/${examName}/${levelId}/${year}`,
+      url: `${homeUrl}/${examNameParam}/${levelId}/year/${year_id}`,
     },
   ];
 

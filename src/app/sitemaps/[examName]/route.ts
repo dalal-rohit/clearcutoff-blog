@@ -45,49 +45,57 @@ export async function GET(
         }
 
         // 2️⃣ Fetch levels
-        const queryLevels = `where[exam_id][like]=${originalExamName}&limit=0&depth=2&draft=false&trash=false`
+        const queryLevels = `parent_id=true`
 
-        const levelsRes = await fetch(`${PAYLOAD_API}/e-stage?${queryLevels}`);
-        const levels = (await levelsRes.json()).docs || [];
+        const levelsRes = await fetch(`${PAYLOAD_API}/blog/get-enavigation?${queryLevels}`);
+        const levels = (await levelsRes.json()).data || [];
 
         for (const level of levels) {
-            const targetId = formatToSlug(level.name)
 
             urls.push({
-                url: `${BASE_URL}/${originalExamName}/${encodeURIComponent(targetId)}`,
+                url: `${BASE_URL}/${originalExamName}/${level?.slug}`,
+                lastModified: level.updatedAt,
+            });
+            urls.push({
+                url: `${BASE_URL}/${originalExamName}/${level?.slug}/subject`,
+                lastModified: level.updatedAt,
+            });
+            urls.push({
+                url: `${BASE_URL}/${originalExamName}/${level?.slug}/year`,
                 lastModified: level.updatedAt,
             });
 
             // 3️⃣ Fetch years
-            const queryYears = `where[stage_id][like]=${originalExamName}&limit=0&depth=2&draft=false&trash=false`
+            const querySubjects = `exam_id=${originalExamName}&slug=${level?.slug}`
 
-            const yearsRes = await fetch(`${PAYLOAD_API}/mapping-instance-and-stage?${queryYears}`);
-            const years = (await yearsRes.json()).docs || [];
-            const instanceIds = JSON.parse(years?.[0].instance_id.replace(/'/g, '"'));
 
-            for (const year of instanceIds) {
+            const subjectsRes = await fetch(`${PAYLOAD_API}/blog/get-subject?${querySubjects}`);
+            const subjects = (await subjectsRes.json()).data || [];
+
+            for (const subject of subjects) {
                 urls.push({
-                    url: `${BASE_URL}/${originalExamName}/${encodeURIComponent(targetId)}/${formatToSlug(unFormatSlug(year))}`,
+                    url: `${BASE_URL}/${originalExamName}/${level?.slug}/subject/${subject?.section?.slug}`,
+                    lastModified: subject.updatedAt,
+                });
+            }
+
+            const queryYears = `exam_id=${originalExamName}`
+
+            const yearsRes = await fetch(`${PAYLOAD_API}/blog/get-years?${queryYears}`);
+            const years = (await yearsRes.json()).data || [];
+
+
+            for (const year of years) {
+                urls.push({
+                    url: `${BASE_URL}/${originalExamName}/${level?.slug}/year/${formatToSlug(year?.instance_id.replace("_", " "))}`,
                     lastModified: year.updatedAt,
                 });
-
-                // 4️⃣ Fetch questions
-                const examYear = formatToSlug(unFormatSlug(year)).replace(/-/g, "_").toUpperCase();
-
-                const queryQuestions = `where[exam_instance_id][equals]=${examYear}&limit=0&depth=2`
-                const questionsRes = await fetch(
-                    `${PAYLOAD_API}/questions?${queryQuestions}&draft=false&trash=false`
-                );
-                const questions = (await questionsRes.json()).docs || [];
-
-                for (const q of questions) {
-                    urls.push({
-                        url: `${BASE_URL}/${originalExamName}/${encodeURIComponent(targetId)}/${formatToSlug(unFormatSlug(year))}/${formatToSlug(limitWords(q.question_text, 4))}-${q.id}`,
-                        lastModified: q.updatedAt,
-                    });
-                }
             }
+
         }
+
+
+        
 
         // Generate XML response
         const xml = `

@@ -2,12 +2,14 @@ import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
 import React from "react";
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { unFormatSlug } from "@/utils/slugify";
+import { formatToSlug, unFormatSlug } from "@/utils/slugify";
 import TestBySubjects from "@/components/blog/assessment-question/test-by-subjects";
 import MainContainer from "@/components/main-container";
 import CustomizableHeader from "@/components/customizable-header";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
+import SubjectsList from "@/components/blog/ui/subjects-list";
+import CourseCheckBadge from "@/components/ui/badge/course-check-badge";
 type Props = {
   params: {
     locale: string;
@@ -51,20 +53,21 @@ type Props = {
 // }
 
 export default async function page({ params }: Props) {
-  const {locale, examName, level_id, subject } = await params;
+  const { locale, examName, level_id, subject } = await params;
 
-  // Build query string safely
-  const querySubjects = `exam_id=${examName}&name=${unFormatSlug(
-    level_id ?? ""
-  )}`;
+  // // Build query string safely
+  // const querySubjects = `exam_id=${examName}&slug=${unFormatSlug(
+  //   level_id ?? ""
+  // )}`;
 
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/get-sections?${querySubjects}`,
-    { cache: "force-cache" }
+    `${process.env.MAIN_BACKEND_URL}/blog/get-subject?exam_id=${examName}&slug=${level_id ?? ""}`,
+    { cache: "no-store" }
   );
 
   const dataSubjects = await resSubjects.json();
+
   if (dataSubjects?.data?.length === 0) {
     return notFound;
   }
@@ -107,9 +110,32 @@ export default async function page({ params }: Props) {
             headingSize="heading-xlarge !font-semibold"
           />
 
-          {dataSubjects?.data?.length > 0 && (
-            <TestBySubjects data={dataSubjects.data} examName={examName} />
-          )}
+          <div className='space-y-4'>
+
+            <div className='w-full px-3 space-y-1'>
+              <div className='heading-large !font-semibold'>
+                By Subjects
+              </div>
+              <div className='grid grid-cols-5 justify-between items-center gap-1'>
+                <div className='heading-small !font-semibold col-span-3'>
+                  Subject-wise questions
+                </div>
+                <div className='flex items-center gap-2 text-[#00a251] col-span-2 justify-self-end'>
+                  <CourseCheckBadge size={16} fill="#00a251" />
+                  <p className='body-medium !font-normal'>by Clear Cutoff</p>
+                </div>
+              </div>
+            </div>
+
+            <div className='bg-white'>
+              {dataSubjects.data?.length > 0 && (
+                dataSubjects.data.map((item, index) => (
+                  <SubjectsList key={index} index={index + 1} title={item?.section?.name} pathname={`subject/${formatToSlug(item?.section?.slug)}`} />
+                ))
+              )}
+            </div>
+          </div>
+
         </div>
       </MainContainer>
 

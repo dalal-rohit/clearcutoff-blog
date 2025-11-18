@@ -1,6 +1,6 @@
 import BlogExamCardsSection from "@/components/blog/blog-exam-cards";
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
-import { getBreadcrumbSchema } from "@/utils/get-breadcrumb-schema";
+import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
 import { Metadata } from "next";
 import React from "react";
 
@@ -71,7 +71,7 @@ export default async function Page({
   const data = await resCourses.json();
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
+  const homeUrl = siteUrl;
   const breadcrumbItems = [{ name: "Home", url: homeUrl }];
 
   return (

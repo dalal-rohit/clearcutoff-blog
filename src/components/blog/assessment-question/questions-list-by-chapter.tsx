@@ -8,6 +8,7 @@ import { formatToSlug } from '@/utils/slugify';
 
 interface AssessmentQuestion {
     correct_option: number;
+    slug: string;
     createdAt: string;
     exam_instance_id: string;
     explanation: string;
@@ -85,6 +86,8 @@ export default function QuestionsListByChapter({ data }: { data: AssessmentQuest
                         {data?.map((item, index) => {
                             const plain = item.question_text?.replace(/<[^>]*>/g, "") || "";
                             const snippet = limitWords(plain, 25);
+                            const slug= item?.slug ? item.slug : formatToSlug(limitWords(item.question_text, 4));
+                            
                             return (
                                 <>
                                     <QuestionCard
@@ -92,7 +95,7 @@ export default function QuestionsListByChapter({ data }: { data: AssessmentQuest
                                         q_no={item.question_number}
                                         index={index}
                                         setLoadingId={setLoadingId}
-                                        path={`/question/${formatToSlug(limitWords(item.question_text, 4))}-${item.id}`}
+                                        path={`/question/${slug}-${item.id}`}
                                         onClick={() => setLoadingId(item.id)}
                                         questionText={snippet}
                                         active={loadingId === item.id}

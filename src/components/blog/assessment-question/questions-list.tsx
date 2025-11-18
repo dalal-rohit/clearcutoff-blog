@@ -42,6 +42,7 @@ interface AssessmentQuestion {
     updatedAt: string;
     chapter: Chapter;
     topic: Topic;
+    slug: string;
 }
 
 export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) {
@@ -84,6 +85,9 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
                     {shown?.map((item, index) => {
                         const plain = item.question_text?.replace(/<[^>]*>/g, "") || "";
                         const snippet = limitWords(plain, 25);
+
+                        const slug= item?.slug ? item.slug : formatToSlug(limitWords(item.question_text, 4));
+
                         return (
                             <>
                                 <QuestionCard
@@ -91,7 +95,7 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
                                     q_no={index + 1}
                                     index={index}
                                     setLoadingId={setLoadingId}
-                                    path={`/question/${formatToSlug(limitWords(item.question_text, 4))}-${item.id}`}
+                                    path={`/question/${slug}-${item.id}`}
                                     onClick={() => setLoadingId(item.id)}
                                     questionText={snippet}
                                     active={loadingId === item.id}
