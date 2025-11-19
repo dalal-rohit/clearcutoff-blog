@@ -71,7 +71,7 @@ export default async function page({ params, searchParams }: Props) {
   const sp = await searchParams;
   const levels = normalizeToArray(sp.levels);
 
-  const examName = unFormatSlug(examNameParam).toLowerCase();
+  const examName = unFormatSlug(examNameParam).toUpperCase();
 
   // console.log("LEVELS ARRAY:", levels.map((l) => unFormatSlug(l))); // <-- Always array!
 
