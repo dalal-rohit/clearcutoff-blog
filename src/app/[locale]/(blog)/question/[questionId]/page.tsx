@@ -4,7 +4,7 @@ import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import MainContainer from "@/components/main-container";
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import { getMcqListFaqSchema } from "@/utils/google/getMcqFaqSchema";
-import { getFaqsSchema } from "@/utils/google/get-faqs-schema";
+import { getFaqSchema, getFaqsSchema } from "@/utils/google/get-faqs-schema";
 import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
 
 // export async function generateMetadata({ params }: { params: { locale: string, questionId: string } }): Promise<Metadata> {
@@ -75,17 +75,25 @@ export default async function page({
 
   const selectedQuestion = data?.data?.find((item: any) => item.id === parseInt(params?.questionId.split("-").pop() || ""));
   const faqItems = [
-    { name: selectedQuestion?.question_text, answer: selectedQuestion?.explanation },
+    {
+      question: selectedQuestion?.question_text,
+      answer: selectedQuestion?.explanation,
+      questionAuthor: "ClearCutoff",
+      answerAuthor: "ClearCutoff",
+      dateCreated: selectedQuestion?.created_at,
+      dateModified: selectedQuestion?.updated_at
+    },
   ];
 
-  const faqlist = getFaqsSchema(faqItems);
+  // const faqlist = getFaqsSchema(faqItems);
+  const faqlistSchema = getFaqSchema(faqItems);
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
 
   return (
     <div>
       <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
-      <BreadcrumbScriptLD breadcrumbItems={faqlist} />
+      <BreadcrumbScriptLD breadcrumbItems={faqlistSchema} id="faq-ld" />
 
       <MainContainer
         padding="py-4"

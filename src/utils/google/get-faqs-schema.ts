@@ -14,3 +14,38 @@ export function getFaqsSchema(items: { name: string; answer: string }[]) {
         })),
     };
 }
+
+
+export function getFaqSchema(
+  faqs: {
+    question: string;
+    answer: string;
+    answerAuthor?: string;
+    questionAuthor?: string;
+    dateCreated?: string;       // ISO format recommended
+    dateModified?: string;      // ISO format recommended
+    url?: string;               // optional
+  }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((f, index) => ({
+      "@type": "Question",
+      "name": f.question,
+      "text": f.question,  // optional but resolved warning
+      "author": f.questionAuthor || "Admin",
+      "dateCreated": f.dateCreated || undefined,
+      "dateModified": f.dateModified || undefined,
+
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": f.answer,
+        "author": f.answerAuthor || "Admin",
+        "dateCreated": f.dateCreated || undefined,
+        "dateModified": f.dateModified || undefined,
+        "url": f.url || undefined
+      }
+    }))
+  };
+}
