@@ -29,7 +29,9 @@ export function getFaqSchema(
 ) {
   return {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
+    "@type": ["QAPage", "FAQPage"],
+    "name": "FAQ",
+    "headline": "FAQ",
     "mainEntity": faqs.map((f, index) => ({
       "@type": "Question",
       "name": f.question,
