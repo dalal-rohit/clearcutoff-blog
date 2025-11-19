@@ -29,7 +29,7 @@ export function getFaqSchema(
 ) {
   return {
     "@context": "https://schema.org",
-    "@type": ["QAPage", "FAQPage"],
+    "@type":  "FAQPage",
     "name": "FAQ",
     "headline": "FAQ",
     "mainEntity": faqs.map((f, index) => ({
