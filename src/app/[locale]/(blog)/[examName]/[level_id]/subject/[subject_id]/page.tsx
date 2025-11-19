@@ -9,6 +9,7 @@ import { formatToSlug, unFormatSlug } from '@/utils/slugify';
 import { limitWords } from '@/utils/text/textLimit';
 import React from 'react'
 import { capitalizeFirst } from '@/utils/text/textFormat';
+import { getBreadcrumbSchema } from '@/utils/google/get-breadcrumb-schema';
 
 export default async function page({ params }: { params: { locale: string, examName: string, level_id: string, subject: string, subject_id: string } }) {
   const { locale, examName: examNameParam, level_id, subject, subject_id } = await params;
@@ -65,10 +66,11 @@ export default async function page({ params }: { params: { locale: string, examN
     { name: "Subject", url: subjectUrl },
     { name: capitalizeFirst(subject_id), url: subjectIdUrl },
   ];
+  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <>
-      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
       <MainContainer maxWidth="max-w-[900px]" padding='py-4' className='space-y-5' bgColor='bg-transparent'>
         <CustomBreadcrumbs isShow={true} items={breadcrumbItems} />

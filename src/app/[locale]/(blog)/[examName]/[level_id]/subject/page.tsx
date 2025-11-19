@@ -10,6 +10,7 @@ import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import SubjectsList from "@/components/blog/ui/subjects-list";
 import CourseCheckBadge from "@/components/ui/badge/course-check-badge";
+import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
 type Props = {
   params: {
     locale: string;
@@ -83,10 +84,11 @@ export default async function page({ params }: Props) {
     { name: unFormatSlug(level_id ?? ""), url: levelUrl },
     { name: "Subject", url: subjectUrl },
   ];
+  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <div>
-      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
       <CustomBreadcrumbs isShow={true} items={breadcrumbItems} />
       <MainContainer

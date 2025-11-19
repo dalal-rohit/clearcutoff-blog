@@ -92,11 +92,12 @@ export default async function Page({
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
   ];
+  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
 
   return (
     <div>
-      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
       <MainContainer
         padding="py-4"

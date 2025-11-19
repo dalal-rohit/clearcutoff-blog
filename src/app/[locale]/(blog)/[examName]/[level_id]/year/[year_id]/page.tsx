@@ -127,7 +127,7 @@ export default async function page({
 
   return (
     <div>
-      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
       <MainContainer
         maxWidth="max-w-[900px]"

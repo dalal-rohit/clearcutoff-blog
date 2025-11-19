@@ -8,6 +8,7 @@ import CustomizableHeader from '@/components/customizable-header';
 import CustomBreadcrumbs from '@/components/breadcrumbs/custom-breadcrumbs';
 import BreadcrumbScriptLD from '@/components/breadcrumbLD-script';
 import { capitalizeFirst } from '@/utils/text/textFormat';
+import { getBreadcrumbSchema } from '@/utils/google/get-breadcrumb-schema';
 
 export default async function page({ params }: { params: { locale: string, examName: string, level_id: string, subject: string, subject_id: string, chapter_name: string } }) {
 
@@ -54,10 +55,11 @@ export default async function page({ params }: { params: { locale: string, examN
     { name: capitalizeFirst(subject_id), url: subjectIdUrl },
     { name: capitalizeFirst(chapter_name), url: chapterUrl },
   ];
+  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <>
-      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
       <MainContainer maxWidth="max-w-[900px]" padding='py-4' className='space-y-5' bgColor='bg-transparent'>
         <CustomBreadcrumbs isShow={true} items={breadcrumbItems} />

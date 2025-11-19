@@ -73,10 +73,11 @@ export default async function Page({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = siteUrl;
   const breadcrumbItems = [{ name: "Home", url: homeUrl }];
+  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <div>
-      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
       <BlogExamCardsSection data={data?.data} />
     </div>

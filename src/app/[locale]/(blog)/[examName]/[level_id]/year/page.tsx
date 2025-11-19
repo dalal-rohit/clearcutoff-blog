@@ -89,10 +89,11 @@ export default async function page({ params }: Props) {
     { name: unFormatSlug(level_id ?? ""), url: examsUrl },
     { name: "Years", url: `${examsUrl}/${level_id}/year` },
   ];
+  const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <div>
-      <BreadcrumbScriptLD breadcrumbItems={breadcrumbItems} />
+      <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
       <MainContainer
         maxWidth="max-w-[900px]"
