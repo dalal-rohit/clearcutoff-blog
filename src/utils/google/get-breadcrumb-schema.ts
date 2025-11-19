@@ -16,8 +16,9 @@
 export function getBreadcrumbSchema(items: { name: string; url?: string }[]) {
   return {
     "@context": "https://schema.org",
+    "@id": items.pop()?.url,
     "@type": "BreadcrumbList",
-    "@name": "BreadcrumbList",
+    "name": "BreadcrumbList",
     "itemListElement": items.map((item, index) => ({
       "@type": "ListItem",
       "position": index + 1,
