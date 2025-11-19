@@ -4,7 +4,6 @@ export function getFaqsSchema(items: { name: string; answer: string }[]) {
         "@context": "https://schema.org",
         "@type": "QAPage",
         "name": "FAQ",
-        "headline": "FAQ",
         "mainEntity": items.map((item) => ({
             "@type": "Question",
             "name": item.name,
