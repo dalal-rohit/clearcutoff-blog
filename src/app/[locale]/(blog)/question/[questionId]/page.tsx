@@ -3,49 +3,41 @@ import React from "react";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import MainContainer from "@/components/main-container";
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
-import { getMcqListFaqSchema } from "@/utils/google/getMcqFaqSchema";
-import { getFaqSchema, getFaqsSchema } from "@/utils/google/get-faqs-schema";
+import { getFaqSchema } from "@/utils/google/get-faqs-schema";
 import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
+import { Metadata } from "next";
+import { siteConfig } from "@/lib/metadata";
 
-// export async function generateMetadata({ params }: { params: { locale: string, questionId: string } }): Promise<Metadata> {
-//   const locale = params?.locale ?? "en";
-//   const str = params?.questionId ?? "";
-//   const questionId = str.replace("question-", "");
-//   try {
-//     const res = await fetch(
-//       `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/questions?locale=${locale}&limit=0&depth=2`,
-//       { cache: "no-store" }
-//     );
-//     const data = await res.json();
-//     const baseTitle = (data?.seoTitle as string) || "Teaching Exams";
-//     const baseDescription =
-//       (data?.seoDescription as string) ||
-//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string; questionId: string };
+}): Promise<Metadata> {
+  const locale = params?.locale ?? "en";
 
-//     const title = `${baseTitle} | ClearCutoff`;
-//     return {
-//       title,
-//       description: baseDescription,
-//       openGraph: {
-//         title,
-//         description: baseDescription,
-//         type: "website",
-//       },
-//       alternates: {
-//         canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
-//       },
-//     };
-//   } catch {
-//     const fallbackTitle = "Teaching Exams | ClearCutoff";
-//     const fallbackDesc =
-//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-//     return {
-//       title: fallbackTitle,
-//       description: fallbackDesc,
-//       openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
-//     };
-//   }
-// }
+  return {
+    title: `${siteConfig.name} - ${params.questionId}`,
+    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+    openGraph: {
+      title: "Academy",
+      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+      url: "https://clearcutoff.in",
+      siteName: siteConfig.name,
+      images: [
+        {
+          url: "https://cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com/images/favicon.png",
+          width: 1200,
+          height: 630,
+          alt: "ClearCutoff Exam Prep",
+        },
+      ],
+      type: "website",
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/question/${params.questionId}`,
+    },
+  };
+}
 
 export default async function page({
   params,

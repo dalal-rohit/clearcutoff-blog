@@ -20,6 +20,7 @@ import { useAuthHandler } from "@/hooks/useAuthHandler";
 import OTPInput from "../inputs/OTPInput";
 import { CustomBottomSheet, CustomModal } from "../modals-bottom-sheet";
 import FreeBadge from "../badge/free-badge";
+import { logAmplitudeEvent } from "@/services/analytics";
 
 const apiVerifyOtp = async (phone: string, otp: string) => {
   try {
@@ -66,13 +67,13 @@ export default function AuthFlow() {
   const { isOpen, type, payload, openModal, closeModal } = useAuthModal();
 
   useEffect(() => {
-    // logAmplitudeEvent("Authentication Options Viewed", {
-    //   initial_intent: type,
-    //   options_available: "phone",
-    // });
-    // logAmplitudeEvent("Authentication Method Selected", {
-    //   auth_method: "phone_otp",
-    // });
+    logAmplitudeEvent("Authentication Options Viewed", {
+      initial_intent: type,
+      options_available: "phone",
+    });
+    logAmplitudeEvent("Authentication Method Selected", {
+      auth_method: "phone_otp",
+    });
   }, [type]);
 
   const [otp, setOtp] = useState("");
@@ -144,12 +145,15 @@ export default function AuthFlow() {
     } catch (err) {
       setError((err as Error).message || "An unexpected error occurred.");
     } finally {
+      setIsDisabled(true);
       setIsLoading(false);
     }
   };
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setCanResend(false);
+    setCounter(30);
     await sendOtp();
   };
 
@@ -193,131 +197,99 @@ export default function AuthFlow() {
         onSubmit={handleSendOtp}
         className="flex flex-col gap-8 px-6 md:px-10 py-8"
       >
-        <div className="flex flex-col gap-4">
-        <FreeBadge />
-          <Typography className="heading-large">
-            Create a FREE Account!
-          </Typography>
-          <Typography className="body-medium !font-normal surface-text-gray-muted">
-            Already registered?{" "}
-            <span
-              onClick={() => openModal({ type: "login" })}
-              className="!font-semibold text-[#0083ff] cursor-pointer"
-            >
-              Login
-            </span>
-          </Typography>
-        </div>
-        <div className="flex flex-col gap-4">
-          <FormControl error={!!error}>
-            <FormLabel className="body-small !font-semibold neutral-blueGrayLight">
-              Mobile Number
-            </FormLabel>
-            {renderNumberInput()}
-            {error && (
-              <FormHelperText sx={{ color: "red" }}>{error}</FormHelperText>
-            )}
-            {/* Show success if exists */}
-            {success && (
-              <FormHelperText sx={{ color: "green" }}>{success}</FormHelperText>
-            )}{" "}
-          </FormControl>
-          <Button
-            size="lg"
-            fullWidth
-            disabled={disabled}
-            type="submit"
-            loading={isLoading}
-            sx={{
-              ...disabledButtonStyle(),
-            }}
-          >
-            Continue
-          </Button>
-          <Typography className="text-center body-medium !font-normal surface-text-gray-muted">
-            By Signing Up, I agree to{" "}
-            <Link
-              onClick={closeModal}
-              href="/terms-and-conditions"
-              className=" text-[#0083ff] cursor-pointer"
-            >
-              Terms & Conditions
-            </Link>{" "}
-            and{" "}
-            <Link
-              onClick={closeModal}
-              href="/refund-policy"
-              className=" text-[#0083ff] cursor-pointer"
-            >
-              Privacy Policy
-            </Link>
-          </Typography>
-        </div>
-      </form>
-    );
-  };
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8">
+            <div className="flex items-center justify-center">
+              <Image
+                src="/images/main-logo.svg"
+                alt="ClearCutoff Logo"
+                width={249}
+                height={58}
+                className="h-[58px] w-[249px] object-contain"
+                priority
+              />
+            </div>
 
-  const renderLogin = () => {
-    return (
-      <form
-        onSubmit={handleSendOtp}
-        className="flex flex-col gap-6 p-6 md:p-10"
-      >
-        <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6">
+              <div className="text-center">
+                <Typography className="heading-large">
+                  Start with Clear Cutoff
+                </Typography>
+                <Typography className="body-medium !font-normal surface-text-gray-muted">
+                  Clear exam cutoff with us!
+                </Typography>
+              </div>
+              <div className="text-center">
+                <FreeBadge />
+              </div>
+              <div>
+                <FormControl error={!!error}>
+                  <FormLabel className="body-small !font-semibold neutral-blueGrayLight">
+                    Mobile Number
+                  </FormLabel>
+                  {renderNumberInput()}
+                  {error && (
+                    <FormHelperText sx={{ color: "red" }}>{error}</FormHelperText>
+                  )}
+                  {/* Show success if exists */}
+                  {success && (
+                    <FormHelperText sx={{ color: "green" }}>{success}</FormHelperText>
+                  )}{" "}
+                </FormControl>
+                <Button
+                  size="lg"
+                  fullWidth
+                  disabled={disabled}
+                  type="submit"
+                  loading={isLoading}
+                  sx={{
+                    ...disabledButtonStyle(),
+                  }}
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+          </div>
           <div>
-            <Typography className="heading-large">
-              Login to Clear Cutoff
-            </Typography>
-            <Typography className="body-medium !font-normal">
-              Continue your journey with us and clear exam!
+            <Typography className="text-center body-medium !font-normal surface-text-gray-muted">
+              By Signing Up, I agree to{" "}
+              <Link
+                onClick={closeModal}
+                href="/terms-and-conditions"
+                className=" text-[#0083ff] cursor-pointer"
+              >
+                Terms & Conditions
+              </Link>{" "}
+              and{" "}
+              <Link
+                onClick={closeModal}
+                href="/refund-policy"
+                className=" text-[#0083ff] cursor-pointer"
+              >
+                Privacy Policy
+              </Link>
             </Typography>
           </div>
-          <Typography className="body-medium !font-normal surface-text-gray-muted">
-            Not registered already?{" "}
-            <span
-              onClick={() => openModal({ type: "register" })}
-              className="!font-semibold text-[#0083ff] cursor-pointer"
-            >
-              Sign Up{" "}
-            </span>
-          </Typography>
         </div>
-        <div className="flex flex-col gap-4">
-          <FormControl error={!!error}>
-            <FormLabel className="body-small !font-semibold neutral-blueGrayLight">
-              Mobile Number
-            </FormLabel>
 
-            {renderNumberInput()}
-          </FormControl>
-
-          <Button
-            disabled={disabled}
-            size="lg"
-            fullWidth
-            type="submit"
-            loading={isLoading}
-            sx={{
-              ...disabledButtonStyle(),
-            }}
-          >
-            Continue Now!
-          </Button>
-        </div>
       </form>
     );
   };
 
-  const handleCodeFilled = (code: string) => {
-    setOtp(code);
-    handleVerifyOtp(code);
-    setIsDisabled(false);
-  };
+  useEffect(() => {
+    if (otp.length === OTP_LENGTH) {
+      handleVerifyOtp(otp);
+      setIsDisabled(false);
+    }
+  }, [otp]);
 
   const handleVerifyOtp = async (otpCode?: string) => {
+
     const enteredOtp = otpCode ?? otp; // ✅ fallback to state if no param given
     if (enteredOtp.length < OTP_LENGTH) {
       setError("Please enter the complete 4-digit OTP.");
+      setIsDisabled(true);
       return;
     }
     setSuccess("");
@@ -328,10 +300,12 @@ export default function AuthFlow() {
       if (response.success) {
         setSuccess(response.message);
       } else {
+        setIsDisabled(true);
         setError(response.message);
       }
 
       if (response.success) {
+        localStorage.setItem("CSRF_TOKEN", response.token);
         window.location.href = `https://app.clearcutoff.in/login?token=${response.token}`;
 
         closeModal();
@@ -344,73 +318,115 @@ export default function AuthFlow() {
     }
   };
 
+  const [counter, setCounter] = useState<number>(30);
+  const [canResend, setCanResend] = useState<boolean>(false);
+
+  useEffect(() => {
+    let timer: any;
+
+    if (counter > 0) {
+      timer = setInterval(() => {
+        setCounter((prev) => prev - 1);
+      }, 1000);
+    } else {
+      setCanResend(true);
+    }
+
+    return () => clearInterval(timer);
+  }, [counter]);
+
   const renderOTP = () => {
     return (
       // --- MODIFIED: Added the ref to the form element ---
       <form ref={otpFormRef} className="flex flex-col gap-6 p-6 md:p-10">
-        <Typography className="heading-large">Verify OTP </Typography>
-        <div className="flex flex-col gap-8">
-          <div className="flex flex-col gap-6">
-            <Typography className="body-large !font-normal">
-              Code sent to @{" "}
-              <span className="!font-semibold">+91-{payload.mobileNumber}</span>{" "}
-              <span
-                onClick={() =>
-                  openModal({
-                    type: payload.from,
-                    payload: { mobileNumber: payload.mobileNumber },
-                  })
-                }
-                className="cursor-pointer !font-semibold   text-[#0083ff] "
-              >
-                Edit
-              </span>
-            </Typography>
-            <FormControl className="flex flex-col gap-2">
-              {/* <FormLabel className="body-small !font-semibold neutral-blueGrayLight">
-                Verification Code
-              </FormLabel> */}
-
-              <OTPInput
-                spaceX={5}
-                onCodeFilled={handleCodeFilled}
-                error={error}
-                success={success}
-              />
-            </FormControl>
-            <Typography className="text-center">
-              Didn&apos;t receive code?{" "}
-              <span
-                onClick={async (e) => {
-                  handleSendOtp(e as any);
-                  setResendCount((prevCount) => prevCount + 1);
-                  // await logAmplitudeEvent("Verification Resent", {
-                  //   verification_method: "Number",
-                  //   resend_count: resendCount,
-                  // });
-                }}
-                className="cursor-pointer text-[#0083ff]"
-              >
-                Resend OTP
-              </span>
-            </Typography>
+        <div className="space-y-6">
+          <div className="flex items-center justify-center">
+            <Image
+              src="/images/main-logo.svg"
+              alt="ClearCutoff Logo"
+              width={349}
+              height={58}
+              className="h-[68px] w-[349px] object-contain"
+              priority
+            />
           </div>
-          <Button
-            disabled={isDisabled}
-            size="lg"
-            fullWidth
-            type="submit"
-            loading={isLoading}
-            onClick={() => {
-              handleVerifyOtp();
-            }}
-            sx={{
-              ...disabledButtonStyle(),
-            }}
-          >
-            Verify OTP
-          </Button>
+          <div className="flex flex-col gap-4">
+            <Typography className="heading-xlarge text-center">Verify OTP </Typography>
+            <div className="flex flex-col gap-4">
+              <Typography className="body-large !font-normal text-center">
+                Code sent to @{" "}
+                <span className="!font-semibold">+91-{payload.mobileNumber}</span>{" "}
+                <span
+                  onClick={() =>
+                    openModal({
+                      type: payload.from,
+                      payload: { mobileNumber: payload.mobileNumber },
+                    })
+                  }
+                  className="cursor-pointer !font-semibold   text-[#0083ff] "
+                >
+                  Edit
+                </span>
+              </Typography>
+              <FormControl className="flex -mb-4">
+                <MainInput
+                  ref={mobileInputRef}
+                  label="4-digit OTP"
+                  value={otp}
+                  placeholder="Enter OTP"
+                  error={error}
+                  success={success}
+                  onChange={(e) => setOtp(e.target.value)} // ✅ Pass correct event value
+                  inputType="phone"
+                  maxLength={4}
+                />
+              </FormControl>
+              <Typography className="text-center">
+
+                {canResend ? (
+                  <>
+                    <span
+                      onClick={async (e) => {
+                        handleSendOtp(e as any);
+                        setResendCount((prevCount) => prevCount + 1);
+                        await logAmplitudeEvent("Verification Resent", {
+                          verification_method: "Number",
+                          resend_count: resendCount,
+                        });
+                      }}
+                      className="cursor-pointer text-[#0083ff]"
+                    >
+                      Resend OTP
+                    </span>
+                  </>
+
+                ) : (
+                  <p className="text-gray-600">
+                    <strong>{counter}</strong> seconds
+                  </p>
+                )}
+              </Typography>
+            </div>
+            <div>
+              <Button
+                disabled={isDisabled}
+                size="lg"
+                fullWidth
+                type="button"
+                loading={isLoading}
+                onClick={() => {
+                  handleVerifyOtp();
+                }}
+                sx={{
+                  ...disabledButtonStyle(),
+                }}
+              >
+                Verify OTP
+              </Button>
+            </div>
+          </div>
         </div>
+
       </form>
     );
   };
@@ -427,11 +443,10 @@ export default function AuthFlow() {
               exit="exit"
               variants={animationVariants}
               transition={{ duration: 0.3 }}
-              // sx={{ px: 4, py: 5 }}
+            // sx={{ px: 4, py: 5 }}
             >
               {type === "otp" && renderOTP()}
-              {type === "login" && renderLogin()}
-              {type === "register" && renderRegister()}
+              {type === "register" || type === "login" && renderRegister()}
             </MotionBox>
           </CustomBottomSheet>
         ) : (
@@ -441,8 +456,7 @@ export default function AuthFlow() {
             onClose={() => closeModal()}
           >
             {type === "otp" && renderOTP()}
-            {type === "login" && renderLogin()}
-            {type === "register" && renderRegister()}
+            {type === "register" || type === "login" && renderRegister()}
           </CustomModal>
         ))}
     </AnimatePresence>

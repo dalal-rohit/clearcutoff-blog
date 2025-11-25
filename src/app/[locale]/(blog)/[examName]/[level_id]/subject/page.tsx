@@ -11,6 +11,7 @@ import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import SubjectsList from "@/components/blog/ui/subjects-list";
 import CourseCheckBadge from "@/components/ui/badge/course-check-badge";
 import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
+import { siteConfig } from "@/lib/metadata";
 type Props = {
   params: {
     locale: string;
@@ -19,47 +20,40 @@ type Props = {
     subject?: string;
   };
 };
-// export async function generateMetadata({ params }: Props): Promise<Metadata> {
-//   const locale = params?.locale ?? "en";
 
-//   try {
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string; examName: string, level_id: string };
+}): Promise<Metadata> {
+  const locale = params?.locale ?? "en";
 
-//     const baseTitle = "Teaching Exams";
-//     const baseDescription =
-//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-
-//     const title = `${baseTitle} | ClearCutoff`;
-//     return {
-//       title,
-//       description: baseDescription,
-//       openGraph: {
-//         title,
-//         description: baseDescription,
-//         type: "website",
-//       },
-//       alternates: {
-//         canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
-//       },
-//     };
-//   } catch {
-//     const fallbackTitle = "Teaching Exams | ClearCutoff";
-//     const fallbackDesc =
-//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-//     return {
-//       title: fallbackTitle,
-//       description: fallbackDesc,
-//       openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
-//     };
-//   }
-// }
+  return {
+    title: `${siteConfig.name} - ${params.examName} - ${params.level_id}`,
+    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+    openGraph: {
+      title: "Academy",
+      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+      url: "https://clearcutoff.in",
+      siteName: siteConfig.name,
+      images: [
+        {
+          url: "https://cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com/images/favicon.png",
+          width: 1200,
+          height: 630,
+          alt: "ClearCutoff Exam Prep",
+        },
+      ],
+      type: "website",
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject`,
+    },
+  };
+}
 
 export default async function page({ params }: Props) {
   const { locale, examName, level_id, subject } = await params;
-
-  // // Build query string safely
-  // const querySubjects = `exam_id=${examName}&slug=${unFormatSlug(
-  //   level_id ?? ""
-  // )}`;
 
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(

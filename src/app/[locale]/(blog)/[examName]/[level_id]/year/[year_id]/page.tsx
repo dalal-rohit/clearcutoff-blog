@@ -9,48 +9,39 @@ import CustomizableHeader from "@/components/customizable-header";
 import { capitalizeFirst } from "@/utils/text/textFormat";
 import DetailsSectionCard from "@/components/blog/assessment-question/details-section-card";
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
+import { Metadata } from "next";
+import { siteConfig } from "@/lib/metadata";
 
-// export async function generateMetadata({ params }: { params: { locale: string, level_id: string } }): Promise<Metadata> {
-//   const locale = params?.locale ?? "en";
-//   const levelId = params?.level_id;
-//   const query = `where[stage_id][equals]=${levelId}&limit=0&depth=2&locale=${locale}&draft=false&trash=false`
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string; examName: string, level_id: string, year_id: string };
+}): Promise<Metadata> {
+  const locale = params?.locale ?? "en";
 
-//   try {
-//     const res = await fetch(
-//       `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/mapping-instance-and-stage?${query}`,
-//       { cache: "no-store" }
-//     );
-
-//     const data = await res.json();
-//     const baseTitle = (data?.seoTitle as string) || "Teaching Exams";
-//     const baseDescription =
-//       (data?.seoDescription as string) ||
-//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-
-//     const title = `${baseTitle} | ClearCutoff`;
-//     return {
-//       title,
-//       description: baseDescription,
-//       openGraph: {
-//         title,
-//         description: baseDescription,
-//         type: "website",
-//       },
-//       alternates: {
-//         canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
-//       },
-//     };
-//   } catch {
-//     const fallbackTitle = "Teaching Exams | ClearCutoff";
-//     const fallbackDesc =
-//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-//     return {
-//       title: fallbackTitle,
-//       description: fallbackDesc,
-//       openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
-//     };
-//   }
-// }
+  return {
+    title: `${siteConfig.name} - ${params.examName} - ${params.level_id}`,
+    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+    openGraph: {
+      title: "Academy",
+      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+      url: "https://clearcutoff.in",
+      siteName: siteConfig.name,
+      images: [
+        {
+          url: "https://cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com/images/favicon.png",
+          width: 1200,
+          height: 630,
+          alt: "ClearCutoff Exam Prep",
+        },
+      ],
+      type: "website",
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year/${params.year_id}`,
+    },
+  };
+}
 
 export default async function page({
   params,

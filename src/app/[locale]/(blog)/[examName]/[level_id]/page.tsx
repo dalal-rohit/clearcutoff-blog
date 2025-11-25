@@ -13,6 +13,7 @@ import CustomizableHeader from "@/components/customizable-header";
 import StarBadge from "@/components/ui/badge/star-badge";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
+import { siteConfig } from "@/lib/metadata";
 type Props = {
   params: {
     locale: string;
@@ -23,42 +24,37 @@ type Props = {
     levels?: string | string[]; // ✅ Accept both
   };
 };
-// export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-//   const locale = params?.locale ?? "en";
 
-//   try {
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string; examName: string, level_id: string };
+}): Promise<Metadata> {
+  const locale = params?.locale ?? "en";
 
-
-
-
-//     const baseTitle = "Teaching Exams";
-//     const baseDescription =
-//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-
-//     const title = `${baseTitle} | ClearCutoff`;
-//     return {
-//       title,
-//       description: baseDescription,
-//       openGraph: {
-//         title,
-//         description: baseDescription,
-//         type: "website",
-//       },
-//       alternates: {
-//         canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale}/exam`,
-//       },
-//     };
-//   } catch {
-//     const fallbackTitle = "Teaching Exams | ClearCutoff";
-//     const fallbackDesc =
-//       "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.";
-//     return {
-//       title: fallbackTitle,
-//       description: fallbackDesc,
-//       openGraph: { title: fallbackTitle, description: fallbackDesc, type: "website" },
-//     };
-//   }
-// }
+  return {
+    title: `${siteConfig.name} - ${params.examName} - ${params.level_id}`,
+    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+    openGraph: {
+      title: "Academy",
+      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+      url: "https://clearcutoff.in",
+      siteName: siteConfig.name,
+      images: [
+        {
+          url: "https://cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com/images/favicon.png",
+          width: 1200,
+          height: 630,
+          alt: "ClearCutoff Exam Prep",
+        },
+      ],
+      type: "website",
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}`,
+    },
+  };
+}
 
 function normalizeToArray(value?: string | string[]) {
   if (!value) return [];

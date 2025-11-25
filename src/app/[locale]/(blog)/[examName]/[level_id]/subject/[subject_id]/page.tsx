@@ -10,6 +10,39 @@ import { limitWords } from '@/utils/text/textLimit';
 import React from 'react'
 import { capitalizeFirst } from '@/utils/text/textFormat';
 import { getBreadcrumbSchema } from '@/utils/google/get-breadcrumb-schema';
+import { siteConfig } from '@/lib/metadata';
+import { Metadata } from 'next';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string; examName: string, level_id: string, subject_id: string };
+}): Promise<Metadata> {
+  const locale = params?.locale ?? "en";
+
+  return {
+    title: `${siteConfig.name} - ${params.examName} - ${params.level_id}`,
+    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+    openGraph: {
+      title: "Academy",
+      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+      url: "https://clearcutoff.in",
+      siteName: siteConfig.name,
+      images: [
+        {
+          url: "https://cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com/images/favicon.png",
+          width: 1200,
+          height: 630,
+          alt: "ClearCutoff Exam Prep",
+        },
+      ],
+      type: "website",
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}`,
+    },
+  };
+}
 
 export default async function page({ params }: { params: { locale: string, examName: string, level_id: string, subject: string, subject_id: string } }) {
   const { locale, examName: examNameParam, level_id, subject, subject_id } = await params;
