@@ -11,7 +11,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     // Fetch all exams (like reet, ctet, htet)
     const res = await fetch(`${PAYLOAD_API}/blog/exam`, { cache: "no-store" });
-    const exams = (await res.json()).data || [];
+    const res1 = (await res.json()).data || [];
+    const allowedExams = ["ctet"];
+
+    const exams = res1?.filter((item: any) => {
+      const key = item?.short_name?.toLowerCase();
+      return allowedExams.includes(key);
+    });
 
     for (const exam of exams) {
       const examId = exam.exam_id;

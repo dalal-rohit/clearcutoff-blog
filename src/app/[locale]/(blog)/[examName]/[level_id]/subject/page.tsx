@@ -54,7 +54,12 @@ export async function generateMetadata({
 
 export default async function page({ params }: Props) {
   const { locale, examName, level_id, subject } = await params;
+  const allowedExams = ["ctet"];
 
+  // Check
+  if (!allowedExams.includes(examName?.toLowerCase())) {
+    redirect("/");
+  }
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-subject?exam_id=${examName}&slug=${level_id ?? ""}`,

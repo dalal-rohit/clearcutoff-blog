@@ -67,6 +67,12 @@ export default async function page({ params, searchParams }: Props) {
   const sp = await searchParams;
   const levels = normalizeToArray(sp.levels);
 
+  const allowedExams = ["ctet"];
+
+  // Check
+  if (!allowedExams.includes(examNameParam?.toLowerCase())) {
+    redirect("/");
+  }
   const examName = unFormatSlug(examNameParam).toUpperCase();
 
   // console.log("LEVELS ARRAY:", levels.map((l) => unFormatSlug(l))); // <-- Always array!

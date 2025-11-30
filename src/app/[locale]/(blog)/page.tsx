@@ -49,7 +49,17 @@ export default async function Page({
   );
 
 
-  const data = await resCourses.json();
+  const res = await resCourses.json();
+  const allowedExams = ["ctet"]; 
+
+  const data = res?.data?.filter((item: any) => {
+    const key = item?.short_name?.toLowerCase();
+    return allowedExams.includes(key);
+  });
+
+
+
+  console.log('data', data);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = siteUrl;
@@ -60,7 +70,7 @@ export default async function Page({
     <div>
       <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
-      <BlogExamCardsSection data={data?.data} />
+      <BlogExamCardsSection data={data} />
     </div>
   );
 }

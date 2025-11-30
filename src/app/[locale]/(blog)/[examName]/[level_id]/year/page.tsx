@@ -61,6 +61,12 @@ export default async function page({ params }: Props) {
 
   const examName = examNameParam?.toUpperCase() ?? "";
 
+  const allowedExams = ["ctet"];
+
+  // Check
+  if (!allowedExams.includes(examNameParam?.toLowerCase())) {
+    redirect("/");
+  }
   // Build query string safely
   const queryYears = `exam_id=${examNameParam}`;
 

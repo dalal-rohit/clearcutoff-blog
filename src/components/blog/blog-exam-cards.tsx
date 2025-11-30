@@ -88,36 +88,41 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                 />
 
                 <div className='space-y-6'>
-                    <div className='w-full'>
-                        <div className="heading-xlarge">{highlightTextUtil('Central Teaching Exams', 'Central')}</div>
-                        <div className="mt-5 grid items-start gap-5 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
-                            {centralExams.map((item) => {
-                                return (
-                                    <ExamCourseCard bgcolor='white' key={item.id} item={item} onClick={() => onSelect(item)} />
-                                )
-                            })}
+                    {centralExams.length > 0 && (
+                        <div className='w-full'>
+                            <div className="heading-xlarge">{highlightTextUtil('Central Teaching Exams', 'Central')}</div>
+                            <div className="mt-5 grid items-start gap-5 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+                                {centralExams.map((item) => {
+                                    return (
+                                        <ExamCourseCard bgcolor='white' key={item.id} item={item} onClick={() => onSelect(item)} />
+                                    )
+                                })}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
-                    <div className='w-full'>
-                        <div className="heading-xlarge">{highlightTextUtil('State Teaching Exams', 'State')}</div>
-                        <div className="mt-4 md:mt-5 grid items-start gap-5 ">
-                            {Object.entries(stateExams).map(([state, exams]) => {
-                                return (
-                                    <div key={state} >
-                                        <h3 className="heading-large  neutral-blueGrayLight">{state}</h3>
-                                        <div className={["mt-4 grid items-start gap-5 grid-cols-2 ", exams.length > 3 ? "md:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-2 lg:grid-cols-3"].join(' ')}>
-                                            {exams.map((item) => {
-                                                return (
-                                                    <ExamCourseCard bgcolor='white' key={item.id} item={item} onClick={() => onSelect(item)} />
-                                                )
-                                            })}
+                    {Object.entries(stateExams).length > 0 && (
+                        <div className='w-full'>
+                            <div className="heading-xlarge">{highlightTextUtil('State Teaching Exams', 'State')}</div>
+                            <div className="mt-4 md:mt-5 grid items-start gap-5 ">
+                                {Object.entries(stateExams).map(([state, exams]) => {
+                                    return (
+                                        <div key={state} >
+                                            <h3 className="heading-large  neutral-blueGrayLight">{state}</h3>
+                                            <div className={["mt-4 grid items-start gap-5 grid-cols-2 ", exams.length > 3 ? "md:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-2 lg:grid-cols-3"].join(' ')}>
+                                                {exams.map((item) => {
+                                                    return (
+                                                        <ExamCourseCard bgcolor='white' key={item.id} item={item} onClick={() => onSelect(item)} />
+                                                    )
+                                                })}
+                                            </div>
                                         </div>
-                                    </div>
-                                )
-                            })}
+                                    )
+                                })}
+                            </div>
                         </div>
-                    </div>
+                    )}
+
                 </div>
                 {/* <div className=" text-center space-y-6">
                     <p className="text-xl md:text-2xl text-gray-700">

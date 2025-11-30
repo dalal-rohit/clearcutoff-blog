@@ -11,6 +11,7 @@ import { capitalizeFirst } from '@/utils/text/textFormat';
 import { getBreadcrumbSchema } from '@/utils/google/get-breadcrumb-schema';
 import { siteConfig } from '@/lib/metadata';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 export async function generateMetadata({
   params,
@@ -18,6 +19,8 @@ export async function generateMetadata({
   params: { locale: string; examName: string, level_id: string, subject_id: string, chapter_name: string };
 }): Promise<Metadata> {
   const locale = params?.locale ?? "en";
+
+
 
   return {
     title: `${siteConfig.name} - ${params.examName} - ${params.level_id}`,
@@ -47,6 +50,13 @@ export default async function page({ params }: { params: { locale: string, examN
 
   const { locale, examName, level_id, subject, subject_id, chapter_name } = await params;
 
+
+  const allowedExams = ["ctet"];
+
+  // Check
+  if (!allowedExams.includes(examName?.toLowerCase())) {
+    redirect("/");
+  }
   const query = `slug=${chapter_name}`
 
   const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions-by-chapter?${query}`, {

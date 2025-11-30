@@ -11,6 +11,7 @@ import DetailsSectionCard from "@/components/blog/assessment-question/details-se
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import { Metadata } from "next";
 import { siteConfig } from "@/lib/metadata";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -56,6 +57,15 @@ export default async function page({
 }) {
   const { locale, examName: examNameParam, level_id, year, year_id } = await params;
   const examName = examNameParam?.toUpperCase() ?? "";
+
+
+  const allowedExams = ["ctet"];
+
+  // Check
+  if (!allowedExams.includes(examNameParam?.toLowerCase())) {
+    redirect("/");
+  }
+
   const levelId = level_id;
   const examYear = year_id.replace(/-/g, "_").toUpperCase();
   const yearId = year_id;

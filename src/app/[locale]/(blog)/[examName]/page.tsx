@@ -8,6 +8,7 @@ import { Metadata } from "next";
 import React from "react";
 import { unFormatSlug } from "@/utils/slugify";
 import { siteConfig } from "@/lib/metadata";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -47,6 +48,15 @@ export default async function Page({
 }) {
   const { locale, examName: examNameParam } = await params;
   const examName = unFormatSlug(examNameParam ?? "").toUpperCase();
+
+  const allowedExams = ["ctet", "htet"];
+
+  // Check
+  if (!allowedExams.includes(examName?.toLowerCase())) {
+    redirect("/");
+  }
+
+
 
   // Build query string safely
   const query = `short_name=${examNameParam}&enavigation=true`;

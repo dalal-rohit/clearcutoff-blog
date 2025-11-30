@@ -24,6 +24,13 @@ export async function GET(
     const { examName } = await params;
 
     const originalExamName = examName.replace(/\.xml$/i, "");
+    const allowedExams = ["ctet"];
+
+    // Check
+    if (!allowedExams.includes(originalExamName?.toLowerCase())) {
+        return;
+    }
+
 
     if (!allowedCourses.includes(originalExamName)) {
         return new NextResponse(`${originalExamName} Exam not Allowed`, { status: 404 });
@@ -95,7 +102,7 @@ export async function GET(
         }
 
 
-        
+
 
         // Generate XML response
         const xml = `
