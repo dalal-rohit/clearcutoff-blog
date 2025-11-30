@@ -49,7 +49,7 @@ export default async function Page({
   const { locale, examName: examNameParam } = await params;
   const examName = unFormatSlug(examNameParam ?? "").toUpperCase();
 
-  const allowedExams = ["ctet", "htet"];
+  const allowedExams = ["ctet"];
 
   // Check
   if (!allowedExams.includes(examName?.toLowerCase())) {
