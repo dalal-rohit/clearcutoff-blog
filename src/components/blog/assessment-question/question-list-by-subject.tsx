@@ -57,6 +57,10 @@ export default function QuestionListBySubject({ data }: { data: Chapter[] }) {
                         return aLang.localeCompare(bLang);
                     });
 
+                if (data.length === 0) {
+                    return;
+                }
+
 
                 return (
                     <div key={index} className='bg-white p-4 rounded space-y-5'>
