@@ -12,6 +12,7 @@ import { getBreadcrumbSchema } from '@/utils/google/get-breadcrumb-schema';
 import { siteConfig } from '@/lib/metadata';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import QuestionsListByChapterName from '@/components/blog/assessment-question/questions-list-by-chapter-name';
 
 export async function generateMetadata({
   params,
@@ -146,6 +147,7 @@ export default async function page({ params }: { params: { locale: string, examN
             </div>
           </div>
           <div className="grid grid-cols-1 gap-4">
+            {/* <QuestionsListByChapterName data={questions} /> */}
             <QuestionsList data={questions} />
           </div>
         </div>

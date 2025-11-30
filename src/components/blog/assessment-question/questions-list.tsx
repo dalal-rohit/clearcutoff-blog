@@ -66,13 +66,13 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
 
     const basePath = usePathname();
 
-    const routeParams = useParams<{ locale: string; examName: string; level_id: string; year: string, year_id: string,chapter_name: string }>();
+    const routeParams = useParams<{ locale: string; examName: string; level_id: string; year: string, year_id: string, chapter_name: string }>();
     const examName = routeParams?.examName;
     const levelId = routeParams?.level_id;
     const yearId = routeParams?.year_id;
     const chapterId = routeParams?.chapter_name;
 
-    const sourceName= capitalizeFirst(unFormatSlug(yearId ? yearId : chapterId));
+    const sourceName = capitalizeFirst(unFormatSlug(yearId ? yearId : chapterId));
 
 
 
@@ -86,9 +86,8 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
                         const plain = item.question_text?.replace(/<[^>]*>/g, "") || "";
                         const snippet = limitWords(plain, 25);
 
-                        const slug= item?.slug ? item.slug : formatToSlug(limitWords(item.question_text, 4));
+                        const slug = item?.slug ? item.slug : formatToSlug(limitWords(item.question_text, 4));
 
-                        console.log("Question item:", item, "Slug:", slug);
 
                         return (
                             <>

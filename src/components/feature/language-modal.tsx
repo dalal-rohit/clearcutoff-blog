@@ -79,7 +79,7 @@ export default function LanguageModal({ isOpen, onClose }: { isOpen: boolean, on
                         </div>
                     </div>
 
-                    {params.examName && (
+                    {params.examName  && (
                         <div className='flex flex-col gap-4'>
                             <div className='space-y-1'>
                                 <h2 className='heading-large font-semibold neutral-blueGrayLight'>{highlightTextUtil(`Select ${params.examName.toUpperCase()} Exam Language`, params.examName.toUpperCase())}</h2>

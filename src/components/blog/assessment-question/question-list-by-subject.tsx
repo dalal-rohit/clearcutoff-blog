@@ -7,6 +7,8 @@ import { Button } from '@mui/joy';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { capitalizeFirst } from '@/utils/text/textFormat';
+import { useLanguageStore } from '@/store/useLanguageStore';
+import { getQuestionsByLanguage } from '@/utils/getQuestionsByLanguage';
 
 interface Question {
     id: number;
@@ -14,6 +16,7 @@ interface Question {
     slug: string;
     chapter?: { name?: string };
     topic?: { name?: string };
+    language_code?: string
 }
 
 interface Chapter {
@@ -28,12 +31,33 @@ export default function QuestionListBySubject({ data }: { data: Chapter[] }) {
     const pathname = usePathname();
     const subjectIdParam = params?.subject_id;
     const subjectId = Array.isArray(subjectIdParam) ? subjectIdParam[0] : (subjectIdParam ?? "");
+    const { courseLanguage } = useLanguageStore();
 
     return (
         <div className="grid grid-cols-1 gap-4">
 
 
             {data.map((item: Chapter, index: number) => {
+
+                const courseLangName = courseLanguage.toLowerCase() === 'en' ? 'english' : 'hindi';
+
+                const data = item.questions
+                    .filter(item => {
+                        const lang = (item.language_code || '').toLowerCase();
+                        return lang === courseLangName || (lang !== 'english' && lang !== 'hindi');
+                    })
+                    .sort((a, b) => {
+                        const aLang = (a.language_code || '').toLowerCase();
+                        const bLang = (b.language_code || '').toLowerCase();
+                        const aIsCourseLang = aLang === courseLangName;
+                        const bIsCourseLang = bLang === courseLangName;
+
+                        if (aIsCourseLang && !bIsCourseLang) return -1;
+                        if (!aIsCourseLang && bIsCourseLang) return 1;
+                        return aLang.localeCompare(bLang);
+                    });
+
+
                 return (
                     <div key={index} className='bg-white p-4 rounded space-y-5'>
                         <div className='space-y-1'>
@@ -46,7 +70,9 @@ export default function QuestionListBySubject({ data }: { data: Chapter[] }) {
                         </div>
                         <div className="grid grid-cols-1 gap-4">
 
-                            {item.questions.map((question: Question, index: number) => {
+                            {data.map((question: Question, index: number) => {
+                                if (index >= 3) return null;
+
                                 const plain = question.question_text?.replace(/<[^>]*>/g, "") || "";
                                 const snippet = limitWords(plain, 25);
                                 const slug = question?.slug ? question.slug : formatToSlug(limitWords(question.question_text, 4));
