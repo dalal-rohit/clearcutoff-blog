@@ -52,6 +52,11 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year`,
+      languages: {
+        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year`, // Add this line
+        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/${params.examName}/${params.level_id}/year`,
+        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year`,
+      },
     },
   };
 }

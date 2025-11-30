@@ -35,6 +35,11 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/question/${params.questionId}`,
+      languages: {
+        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/question/${params.questionId}`, // Add this line
+        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/question/${params.questionId}`,
+        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/question/${params.questionId}`,
+      },
     },
   };
 }

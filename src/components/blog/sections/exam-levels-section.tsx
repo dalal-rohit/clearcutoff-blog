@@ -11,6 +11,7 @@ import { highlightTextUtil } from '@/utils/highlightTextUtil'
 import { Button } from '@mui/joy'
 import { PencilSquareIcon } from '@heroicons/react/16/solid'
 import ExamSelectionContainer from '@/components/ui/exam/exam-selection-container'
+import Link from 'next/link'
 
 type NavItem = {
     id: number | string
@@ -125,6 +126,18 @@ export default function ExamLevelsSection({ data, examName }: { data?: NavItem[]
                             </div>
                         </div>
                     )}
+
+
+                    <div className='hidden'>
+                        {roots.map((item: { name?: string }, index) => (
+                            <div key={item.name || index}>
+                                <Link href={`${pathname}/${formatToSlug(item?.name ?? "")}` || "#"}>
+                                    {item?.name}
+                                </Link>
+                            </div>
+                        ))}
+
+                    </div>
 
                 </div>
             </div>

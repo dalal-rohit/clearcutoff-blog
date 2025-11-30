@@ -1,9 +1,7 @@
-import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
 import React from "react";
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { formatToSlug, unFormatSlug } from "@/utils/slugify";
-import TestBySubjects from "@/components/blog/assessment-question/test-by-subjects";
 import MainContainer from "@/components/main-container";
 import CustomizableHeader from "@/components/customizable-header";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
@@ -48,11 +46,17 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject`,
+      languages: {
+        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject`, // Add this line
+        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/${params.examName}/${params.level_id}/subject`,
+        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject`,
+      },
     },
   };
 }
 
 export default async function page({ params }: Props) {
+
   const { locale, examName, level_id, subject } = await params;
   const allowedExams = ["ctet"];
 
@@ -60,6 +64,7 @@ export default async function page({ params }: Props) {
   if (!allowedExams.includes(examName?.toLowerCase())) {
     redirect("/");
   }
+
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-subject?exam_id=${examName}&slug=${level_id ?? ""}`,
@@ -68,9 +73,9 @@ export default async function page({ params }: Props) {
 
   const dataSubjects = await resSubjects.json();
 
-  if (dataSubjects?.data?.length === 0) {
-    return notFound;
-  }
+  // if (dataSubjects?.data?.length === 0) {
+  //   return notFound;
+  // }
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
   const examsUrl = `${homeUrl}/${examName}`;
@@ -139,9 +144,6 @@ export default async function page({ params }: Props) {
 
         </div>
       </MainContainer>
-
-      {/* <SimilarQuestionsSection /> */}
-      {/* <OthersExamsSection /> */}
     </div>
   );
 }

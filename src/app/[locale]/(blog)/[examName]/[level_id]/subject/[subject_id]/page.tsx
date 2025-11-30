@@ -43,6 +43,11 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}`,
+      languages: {
+        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}`, // Add this line
+        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/${params.examName}/${params.level_id}/subject/${params.subject_id}`,
+        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}`,
+      },
     },
   };
 }
@@ -61,7 +66,7 @@ export default async function page({ params }: { params: { locale: string, examN
   const query = `section_id=${examNameParam}&slug=${subject_id}`
 
   const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions-by-section?${query}`, {
-    cache: "force-cache",
+    cache: "no-store",
   });
   const data = await res.json();
 

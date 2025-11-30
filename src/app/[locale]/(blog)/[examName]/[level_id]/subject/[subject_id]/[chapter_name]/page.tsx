@@ -42,6 +42,11 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}/${params.chapter_name}`,
+      languages: {
+        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}/${params.chapter_name}`, // Add this line
+        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/${params.examName}/${params.level_id}/subject/${params.subject_id}/${params.chapter_name}`,
+        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}/${params.chapter_name}`,
+      },
     },
   };
 }
@@ -57,10 +62,10 @@ export default async function page({ params }: { params: { locale: string, examN
   if (!allowedExams.includes(examName?.toLowerCase())) {
     redirect("/");
   }
-  const query = `slug=${chapter_name}`
+  const query = `slug=${chapter_name}&exam_name=${examName}`
 
   const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions-by-chapter?${query}`, {
-    cache: "force-cache",
+    cache: "no-store",
   });
   const data = await res.json();
 
