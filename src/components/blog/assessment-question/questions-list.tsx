@@ -88,6 +88,8 @@ export default function QuestionsList({ data }: { data: AssessmentQuestion[] }) 
 
                         const slug= item?.slug ? item.slug : formatToSlug(limitWords(item.question_text, 4));
 
+                        console.log("Question item:", item, "Slug:", slug);
+
                         return (
                             <>
                                 <QuestionCard

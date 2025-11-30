@@ -9,25 +9,76 @@ import { highlightTextUtil } from '@/utils/highlightTextUtil'
 import Image from 'next/image'
 import CourseCheckBadge from '../ui/badge/course-check-badge'
 import { formatToSlug } from '@/utils/slugify'
+import { ChartSuccessBarIcon } from '../ui/icons/chart-success-bar-icon'
+import CalendarIcon from '../ui/icons/calendar-icon'
+import CircleClockIcon from '../ui/icons/circle-clock-icon'
+import WarningCirleIcon from '../ui/icons/warning-circle-icon'
 
 const ExamCourseCard = ({ item, onClick, bgcolor }: { item: Exam, onClick: () => void, bgcolor?: string }) => {
+    const metadata = JSON.parse(item?.metadata);
+    const points = [
+        {
+            id: 1,
+            icon: <CalendarIcon />,
+            name: 'Exam Date',
+            value: metadata?.exam_date,
+        },
+        {
+            id: 2,
+            icon: <WarningCirleIcon />,
+            name: 'Exam Mode',
+            value: metadata?.exam_mode,
+        },
+        {
+            id: 3,
+            icon: <CircleClockIcon />,
+            name: 'Duration',
+            value: metadata?.duration,
+        },
+        {
+            id: 3,
+            icon: <ChartSuccessBarIcon />,
+            name: 'Cutoff',
+            value: metadata?.cutoff,
+        },
+    ]
     return (
         <CardWrap bgcolor={bgcolor} onClick={onClick} cursor='pointer' borderwidth={1}>
-            <div className='flex items-center gap-4'>
-                <div className='relative h-16 w-16'>
-                    <Image
-                        src={item.logo_url}
-                        alt={item.name}
-                        width={64}
-                        height={64}
-                    />
-                    <div className='absolute bottom-0 right-0 bg-white p-1 rounded-full'>
-                        <CourseCheckBadge size={20} fill="#0083ff" />
+            <div className='flex  items-start gap-4'>
+                <div className='flex flex-col gap-1'>
+                    <div className='relative h-16 w-16'>
+                        <Image
+                            src={item.logo_url}
+                            alt={item.name}
+                            width={64}
+                            height={64}
+                        />
+                        <div className='absolute bottom-0 right-0 bg-white p-1 rounded-full'>
+                            <CourseCheckBadge size={20} fill="#0083ff" />
+                        </div>
+
+                    </div>
+                    <div className='text-center'>
+                        <h3 className='heading-medium !font-semibold text-black'>{item.short_name}</h3>
+                        <p className='body-small !font-normal'>{item.exam_type}</p>
                     </div>
                 </div>
+
                 <div>
-                    <h3 className='heading-medium !font-semibold text-black'>{item.short_name}</h3>
-                    <p className='body-small !font-normal'>{item.exam_type}</p>
+
+                    {points.map((item, index) => {
+                        if (!item.value) return null;
+                        return (
+                            <div key={item.id || index} className='flex items-center gap-1'>
+                                <span className='flex items-center'>{item?.icon}</span>
+                                <span className='body-medium !font-normal surface-text-gray-muted'>{item?.name}:</span>
+                                <span className="text-gray-600">{item?.value}</span>
+                            </div>
+                        );
+                    })}
+
+
+
                 </div>
             </div>
         </CardWrap>
@@ -61,15 +112,15 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
         fetchData()
     }, [])
 
-    const centralExams = data.filter(item => item.state.toLowerCase().includes('india') && item.status.toLowerCase().includes("active"))
-    const stateExams = data
-        .filter(item => !item.state.toLowerCase().includes("india") && item.status.toLowerCase().includes("active"))
+    const centralExams = data?.filter(item => item.state.toLowerCase().includes('india') && item.status.toLowerCase().includes("active"))
+    const stateExams = data?.filter(item => !item.state.toLowerCase().includes("india") && item.status.toLowerCase().includes("active"))
         .reduce((groups, exam) => {
             const key = exam.state;
             if (!groups[key]) groups[key] = [];
             groups[key].push(exam);
             return groups;
         }, {} as Record<string, Exam[]>);
+
 
     return (
         <MainContainer padding="py-4 px-3" bgColor='transparent' maxWidth="max-w-[900px]">
@@ -88,10 +139,10 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                 />
 
                 <div className='space-y-6'>
-                    {centralExams.length > 0 && (
+                    {centralExams?.length > 0 && (
                         <div className='w-full'>
                             <div className="heading-xlarge">{highlightTextUtil('Central Teaching Exams', 'Central')}</div>
-                            <div className="mt-5 grid items-start gap-5 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="mt-5 grid items-start gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
                                 {centralExams.map((item) => {
                                     return (
                                         <ExamCourseCard bgcolor='white' key={item.id} item={item} onClick={() => onSelect(item)} />
@@ -101,7 +152,7 @@ export default function BlogExamCardsSection({ data }: { data: Exam[] }) {
                         </div>
                     )}
 
-                    {Object.entries(stateExams).length > 0 && (
+                    {Object.entries(stateExams)?.length > 0 && (
                         <div className='w-full'>
                             <div className="heading-xlarge">{highlightTextUtil('State Teaching Exams', 'State')}</div>
                             <div className="mt-4 md:mt-5 grid items-start gap-5 ">

@@ -45,21 +45,21 @@ export default async function Page({
 
   const resCourses = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/exam?status=active`,
-    { cache: "force-cache" }
+    {
+      next: { revalidate: 60 }
+    }
   );
 
 
+
   const res = await resCourses.json();
-  const allowedExams = ["ctet"]; 
+  const allowedExams = ["ctet"];
 
   const data = res?.data?.filter((item: any) => {
     const key = item?.short_name?.toLowerCase();
     return allowedExams.includes(key);
   });
 
-
-
-  console.log('data', data);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = siteUrl;

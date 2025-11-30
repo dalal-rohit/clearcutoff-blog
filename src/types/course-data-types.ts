@@ -154,6 +154,7 @@ interface Exam {
     price: number;
     combo_price: number;
     marking_schema: string; // or you can parse it to a JSON object
+    metadata: string; // or you can parse it to a JSON object
     createdAt: string;
     updatedAt: string;
 }
