@@ -68,7 +68,7 @@ export default async function page({ params }: Props) {
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-subject?exam_id=${examName}&slug=${level_id ?? ""}`,
-    { cache: "force-cache" }
+    { cache: "no-store" }
   );
 
   const dataSubjects = await resSubjects.json();

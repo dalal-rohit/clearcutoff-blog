@@ -101,7 +101,7 @@ export default async function page({ params, searchParams }: Props) {
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-sections?${querySubjects}`,
-    { cache: "force-cache" }
+    { cache: "no-store" }
   );
 
 
