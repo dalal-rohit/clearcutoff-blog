@@ -51,7 +51,8 @@ export default async function Page({
   const resCourses = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/exam?status=active`,
     {
-      next: { revalidate: 60 }
+      cache: "force-cache"
+      // next: { revalidate: 60 }
     }
   );
 

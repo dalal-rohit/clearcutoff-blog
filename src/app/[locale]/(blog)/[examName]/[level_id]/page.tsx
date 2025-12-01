@@ -96,12 +96,12 @@ export default async function page({ params, searchParams }: Props) {
   // ✅ Correct API fetch Years
   const resYears = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-years?${queryYears}`,
-    { cache: "no-store" }
+    { cache: "force-cache" }
   );
   // ✅ Correct API fetch Subjects
   const resSubjects = await fetch(
     `${process.env.MAIN_BACKEND_URL}/blog/get-sections?${querySubjects}`,
-    { cache: "no-store" }
+    { cache: "force-cache" }
   );
 
 
