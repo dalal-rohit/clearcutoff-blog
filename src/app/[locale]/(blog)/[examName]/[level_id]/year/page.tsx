@@ -93,8 +93,8 @@ export default async function page({ params }: Props) {
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
-    { name: unFormatSlug(level_id ?? ""), url: examsUrl },
-    { name: "Years", url: `${examsUrl}/${level_id}/year` },
+    { name: unFormatSlug(level_id ?? ""), url: `${homeUrl}/${examNameParam}/${level_id}` },
+    { name: "Years", url: `${homeUrl}/${examNameParam}/${level_id}/year` },
   ];
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 

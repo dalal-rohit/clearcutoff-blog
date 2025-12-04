@@ -80,7 +80,7 @@ export default async function page({ params }: Props) {
   const homeUrl = `${siteUrl}/${locale}`.replace(/\/+$/, "");
   const examsUrl = `${homeUrl}/${examName}`;
   const levelUrl = `${examsUrl}/${level_id}`;
-  const subjectUrl = `${levelUrl}/${subject}`;
+  const subjectUrl = `${levelUrl}/subject`;
 
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },

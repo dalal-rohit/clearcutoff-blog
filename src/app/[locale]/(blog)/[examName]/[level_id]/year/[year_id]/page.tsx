@@ -96,16 +96,16 @@ export default async function page({
       url: `${homeUrl}/${examNameParam}`,
     },
     {
-      name: capitalizeFirst(unFormatSlug(levelId)),
-      url: `${homeUrl}/${examNameParam}/${levelId}`,
+      name: capitalizeFirst(unFormatSlug(level_id)),
+      url: `${homeUrl}/${examNameParam}/${level_id}`,
     },
     {
       name: "Years",
-      url: `${homeUrl}/${examNameParam}/${levelId}/year`,
+      url: `${homeUrl}/${examNameParam}/${level_id}/year`,
     },
     {
       name: unFormatSlug(examYear.toUpperCase()),
-      url: `${homeUrl}/${examNameParam}/${levelId}/year/${year_id}`,
+      url: `${homeUrl}/${examNameParam}/${level_id}/year/${year_id}`,
     },
   ];
 
