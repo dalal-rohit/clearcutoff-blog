@@ -14,9 +14,26 @@
 
 
 export function getBreadcrumbSchema(items: { name: string; url?: string }[]) {
+
+  // If there are no items, don't output schema
+  if (!items.length) return null;
+
+  // Work on a copy so the caller's array is not mutated
+  const workingItems = [...items];
+
+  let lastItem: { name: string; url?: string } | undefined;
+
+  if (workingItems.length > 1) {
+    // More than one: pop the last from the *copy*
+    lastItem = workingItems.pop();
+  } else {
+    // Only one: just read it, don't remove it
+    lastItem = workingItems[0];
+  }
+
   return {
     "@context": "https://schema.org",
-    "@id": items.pop()?.url,
+    "@id": lastItem?.url,
     "@type": "BreadcrumbList",
     "name": "BreadcrumbList",
     "itemListElement": items.map((item, index) => ({

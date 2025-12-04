@@ -13,10 +13,11 @@ export async function generateMetadata({
 }: {
   params: { locale: string; questionId: string };
 }): Promise<Metadata> {
-  const locale = params?.locale ?? "en";
+
+  const { locale, questionId } = await params;
 
   return {
-    title: `${siteConfig.name} - ${params.questionId}`,
+    title: `${siteConfig.name} - ${questionId}`,
     description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
     openGraph: {
       title: "Academy",
@@ -34,11 +35,11 @@ export async function generateMetadata({
       type: "website",
     },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/question/${params.questionId}`,
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/question/${questionId}`,
       languages: {
-        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/question/${params.questionId}`, // Add this line
-        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/question/${params.questionId}`,
-        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/question/${params.questionId}`,
+        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/question/${questionId}`, // Add this line
+        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/question/${questionId}`,
+        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/question/${questionId}`,
       },
     },
   };
@@ -70,7 +71,7 @@ export default async function page({
     { name: "Question", url: `${homeUrl}/question/${questionId}` },
   ];
 
-  const selectedQuestion = data?.data?.find((item: any) => item.id === parseInt(params?.questionId.split("-").pop() || ""));
+  const selectedQuestion = data?.data?.find((item: any) => item.id === parseInt(questionId || ""));
   const faqItems = [
     {
       question: selectedQuestion?.question_text,
@@ -104,8 +105,7 @@ export default async function page({
         />
 
         <AssessmentQuestionBlock data={data?.data} />
-        {/* <SimilarQuestionsSection /> */}
-        {/* <OthersExamsSection /> */}
+
       </MainContainer>
     </div>
   );
