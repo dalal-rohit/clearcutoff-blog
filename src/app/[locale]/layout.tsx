@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/icon/favicon.ico",
-        type: "image/x-icon",
+        url: "/icon/favicon-png.png",
+        type: "image/png",
       },
       {
         url: "/icon/favicon-png.png",
