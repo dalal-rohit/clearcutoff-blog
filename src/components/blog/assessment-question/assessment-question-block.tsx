@@ -108,6 +108,7 @@ export default function AssessmentQuestionBlock({ data }: { data: AssessmentQues
             <div className="space-y-4">
               <div className="heading-medium !font-semibold">Explanation</div>
               {/* TEXT */}
+
               
               {!showDetails ? (
                 <p className="body-large !font-normal" >
