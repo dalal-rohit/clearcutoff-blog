@@ -10,6 +10,7 @@ import DetailsSectionCard from "./details-section-card";
 import QuestionCard from "../ui/question-card";
 import { formatToSlug } from "@/utils/slugify";
 import removeMd from "remove-markdown";
+import { Button } from "@mui/joy";
 
 interface AssessmentQuestion {
   correct_option: number;
@@ -44,6 +45,7 @@ const options = ["", "A", "B", "C", "D"];
 export default function AssessmentQuestionBlock({ data }: { data: AssessmentQuestion[] }) {
   const [showExplanation, setShowExplanation] = React.useState<{ [key: number]: boolean }>({});
   const params = useParams<{ questionId: string }>();
+  const [showDetails, setShowDetails] = React.useState(false);
 
   const selectedQuestion = data?.find((item: AssessmentQuestion) => item.id === parseInt(params?.questionId.split("-").pop() || ""));
   const otherQuestions = data?.filter((item: AssessmentQuestion) => item.id !== parseInt(params?.questionId.split("-").pop() || ""));
@@ -108,26 +110,22 @@ export default function AssessmentQuestionBlock({ data }: { data: AssessmentQues
               {/* TEXT */}
 
 
-              <p className="body-large !font-normal" >
-                {removeMd(limitWords(selectedQuestion?.explanation || "", 70))}
-              </p>
+              {!showDetails ? (
+                <p className="body-large !font-normal" >
+                  {removeMd(limitWords(selectedQuestion?.explanation || "", 70))}
+                  <span onClick={() => setShowDetails(!showDetails)} className="ml-2 mt-5 body-medium cursor-pointer !font-normal text-brand px-3 py-0.5 bg-[#006bd1]/10 rounded-md">{showDetails ? "Read Less" : "Read More"}</span>
+
+                </p>
+              ) : (
+                <p className="body-large !font-normal" >
+                  {removeMd(selectedQuestion?.explanation || "")}
+                  <span onClick={() => setShowDetails(!showDetails)} className="ml-2 mt-5 body-medium cursor-pointer !font-normal text-brand px-3 py-0.5 bg-[#006bd1]/10 rounded-md">{showDetails ? "Read Less" : "Read More"}</span>
+
+                </p>
+              )}
+
 
             </div>
-
-
-            {/* 50% OVERLAY */}
-            <span className="absolute right-0 bottom-0 w-full h-1/2 bg-[#F3F7FD]/90 pointer-events-none"></span>
-
-            {/* BUTTON ON OVERLAY */}
-            <button
-              className="
-                  absolute left-1/2 bottom-4 
-                  -translate-x-1/2 -translate-y-1/2
-                  z-20 
-                "
-            >
-              <RegisterButton size="lg" isFull />
-            </button>
 
           </div>
         </div>
