@@ -16,6 +16,7 @@ import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import CourseCheckBadge from "@/components/ui/badge/course-check-badge";
 import SubjectsList from "@/components/blog/ui/subjects-list";
 import { siteConfig } from "@/lib/metadata";
+import { generateLocaleMetadata } from "@/lib/seo/generateLocaleMetadata";
 type Props = {
   params: {
     locale: string;
@@ -28,38 +29,21 @@ type Props = {
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string; examName: string, level_id: string };
-}): Promise<Metadata> {
-  const locale = params?.locale ?? "en";
+  params: { locale: string; examName: string; level_id: string };
+}) {
+  const {locale,examName,level_id} = await params ?? {};
 
-  return {
-    title: `${siteConfig.name} - ${params.examName} - ${params.level_id}`,
-    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-    openGraph: {
-      title: "Academy",
-      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-      url: "https://clearcutoff.in",
-      siteName: siteConfig.name,
-      images: [
-        {
-          url: "https://cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com/images/favicon.png",
-          width: 1200,
-          height: 630,
-          alt: "ClearCutoff Exam Prep",
-        },
-      ],
-      type: "website",
-    },
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year`,
-      languages: {
-        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year`, // Add this line
-        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/${params.examName}/${params.level_id}/year`,
-        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year`,
-      },
-    },
-  };
+  const path = `${examName}/${level_id}/year`;
+
+  return generateLocaleMetadata({
+    locale,
+    path,
+    title: `${siteConfig.name} - ${examName} - ${level_id}`,
+    description:
+      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+  });
 }
+
 
 export default async function page({ params }: Props) {
   const { locale, examName: examNameParam, level_id, year } = await params;
@@ -77,8 +61,8 @@ export default async function page({ params }: Props) {
 
   // ✅ Correct API fetch Years
   const resYears = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/get-years?${queryYears}`,
-    { cache: "force-cache" }
+    `${process.env.BACKEND_URL}/blog/get-years?${queryYears}`,
+    { cache: "force-cache" },
   );
 
   const dataYears = await resYears.json();
@@ -93,7 +77,10 @@ export default async function page({ params }: Props) {
   const breadcrumbItems = [
     { name: "Home", url: homeUrl },
     { name: examName, url: examsUrl },
-    { name: unFormatSlug(level_id ?? ""), url: `${homeUrl}/${examNameParam}/${level_id}` },
+    {
+      name: unFormatSlug(level_id ?? ""),
+      url: `${homeUrl}/${examNameParam}/${level_id}`,
+    },
     { name: "Years", url: `${homeUrl}/${examNameParam}/${level_id}/year` },
   ];
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
@@ -114,7 +101,7 @@ export default async function page({ params }: Props) {
             heading={`${examName} Exam ${unFormatSlug(level_id ?? "")}`}
             highlightText={examName}
             subheading={`${examName} exam ${unFormatSlug(
-              level_id ?? ""
+              level_id ?? "",
             )} preparation with Clear Cutoff`}
             headingColor="text-gray-900"
             highlightColor="text-blue-500"
@@ -124,34 +111,34 @@ export default async function page({ params }: Props) {
             headingSize="heading-xlarge !font-semibold"
           />
 
-          <div className='space-y-4'>
-            <div className='w-full px-3 space-y-1'>
-              <div className='heading-large !font-semibold'>
-                By Years
-              </div>
-              <div className='grid grid-cols-5 justify-between items-center gap-1'>
-                <div className='heading-small !font-semibold col-span-3'>
+          <div className="space-y-4">
+            <div className="w-full px-3 space-y-1">
+              <div className="heading-large !font-semibold">By Years</div>
+              <div className="grid grid-cols-5 justify-between items-center gap-1">
+                <div className="heading-small !font-semibold col-span-3">
                   Year-wise questions
                 </div>
-                <div className='flex items-center gap-2 text-[#00a251] col-span-2 justify-self-end'>
+                <div className="flex items-center gap-2 text-[#00a251] col-span-2 justify-self-end">
                   <CourseCheckBadge size={16} fill="#00a251" />
-                  <p className='body-medium !font-normal'>by Clear Cutoff</p>
+                  <p className="body-medium !font-normal">by Clear Cutoff</p>
                 </div>
               </div>
             </div>
-            <div className='bg-white'>
-
-              {dataYears?.data?.length > 0 && (
+            <div className="bg-white">
+              {dataYears?.data?.length > 0 &&
                 dataYears?.data.map((item: any, index: any) => {
                   const url = `year/${formatToSlug(item?.instance_id.replace("_", " "))}`;
                   return (
-                    <SubjectsList key={index} index={index + 1} title={item?.instance_id.replace("_", " ")} pathname={url} />
-                  )
-                })
-              )}
+                    <SubjectsList
+                      key={index}
+                      index={index + 1}
+                      title={item?.instance_id.replace("_", " ")}
+                      pathname={url}
+                    />
+                  );
+                })}
             </div>
           </div>
-
         </div>
       </MainContainer>
 

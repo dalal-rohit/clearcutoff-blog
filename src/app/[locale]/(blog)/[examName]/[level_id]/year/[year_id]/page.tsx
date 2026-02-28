@@ -12,42 +12,32 @@ import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import { Metadata } from "next";
 import { siteConfig } from "@/lib/metadata";
 import { redirect } from "next/navigation";
+import { apiFetch } from "@/lib/api/api2";
+import { generateLocaleMetadata } from "@/lib/seo/generateLocaleMetadata";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string; examName: string, level_id: string, year_id: string };
-}): Promise<Metadata> {
-  const locale = params?.locale ?? "en";
-
-  return {
-    title: `${siteConfig.name} - ${params.examName} - ${params.level_id}`,
-    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-    openGraph: {
-      title: "Academy",
-      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-      url: "https://clearcutoff.in",
-      siteName: siteConfig.name,
-      images: [
-        {
-          url: "https://cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com/images/favicon.png",
-          width: 1200,
-          height: 630,
-          alt: "ClearCutoff Exam Prep",
-        },
-      ],
-      type: "website",
-    },
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year/${params.year_id}`,
-      languages: {
-        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year/${params.year_id}`, // Add this line
-        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/${params.examName}/${params.level_id}/year/${params.year_id}`,
-        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/year/${params.year_id}`,
-      },
-    },
+  params: {
+    locale: string;
+    examName: string;
+    level_id: string;
+    year_id: string;
   };
+}) {
+  const {locale,examName,level_id,year_id} = await params ?? {};
+
+  const path = `/${examName}/${level_id}/year/${year_id}`;
+
+  return generateLocaleMetadata({
+    locale,
+    path,
+    title: `${siteConfig.name} - ${examName} - ${level_id}`,
+    description:
+      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+  });
 }
+
 
 export default async function page({
   params,
@@ -60,9 +50,14 @@ export default async function page({
     year_id: string;
   };
 }) {
-  const { locale, examName: examNameParam, level_id, year, year_id } = await params;
+  const {
+    locale,
+    examName: examNameParam,
+    level_id,
+    year,
+    year_id,
+  } = await params;
   const examName = examNameParam?.toUpperCase() ?? "";
-
 
   const allowedExams = ["ctet"];
 
@@ -77,14 +72,7 @@ export default async function page({
 
   const query = `year=${examYear}`;
 
-  const res = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/get-questions?${query}`,
-    {
-      cache: "no-store",
-    }
-  );
-  const data = await res.json();
-
+  const data = await apiFetch(`/blog/get-questions?${query}`);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = siteUrl;
@@ -153,11 +141,11 @@ export default async function page({
             <CustomizableHeader
               showEyebrow={false}
               heading={`${examName.toUpperCase()} Exam ${unFormatSlug(
-                levelId ?? ""
+                levelId ?? "",
               )}`}
               highlightText={examName.toUpperCase()}
               subheading={`${examName.toUpperCase()} exam ${unFormatSlug(
-                levelId ?? ""
+                levelId ?? "",
               )} preparation with Clear Cutoff`}
               headingColor="text-gray-900"
               highlightColor="text-blue-500"

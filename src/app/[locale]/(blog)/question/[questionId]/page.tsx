@@ -7,22 +7,32 @@ import { getFaqSchema } from "@/utils/google/get-faqs-schema";
 import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
 import { Metadata } from "next";
 import { siteConfig } from "@/lib/metadata";
+import { apiFetch } from "@/lib/api/api2";
 
 export async function generateMetadata({
   params,
 }: {
   params: { locale: string; questionId: string };
 }): Promise<Metadata> {
-
   const { locale, questionId } = await params;
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+
+  const enUrl = `${baseUrl}/question/${questionId}`;
+  const hiUrl = `${baseUrl}/hi/question/${questionId}`;
+
+  const canonicalUrl = locale === "hi" ? hiUrl : enUrl;
 
   return {
     title: `${siteConfig.name} - ${questionId}`,
-    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+    description:
+      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+
     openGraph: {
-      title: "Academy",
-      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-      url: "https://clearcutoff.in",
+      title: siteConfig.name,
+      description:
+        "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+      url: canonicalUrl,
       siteName: siteConfig.name,
       images: [
         {
@@ -34,12 +44,13 @@ export async function generateMetadata({
       ],
       type: "website",
     },
+
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/question/${questionId}`,
+      canonical: canonicalUrl,
       languages: {
-        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/question/${questionId}`, // Add this line
-        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/question/${questionId}`,
-        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/question/${questionId}`,
+        en: enUrl,
+        hi: hiUrl,
+        "x-default": enUrl,
       },
     },
   };
@@ -55,13 +66,7 @@ export default async function page({
   const questionId = str.split("-").pop();
   const query = `id=${questionId}&limit_q=2`;
 
-  const res = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/get-questions?${query}`,
-    {
-      cache: "no-store",
-    }
-  );
-  const data = await res.json();
+  const data = await apiFetch(`/blog/get-questions?${query}`);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const homeUrl = siteUrl;
@@ -71,7 +76,9 @@ export default async function page({
     { name: "Question", url: `${homeUrl}/question/${questionId}` },
   ];
 
-  const selectedQuestion = data?.data?.find((item: any) => item.id === parseInt(questionId || ""));
+  const selectedQuestion = data?.data?.find(
+    (item: any) => item.id === parseInt(questionId || ""),
+  );
   const faqItems = [
     {
       question: selectedQuestion?.question_text,
@@ -79,14 +86,13 @@ export default async function page({
       questionAuthor: "ClearCutoff",
       answerAuthor: "ClearCutoff",
       dateCreated: selectedQuestion?.created_at,
-      dateModified: selectedQuestion?.updated_at
+      dateModified: selectedQuestion?.updated_at,
     },
   ];
 
   // const faqlist = getFaqsSchema(faqItems);
   const faqlistSchema = getFaqSchema(faqItems);
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
-
 
   return (
     <div>
@@ -105,7 +111,6 @@ export default async function page({
         />
 
         <AssessmentQuestionBlock data={data?.data} />
-
       </MainContainer>
     </div>
   );

@@ -80,7 +80,6 @@ export default function QuestionListBySubject({ data }: { data: Chapter[] }) {
                                 const plain = question.question_text?.replace(/<[^>]*>/g, "") || "";
                                 const snippet = limitWords(plain, 25);
                                 const slug = question?.slug ? question.slug : formatToSlug(limitWords(question.question_text, 4));
-                                console.log('question', question, 'slug', slug)
                                 return (
                                     <QuestionCard
                                         key={index}

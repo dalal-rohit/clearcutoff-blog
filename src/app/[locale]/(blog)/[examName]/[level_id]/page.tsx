@@ -1,148 +1,186 @@
-import MainBreadcrumbs from "@/components/breadcrumbs/main-breadcrumbs";
 import React from "react";
 import { Metadata } from "next";
 import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
 import TestByYears from "@/components/blog/assessment-question/test-by-years";
+import TestBySubjects from "@/components/blog/assessment-question/test-by-subjects";
 import { notFound, redirect } from "next/navigation";
 import { unFormatSlug } from "@/utils/slugify";
-import { findLeafNodes } from "@/utils/getLeafNodes";
-import TestBySubjects from "@/components/blog/assessment-question/test-by-subjects";
-import NotFound from "@/app/not-found";
 import MainContainer from "@/components/main-container";
 import CustomizableHeader from "@/components/customizable-header";
-import StarBadge from "@/components/ui/badge/star-badge";
 import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
 import { siteConfig } from "@/lib/metadata";
+import { apiFetch } from "@/lib/api/api2";
+
+/* =========================================================
+   TYPES (Next.js 15/16)
+========================================================= */
+
 type Props = {
-  params: {
+  params: Promise<{
     locale: string;
     examName: string;
     level_id?: string;
-  };
-  searchParams: {
-    levels?: string | string[]; // ✅ Accept both
-  };
+  }>;
+  searchParams: Promise<{
+    levels?: string | string[];
+  }>;
 };
+
+/* =========================================================
+   METADATA
+========================================================= */
 
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string; examName: string, level_id: string };
+  params: { locale: string; examName: string; level_id: string };
 }): Promise<Metadata> {
-  const locale = params?.locale ?? "en";
+  const { locale, examName, level_id } = await params;
+
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "";
+
+  const enUrl = `${base}/${examName}/${level_id}`;
+  const hiUrl = `${base}/hi/${examName}/${level_id}`;
+
+  const canonicalUrl = locale === "hi" ? hiUrl : enUrl;
 
   return {
-    title: `${siteConfig.name} - ${params.examName} - ${params.level_id}`,
-    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-    openGraph: {
-      title: "Academy",
-      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-      url: "https://clearcutoff.in",
-      siteName: siteConfig.name,
-      images: [
-        {
-          url: "https://cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com/images/favicon.png",
-          width: 1200,
-          height: 630,
-          alt: "ClearCutoff Exam Prep",
-        },
-      ],
-      type: "website",
-    },
+    title: `${siteConfig.name} - ${examName} - ${level_id}`,
+    description:
+      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}`,
+      canonical: canonicalUrl,
       languages: {
-        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}`, // Add this line
-        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/${params.examName}/${params.level_id}`,
-        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}`,
+        en: enUrl,
+        hi: hiUrl,
+        "x-default": enUrl,
       },
     },
   };
 }
 
+/* =========================================================
+   HELPERS
+========================================================= */
+
 function normalizeToArray(value?: string | string[]) {
   if (!value) return [];
-  return Array.isArray(value) ? value : [value]; // ✅ ensures array
+  return Array.isArray(value) ? value : [value];
 }
 
+async function safeFetch(url: string, cache: RequestCache = "force-cache") {
+  try {
+      const data = await apiFetch(url, {
+      cache,
+    });
 
-export default async function page({ params, searchParams }: Props) {
-  const { locale, examName: examNameParam, level_id } = await params;
+
+    return data;
+  } catch (err) {
+    console.error("Fetch failed:", err);
+    return null;
+  }
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+export default async function Page({ params, searchParams }: Props) {
+  const { examName: examSlug, level_id } = await params;
   const sp = await searchParams;
+
   const levels = normalizeToArray(sp.levels);
+
+  /* ---------- Validate Exam ---------- */
 
   const allowedExams = ["ctet"];
 
-  // Check
-  if (!allowedExams.includes(examNameParam?.toLowerCase())) {
+  if (!allowedExams.includes(examSlug?.toLowerCase())) {
     redirect("/");
   }
-  const examName = unFormatSlug(examNameParam).toUpperCase();
 
-  // console.log("LEVELS ARRAY:", levels.map((l) => unFormatSlug(l))); // <-- Always array!
+  const examName = unFormatSlug(examSlug).toUpperCase();
+  const levelName = unFormatSlug(level_id ?? "");
 
+  /* ---------- Build API URLs ---------- */
 
-  // Build query string safely
-  const queryYears = `exam_id=${examNameParam}`;
-  // Convert to proper JSON array string for URL
-  const levelsString = encodeURIComponent(JSON.stringify(levels.map(unFormatSlug)));
+  const baseUrl = 'https://apptest.clearcutoff.in/api';
 
-  const querySubjects =
-    `exam_id=${examNameParam}` +
-    `&name=${unFormatSlug(level_id ?? "")}` +
-    `&levels=${levelsString}`;
-
-  // ✅ Correct API fetch Years
-  const resYears = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/get-years?${queryYears}`,
-    { cache: "force-cache" }
-  );
-  // ✅ Correct API fetch Subjects
-  const resSubjects = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/get-sections?${querySubjects}`,
-    { cache: "no-store" }
-  );
-
-
-  const dataYears = await resYears.json();
-  const dataSubjects = await resSubjects.json();
-
-  if (dataYears?.data?.length === 0 && dataSubjects?.data?.length === 0) {
-    return notFound;
+  if (!baseUrl) {
+    console.error("BACKEND_URL missing");
+    return notFound();
   }
 
+  const yearsUrl = `/blog/get-years?exam_id=${examSlug}`;
+
+  const levelsString = encodeURIComponent(
+    JSON.stringify(levels.map(unFormatSlug)),
+  );
+
+  const subjectsUrl =
+    `/blog/get-sections?` +
+    `exam_id=${examSlug}` +
+    `&name=${levelName}` +
+    `&levels=${levelsString}`;
+
+  /* ---------- Fetch Data ---------- */
+
+  const [dataYears, dataSubjects] = await Promise.all([
+    safeFetch(yearsUrl, "force-cache"),
+    safeFetch(subjectsUrl, "no-store"),
+  ]);
+
+  // if (
+  //   (!dataYears?.data || dataYears.data.length === 0) &&
+  //   (!dataSubjects?.data || dataSubjects.data.length === 0)
+  // ) {
+  //   return notFound();
+  // }
+
+  /* ---------- Breadcrumbs ---------- */
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const homeUrl = siteUrl;
-  const examsUrl = `${homeUrl}/${examNameParam}`;
 
   const breadcrumbItems = [
-    { name: "Home", url: homeUrl },
-    { name: examName, url: examsUrl },
-    { name: unFormatSlug(level_id ?? ""), url: `${homeUrl}/${examNameParam}/${level_id}` },
-  ]
+    { name: "Home", url: siteUrl },
+    { name: examName, url: `${siteUrl}/${examSlug}` },
+    {
+      name: levelName,
+      url: `${siteUrl}/${examSlug}/${level_id}`,
+    },
+  ];
+
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
+
+  /* ---------- Render ---------- */
 
   return (
     <div>
-
       <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
-      <MainContainer maxWidth="max-w-[900px]" padding="py-4" bgColor="bg-[#f8fafc]">
+      <MainContainer
+        maxWidth="max-w-[900px]"
+        padding="py-4"
+        bgColor="bg-[#f8fafc]"
+      >
         <div className="px-3">
           <CustomBreadcrumbs
             padding="0px 4px 20px 4px"
-            isShow={true}
+            isShow
             items={breadcrumbItems}
           />
         </div>
-        <div className='space-y-6'>
+
+        <div className="space-y-6">
           <div className="px-3">
             <CustomizableHeader
               showEyebrow={false}
-              heading={`${examName} Exam ${unFormatSlug(level_id ?? "")}`}
+              heading={`${examName} Exam ${levelName}`}
               highlightText={examName}
-              subheading={`${examName} exam ${unFormatSlug(level_id ?? "")} preparation with Clear Cutoff`}
+              subheading={`${examName} exam ${levelName} preparation with Clear Cutoff`}
               headingColor="text-gray-900"
               highlightColor="text-blue-500"
               subheadingColor="text-gray-600"
@@ -152,8 +190,6 @@ export default async function page({ params, searchParams }: Props) {
             />
           </div>
 
-
-
           {dataSubjects?.data?.length > 0 && (
             <TestBySubjects data={dataSubjects.data} examName={examName} />
           )}
@@ -162,11 +198,7 @@ export default async function page({ params, searchParams }: Props) {
             <TestByYears data={dataYears.data} examName={examName} />
           )}
         </div>
-
       </MainContainer>
-
-      {/* <SimilarQuestionsSection /> */}
-      {/* <OthersExamsSection /> */}
     </div>
   );
 }

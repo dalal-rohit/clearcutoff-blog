@@ -15,7 +15,6 @@ export type CardWrapProps = {
 
 export default function CardWrap({
   onClick = () => {
-    console.log("CardWrap onClick");
   },
   children,
   width = "100%",

@@ -9,7 +9,6 @@ if (!PAYLOAD_URL) {
 
 export async function getPayloadData(collection: string, query?: string) {
   const url = `${PAYLOAD_URL}/api/${collection}${query ? `?${query}` : ''}`;
-  console.log(`Fetching from: ${url}`); // For debugging
   try {
     const res = await fetch(url, {
       next: { revalidate: 60 }, // Revalidate data every 60 seconds
@@ -28,7 +27,6 @@ export async function getPayloadData(collection: string, query?: string) {
 
 export async function getPayloadGlobal(slug: string, query?: string) {
   const url = `${PAYLOAD_URL}/api/globals/${slug}${query ? `?${query}` : ''}`;
-  console.log(`Fetching global: ${url}`); // For debugging
   try {
     const res = await fetch(url, {
       next: { revalidate: 3600 }, // Global settings might revalidate less often
@@ -47,7 +45,6 @@ export async function getPayloadGlobal(slug: string, query?: string) {
 
 export async function getPayloadDocument(collection: string, id: string, query?: string) {
   const url = `${PAYLOAD_URL}/api/${collection}/${id}${query ? `?${query}` : ''}`;
-  console.log(`Fetching document: ${url}`); // For debugging
   try {
     const res = await fetch(url, {
       next: { revalidate: 60 },

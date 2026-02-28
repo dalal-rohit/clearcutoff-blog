@@ -5,25 +5,51 @@ import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
 import MainContainer from "@/components/main-container";
 import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
 import { Metadata } from "next";
-import React from "react";
+import React, { Suspense } from "react";
 import { unFormatSlug } from "@/utils/slugify";
 import { siteConfig } from "@/lib/metadata";
 import { redirect } from "next/navigation";
+import { apiFetch } from "@/lib/api/api2";
+
+/* =========================================================
+   TYPES
+========================================================= */
+
+type Params = {
+  params: Promise<{
+    locale: string;
+    examName: string;
+  }>;
+};
+
+/* =========================================================
+   METADATA
+========================================================= */
 
 export async function generateMetadata({
   params,
 }: {
   params: { locale: string; examName: string };
 }): Promise<Metadata> {
-  const locale = params?.locale ?? "en";
+  const { locale, examName } = await params;
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+
+  const enUrl = `${baseUrl}/${examName}`;
+  const hiUrl = `${baseUrl}/hi/${examName}`;
+
+  const canonicalUrl = locale === "hi" ? hiUrl : enUrl;
 
   return {
-    title: `${siteConfig.name} - ${params.examName}`,
-    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+    title: `${siteConfig.name} - ${examName}`,
+    description:
+      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+
     openGraph: {
-      title: "Academy",
-      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-      url: "https://clearcutoff.in",
+      title: siteConfig.name,
+      description:
+        "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+      url: canonicalUrl,
       siteName: siteConfig.name,
       images: [
         {
@@ -35,58 +61,61 @@ export async function generateMetadata({
       ],
       type: "website",
     },
+
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}`,
+      canonical: canonicalUrl,
       languages: {
-        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}`, // Add this line
-        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/${params.examName}`,
-        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}`,
+        en: enUrl,
+        hi: hiUrl,
+        "x-default": enUrl,
       },
     },
   };
 }
+/* =========================================================
+   PAGE
+========================================================= */
 
-export default async function Page({
-  params,
-}: {
-  params: { locale: string; examName: string };
-}) {
-  const { locale, examName: examNameParam } = await params;
-  const examName = unFormatSlug(examNameParam ?? "").toUpperCase();
+export default async function Page({ params }: Params) {
+  const { locale, examName: examSlug } = await params;
+
+  /* ---------- Format Exam Name ---------- */
+
+  const examName = unFormatSlug(examSlug ?? "").toUpperCase();
+
+  /* ---------- Validate Allowed Exams ---------- */
 
   const allowedExams = ["ctet"];
 
-  // Check
-  if (!allowedExams.includes(examName?.toLowerCase())) {
+  if (!allowedExams.includes(examName.toLowerCase())) {
     redirect("/");
   }
 
+  /* ---------- Fetch Data ---------- */
 
-
-  // Build query string safely
-  const query = `short_name=${examNameParam}&enavigation=true`;
-
-  // ✅ Correct API fetch
-  const res = await fetch(
-    `${process.env.MAIN_BACKEND_URL}/blog/exam?${query}`,
-    { cache: "force-cache" }
+  
+  const data = await apiFetch(
+    `/blog/exam?short_name=${examSlug}&enavigation=true&first=true`,
   );
+  const examData = data?.data ?? null;
 
-  const data = await res.json();
-  if (!data.data) {
-    return <NotFound />;
-  }
+  // if (!examData) {
+  //   return <NotFound />;
+  // }
+
+  /* ---------- Breadcrumbs ---------- */
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const homeUrl = siteUrl;
-  const examsUrl = `${homeUrl}/${examNameParam}`;
+  const examUrl = `${siteUrl}/${examSlug}`;
 
   const breadcrumbItems = [
-    { name: "Home", url: homeUrl },
-    { name: examName, url: examsUrl },
+    { name: "Home", url: siteUrl },
+    { name: examName, url: examUrl },
   ];
+
   const breadcrumbLd = getBreadcrumbSchema(breadcrumbItems);
 
+  /* ---------- Render ---------- */
 
   return (
     <div>
@@ -104,8 +133,10 @@ export default async function Page({
             items={breadcrumbItems}
           />
         </div>
-        {/* <MainBreadcrumbs items={breadcrumbItems} /> */}
-        <ExamLevelsSection data={data.data[0].navigation} examName={examName} />
+
+        <Suspense fallback={<div>Loading...</div>}>
+          <ExamLevelsSection data={examData?.navigation} examName={examName} />
+        </Suspense>
       </MainContainer>
     </div>
   );

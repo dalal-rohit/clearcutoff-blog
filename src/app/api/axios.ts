@@ -2,9 +2,9 @@
 import axios from 'axios';
 
 // Get the base URL from your .env file
-const API_URL = process.env.API_URL || 'https://apptest.clearcutoff.in/api';
+const API_URL = 'http://clearcutoff-main-backend.test/api';
 
-const api = axios.create({
+const ENDPOINT = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -13,4 +13,4 @@ const api = axios.create({
   // withCredentials: true, // Use this if you are using Laravel Sanctum for SPA auth
 });
 
-export default api;
+export default ENDPOINT;

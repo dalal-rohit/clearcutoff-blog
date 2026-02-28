@@ -1,61 +1,57 @@
-import MainContainer from '@/components/main-container'
-import CourseCheckBadge from '@/components/ui/badge/course-check-badge';
-import React from 'react'
-import { unFormatSlug } from '@/utils/slugify'
-import QuestionsList from '@/components/blog/assessment-question/questions-list';
-import DetailsSectionCard from '@/components/blog/assessment-question/details-section-card';
-import CustomizableHeader from '@/components/customizable-header';
-import CustomBreadcrumbs from '@/components/breadcrumbs/custom-breadcrumbs';
-import BreadcrumbScriptLD from '@/components/breadcrumbLD-script';
-import { capitalizeFirst } from '@/utils/text/textFormat';
-import { getBreadcrumbSchema } from '@/utils/google/get-breadcrumb-schema';
-import { siteConfig } from '@/lib/metadata';
-import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
-import QuestionsListByChapterName from '@/components/blog/assessment-question/questions-list-by-chapter-name';
+import MainContainer from "@/components/main-container";
+import CourseCheckBadge from "@/components/ui/badge/course-check-badge";
+import React from "react";
+import { unFormatSlug } from "@/utils/slugify";
+import QuestionsList from "@/components/blog/assessment-question/questions-list";
+import DetailsSectionCard from "@/components/blog/assessment-question/details-section-card";
+import CustomizableHeader from "@/components/customizable-header";
+import CustomBreadcrumbs from "@/components/breadcrumbs/custom-breadcrumbs";
+import BreadcrumbScriptLD from "@/components/breadcrumbLD-script";
+import { capitalizeFirst } from "@/utils/text/textFormat";
+import { getBreadcrumbSchema } from "@/utils/google/get-breadcrumb-schema";
+import { siteConfig } from "@/lib/metadata";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { generateLocaleMetadata } from "@/lib/seo/generateLocaleMetadata";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string; examName: string, level_id: string, subject_id: string, chapter_name: string };
-}): Promise<Metadata> {
-  const locale = params?.locale ?? "en";
-
-
-
-  return {
-    title: `${siteConfig.name} - ${params.examName} - ${params.level_id}`,
-    description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-    openGraph: {
-      title: "Academy",
-      description: "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
-      url: "https://clearcutoff.in",
-      siteName: siteConfig.name,
-      images: [
-        {
-          url: "https://cc-teaching-content-ind.s3.dualstack.ap-south-1.amazonaws.com/images/favicon.png",
-          width: 1200,
-          height: 630,
-          alt: "ClearCutoff Exam Prep",
-        },
-      ],
-      type: "website",
-    },
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}/${params.chapter_name}`,
-      languages: {
-        'en': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}/${params.chapter_name}`, // Add this line
-        'hi': `${process.env.NEXT_PUBLIC_SITE_URL}/hi/${params.examName}/${params.level_id}/subject/${params.subject_id}/${params.chapter_name}`,
-        'x-default': `${process.env.NEXT_PUBLIC_SITE_URL}/${params.examName}/${params.level_id}/subject/${params.subject_id}/${params.chapter_name}`,
-      },
-    },
+  params: {
+    locale: string;
+    examName: string;
+    level_id: string;
+    subject_id: string;
+    chapter_name: string;
   };
+}) {
+  const {locale,examName,level_id,subject_id,chapter_name} = await params ?? {};
+
+  const path = `${examName}/${level_id}/subject/${subject_id}/${chapter_name}`;
+
+  return generateLocaleMetadata({
+    locale,
+    path,
+    title: `${siteConfig.name} - ${examName} - ${level_id}`,
+    description:
+      "Explore Complete Courses & Test Series for Teaching Exams and get started for FREE.",
+  });
 }
 
-export default async function page({ params }: { params: { locale: string, examName: string, level_id: string, subject: string, subject_id: string, chapter_name: string } }) {
-
-  const { locale, examName, level_id, subject, subject_id, chapter_name } = await params;
-
+export default async function page({
+  params,
+}: {
+  params: {
+    locale: string;
+    examName: string;
+    level_id: string;
+    subject: string;
+    subject_id: string;
+    chapter_name: string;
+  };
+}) {
+  const { locale, examName, level_id, subject, subject_id, chapter_name } =
+    await params;
 
   const allowedExams = ["ctet"];
 
@@ -63,33 +59,35 @@ export default async function page({ params }: { params: { locale: string, examN
   if (!allowedExams.includes(examName?.toLowerCase())) {
     redirect("/");
   }
-  const query = `slug=${chapter_name}&exam_name=${examName}`
+  const query = `slug=${chapter_name}&exam_name=${examName}`;
 
-  const res = await fetch(`${process.env.MAIN_BACKEND_URL}/blog/get-questions-by-chapter?${query}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.BACKEND_URL}/blog/get-questions-by-chapter?${query}`,
+    {
+      cache: "no-store",
+    },
+  );
   const data = await res.json();
 
   const questions = data?.data?.questions;
 
   const Labels = [
     {
-      lable: 'Exam',
-      value: examName.toUpperCase() ?? "REET"
+      lable: "Exam",
+      value: examName.toUpperCase() ?? "REET",
     },
     {
-      lable: 'Level',
-      value: level_id.toUpperCase() ?? ""
+      lable: "Level",
+      value: level_id.toUpperCase() ?? "",
     },
     {
-      lable: 'State',
-      value: "Rajasthan"
+      lable: "State",
+      value: "Rajasthan",
     },
-  ]
-
+  ];
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const homeUrl = siteUrl
+  const homeUrl = siteUrl;
   const examsUrl = `${homeUrl}/${examName}`;
   const levelUrl = `${examsUrl}/${level_id}`;
   const subjectUrl = `${levelUrl}/subject`;
@@ -110,10 +108,15 @@ export default async function page({ params }: { params: { locale: string, examN
     <>
       <BreadcrumbScriptLD breadcrumbItems={breadcrumbLd} />
 
-      <MainContainer maxWidth="max-w-[900px]" padding='py-4' className='space-y-5' bgColor='bg-transparent'>
+      <MainContainer
+        maxWidth="max-w-[900px]"
+        padding="py-4"
+        className="space-y-5"
+        bgColor="bg-transparent"
+      >
         <CustomBreadcrumbs isShow={true} items={breadcrumbItems} />
 
-        <div className='px-3'>
+        <div className="px-3">
           <CustomizableHeader
             showEyebrow={false}
             heading={`${examName.toUpperCase()} Exam - ${unFormatSlug(level_id ?? "")} - ${unFormatSlug(chapter_name ?? "")}`}
@@ -128,22 +131,24 @@ export default async function page({ params }: { params: { locale: string, examN
           />
         </div>
 
-        <div className='w-full bg-white px-3 py-4'>
-
-          <div className=' '>
-            <DetailsSectionCard sourceLabel="Chapter" Labels={Labels} totalQuestions={questions} yearId={unFormatSlug(chapter_name ?? "")} />
-
+        <div className="w-full bg-white px-3 py-4">
+          <div className=" ">
+            <DetailsSectionCard
+              sourceLabel="Chapter"
+              Labels={Labels}
+              totalQuestions={questions}
+              yearId={unFormatSlug(chapter_name ?? "")}
+            />
           </div>
-
         </div>
-        <div className='space-y-2 px-3'>
-          <div className='flex justify-between items-center gap-2'>
-            <div className='heading-small !font-semibold col-span-3'>
+        <div className="space-y-2 px-3">
+          <div className="flex justify-between items-center gap-2">
+            <div className="heading-small !font-semibold col-span-3">
               Chapter-wise questions
             </div>
-            <div className='flex items-center gap-2 text-[#00a251] col-span-2 justify-self-end'>
+            <div className="flex items-center gap-2 text-[#00a251] col-span-2 justify-self-end">
               <CourseCheckBadge size={16} fill="#00a251" />
-              <p className='body-medium !font-normal'>by Clear Cutoff</p>
+              <p className="body-medium !font-normal">by Clear Cutoff</p>
             </div>
           </div>
           <div className="grid grid-cols-1 gap-4">
@@ -151,9 +156,7 @@ export default async function page({ params }: { params: { locale: string, examN
             <QuestionsList data={questions} />
           </div>
         </div>
-
-
       </MainContainer>
     </>
-  )
+  );
 }

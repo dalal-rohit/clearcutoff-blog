@@ -18,7 +18,6 @@ interface Data {
 
 export default function TestBySubjects({ data, examName }: { data: Data[], examName: string }) {
 
-    console.log("data", data)
 
     const params = useParams<{ locale: string, examName: string, level_id: string, year: string }>();
 
