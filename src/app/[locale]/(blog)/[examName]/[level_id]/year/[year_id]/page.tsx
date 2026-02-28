@@ -27,6 +27,7 @@ export async function generateMetadata({
 }) {
   const {locale,examName,level_id,year_id} = await params ?? {};
 
+  
   const path = `/${examName}/${level_id}/year/${year_id}`;
 
   return generateLocaleMetadata({
